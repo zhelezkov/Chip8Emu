@@ -2,7 +2,7 @@
 //  GPU.hpp
 //  Chip8Emulator
 //
-//  Created by rsredsq on 03/03/2017.
+//
 //
 //
 
@@ -11,4 +11,12 @@
 
 #include <stdio.h>
 
+class GPU
+{
+	unsigned char gfx[128][64];
+
+public:
+	void init();
+	unsigned char operator()(int i, int j);
+};
 #endif /* GPU_hpp */

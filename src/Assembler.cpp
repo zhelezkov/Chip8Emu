@@ -2,7 +2,7 @@
 //  Assembler.cpp
 //  Chip8Emulator
 //
-//  Created by rsredsq on 02/03/2017.
+//
 //
 //
 

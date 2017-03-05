@@ -2,7 +2,7 @@
 //  Memory.hpp
 //  Chip8Emulator
 //
-//  Created by rsredsq on 03/03/2017.
+//
 //
 //
 
@@ -10,5 +10,15 @@
 #define Memory_hpp
 
 #include <stdio.h>
+
+class Memory
+{
+	unsigned char data[4096];
+
+public:
+
+	unsigned char operator[](int i);
+	void init();
+};
 
 #endif /* Memory_hpp */

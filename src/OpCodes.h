@@ -2,7 +2,7 @@
 //  OpCodes.h
 //  Chip8Emulator
 //
-//  Created by rsredsq on 02/03/2017.
+//
 //
 //
 
@@ -10,6 +10,20 @@
 #define OpCodes_h
 
 #include <map>
+#include "CPU.hpp"
+
+union opcodeField
+{
+	struct
+	{
+		unsigned short n4 : 4;
+		unsigned short n3 : 4;
+		unsigned short n2 : 4;
+		unsigned short n1 : 4;
+	};
+	unsigned short rawCode;
+};
+
 
 enum OpMask {
     None = 0,
@@ -36,17 +50,17 @@ public:
         
     }
     
-    OpCode(const char* name, const OpMask mask, const char* description, const void (*exec)(void) = nullptr, const void (*write)(void) = nullptr, const void(*read)(void) = nullptr) : name(name), mask(mask), description(description), exec(exec), write(write), read(read) {
-        bestVal = -999;
+    OpCode(const char* name, const OpMask mask, const char* description, const void (*exec)(CPU& cpu) = nullptr, const void (*write)(CPU& cpu) = nullptr, const void(*read)(CPU& cpu) = nullptr) : name(name), mask(mask), description(description), exec(exec), write(write), read(read) {
+        
     }
-    int bestVal;
+
 public:
     const char* name;
-    const OpMask mask;
+	const OpMask mask;
     const char* description;
-    const void (*exec)(void);
-    const void (*write)(void);
-    const void (*read)(void);
+    const void (*exec)(CPU& cpu);
+    const void (*write)(CPU& cpu);
+    const void (*read)(CPU& cpu);
 };
 
 using address = unsigned short;
@@ -111,25 +125,12 @@ END_OPS
 #undef E
 #undef A
 
-#define n1(val) (val & 0xF000) >> 12
-#define n2(val) (val & 0x0F00) >> 8
-#define n3(val) (val & 0x00F0) >> 4
-#define n4(val) (val & 0x000F)
-
-#define op1(n1) op(n1, 0, 0, 0)
-#define op2(n1, n2) op(n1, n2, 0, 0)
-#define op3(n1, n2, n3) op(n1, n2, n3, 0)
 #define op(n1, n2, n3, n4) (n1 << 12 | n2 << 8 | n3 << 4 | n4)
 
-const OpCode& getOpCode(const unsigned short rawCode) {
-    unsigned char n1 = n1(rawCode);
-    unsigned char n2 = n2(rawCode);
-    unsigned char n3 = n3(rawCode);
-    unsigned char n4 = n4(rawCode);
-
-    switch (n1) {
+const OpCode& getOpCode(const opcodeField opcode) {
+    switch (opcode.n1) {
         case 0x0:
-            return ops[rawCode];
+            return ops[opcode.rawCode];
         case 0x1:
         case 0x2:
         case 0x3:
@@ -137,11 +138,19 @@ const OpCode& getOpCode(const unsigned short rawCode) {
         case 0x5:
         case 0x6:
         case 0x7:
-            return ops[op1(n1)];
+            return ops[op(opcode.n1, 0, 0, 0)];
         case 0x8:
-            return ops[op(n1, 0, 0, n4)];
+            return ops[op(opcode.n1, 0, 0, opcode.n4)];
+		case 0x9:
+		case 0xA:
+		case 0xB:
+		case 0xC:
+		case 0xD:
+			return ops[op(opcode.n1, 0, 0, 0)];
         case 0xE:
-            return ops[op(n1, 0, n3, n4)];
+		case 0xF:
+			return ops[op(opcode.n1, 0, opcode.n3, opcode.n4)];
+			
     }
     
     return ops[0xFFFF];
