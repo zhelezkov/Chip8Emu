@@ -2,16 +2,13 @@
 //  Memory.cpp
 //  Chip8Emulator
 //
-//
-//
-//
 
 #include "Memory.hpp"
 #include <iostream>
 
-void Memory::init()
+void Memory::clear()
 {
-	for (int i = 0; i < 4096; i++)
+	for (int i = 0; i < MEM_SIZE; i++)
 		data[i] = 0;
 }
 

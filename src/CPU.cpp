@@ -2,61 +2,62 @@
 //  CPU.cpp
 //  Chip8Emulator
 //
-//
-//
-//
 
 #include "CPU.hpp"
 
-void CPU::init()
-{
-	PC = 0x200;								// память начинается с 0x200
-	opcode = ops[0xFFFF];					// сбрасываем опкод
-	I = 0;									// сбрасываем регистр
-	SP = 0;									// сбрасываем stack pointer
+CPU::CPU() : opcode(getOpcode({0xffff})) {
+    //PC = START_MEM;
+}
 
-	for(int i = 0; i < 16; i++)				// обнуляем все регистры
+/*void CPU::init()
+{
+							// Г”вЂЎГЏЛ‡ГљВё ГЊвЂЎЛњГ‹ГЊвЂЎГ‚ГљГ’Л‡ Г’ 0x200
+	//opcode = ops[0xFFFF];					// Г’В·пЈївЂЎГ’ЛљвЂљвЂЎГ‚ГЏ Г“Г”ГЌГ“вЂ°
+	I = 0;									// Г’В·пЈївЂЎГ’ЛљвЂљвЂЎГ‚ГЏ пЈїГ‚вЂћГ‹Г’ГљпЈї
+	SP = 0;									// Г’В·пЈївЂЎГ’ЛљвЂљвЂЎГ‚ГЏ stack pointer
+
+	for(int i = 0; i < 16; i++)				// Г“В·ГЊГ›ГЋЛ‡Г‚ГЏ вЂљГ’Г‚ пЈїГ‚вЂћГ‹Г’ГљпЈїЛљ
 		V[i] = 0;
 
-	for (int i = 0; i < 16; i++)			// очищаем стек
+	for (int i = 0; i < 16; i++)			// Г“ЛњГ‹ЛвЂЎГ‚ГЏ Г’ГљГ‚ГЌ
 		stack[i] = 0;
 
-	memory.init();							// инициализируем память
-	gpu.init();								// инициализируем GPU
-	timer.init();							// инициализируем таймер
-	board.init();							// инициализируем клавиатуру
+	//memory.init();							// Г‹ГЊГ‹Л†Г‹вЂЎГЋГ‹ГЃГ‹пЈїГ›Г‚ГЏ Г”вЂЎГЏЛ‡ГљВё
+	//gpu.init();								// Г‹ГЊГ‹Л†Г‹вЂЎГЋГ‹ГЃГ‹пЈїГ›Г‚ГЏ GPU
+	//timer.init();							// Г‹ГЊГ‹Л†Г‹вЂЎГЋГ‹ГЃГ‹пЈїГ›Г‚ГЏ ГљвЂЎГ€ГЏГ‚пЈї
+	//board.init();							// Г‹ГЊГ‹Л†Г‹вЂЎГЋГ‹ГЃГ‹пЈїГ›Г‚ГЏ ГЌГЋвЂЎвЂљГ‹вЂЎГљГ›пЈїГ›
 
-	mode = 0;								// по умолчанию chip48
-}
+	mode = 0;								// Г”Г“ Г›ГЏГ“ГЋЛњвЂЎГЊГ‹Л› chip48
+}*/
 
 void CPU::cycle()
 {
-	static unsigned short rawCode = memory[PC] | memory[PC + 1];						// получаем опкод
-	PC += 2;																			// переходим к следующей инстуруции
+	//static unsigned short rawCode = memory[PC] | memory[PC + 1];						// Г”Г“ГЋГ›ЛњвЂЎГ‚ГЏ Г“Г”ГЌГ“вЂ°
+	PC += 2;																			// Г”Г‚пЈїГ‚Д±Г“вЂ°Г‹ГЏ ГЌ Г’ГЋГ‚вЂ°Г›Л›ЛГ‚Г€ Г‹ГЊГ’ГљГ›пЈїГ›Л†Г‹Г‹
 
-	opcode = getOpCode({rawCode});														// нужный опкод
-	opcode.exec(this);																	// выполнили опкод
+	//opcode = getOpCode({rawCode});														// ГЊГ›ГЉГЊЛљГ€ Г“Г”ГЌГ“вЂ°
+	//opcode.exec(this);																	// вЂљЛљГ”Г“ГЋГЊГ‹ГЋГ‹ Г“Г”ГЌГ“вЂ°
 
-	timer.update();																		// обновили таймер
+	//timer.update();																		// Г“В·ГЊГ“вЂљГ‹ГЋГ‹ ГљвЂЎГ€ГЏГ‚пЈї
 
 }
 
-const Memory& CPU::getMemory()
+/*const Memory& CPU::getMemory()
 {
-	return memory;
+	//return memory;
 }
 
 const GPU& CPU::getGpu()
 {
-	return gpu;
+	//return gpu;
 }
 
 const Keyboard& CPU::getBoard()
 {
-	return board;
+	//return board;
 }
 
 const Timers& CPU::getTimers()
 {
-	return timer;
-}
+	//return timer;
+}*/

@@ -2,9 +2,6 @@
 //  Timers.cpp
 //  Chip8Emulator
 //
-//  
-//
-//
 
 #include "Timers.hpp"
 

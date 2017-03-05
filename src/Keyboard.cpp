@@ -2,11 +2,8 @@
 //  Keyboard.cpp
 //  Chip8Emulator
 //
-//  
-//
-//
 
-#include "Keyboard.hpp""
+#include "Keyboard.hpp"
 
 void Keyboard::init()
 {
@@ -15,6 +12,6 @@ void Keyboard::init()
 		key[i] = 0;
 
 	// загрузка шрифтов
-	for (int i = 0; i < 50; ++i)
-		memory[i] = font[i];
+	//for (int i = 0; i < 50; ++i)
+		//memory[i] = font[i];
 }

@@ -2,9 +2,6 @@
 //  Instructions.h
 //  Chip8Emulator
 //
-//
-//
-//
 
 #ifndef Instructions_h
 #define Instructions_h

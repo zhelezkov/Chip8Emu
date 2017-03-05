@@ -1,15 +1,12 @@
 //
 //  Assembler.hpp
-//  Chip8Emulator
-//
-//
-//
+//  Chip8Asm
 //
 
 #ifndef Assembler_hpp
 #define Assembler_hpp
 
-#include "OpCodes.hpp"
+//#include "OpCodes.hpp"
 
 //TODO: probably all write functions should be located here
 

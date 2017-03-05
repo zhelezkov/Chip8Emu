@@ -2,9 +2,6 @@
 //  Keyboard.hpp
 //  Chip8Emulator
 //
-//
-//
-//
 
 #ifndef Keyboard_hpp
 #define Keyboard_hpp

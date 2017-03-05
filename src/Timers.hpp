@@ -2,9 +2,6 @@
 //  Timers.hpp
 //  Chip8Emulator
 //
-//  
-//
-//
 
 #ifndef Timers_hpp
 #define Timers_hpp
