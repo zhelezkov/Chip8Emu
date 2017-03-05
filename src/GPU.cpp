@@ -4,20 +4,19 @@
 //
 
 #include "GPU.hpp"
-#include <iostream>
 
-GPU::GPU(const GPUModes mode) : mode(mode) {
+GPU::GPU() {
     clearScreen();
 }
 
 void GPU::clearScreen()
 {
-    for (int x = 0; x < 128; x++)
-        for (int y = 0; y < 64; y++)
+    for (int x = 0; x < width; x++)
+        for (int y = 0; y < height; y++)
 			gfx[x][y] = 0;
 }
 
-void GPU::setMode(const GPUModes mode) {
+void GPU::setMode(const CHIPMode mode) {
     this->mode = mode;
     width = WIDTH / mode;
     height = HEIGHT / mode;

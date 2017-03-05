@@ -8,17 +8,14 @@
 //#include "CPU.hpp"
 //#include "OpCodes.hpp"
 
-
-CPU* CPU::instance = nullptr;
+Emulator::Emulator() {
+    Memory mem;
+    GPU gpu;
+    TimersManager timers;
+    CPU cpu(STANDART, mem, gpu, timers);
+}
 
 int main() {
-    CPU cpu;
-    CPU::instance = &cpu;
-    const Opcode& c = getOpcode({0xffff});
-    
-        const Opcode& cc = getOpcode({0xffff});
-    
-    const Opcode& ccc = getOpcode({0xffff});
-    printf("Emulator");
+    Emulator emulator;
     return 0;
 }

@@ -6,41 +6,41 @@
 #ifndef CPU_hpp
 #define CPU_hpp
 
-//#include "Memory.hpp"
-//#include "GPU.hpp"
-//#include "Timers.hpp"
+#include "Memory.hpp"
+#include "GPU.hpp"
+#include "TimersManager.hpp"
 //#include "Keyboard.hpp"
+#include "CHIP.h"
 #include "Opcodes.h"
 
-class Opcode;
+#define STACK_SIZE 16
+#define REGISTERS_COUNT 16
 
-class CPU
-{
-
+class CPU {
 private:
-	const Opcode& opcode;
-	unsigned char V[16];
+	unsigned char V[REGISTERS_COUNT];
 	unsigned short I;
 	unsigned short PC;
 	unsigned char SP;
 
-	unsigned short stack[16];
+	unsigned short stack[STACK_SIZE];
 
-	//Memory memory;
-	//GPU gpu;
-	//Timers timer;
+	Memory& memory;
+	GPU& gpu;
+	TimersManager& timersManager;
 	//Keyboard board;
 
-	int mode;						// 0 - chip48, 1 - superChip8
-
+	CHIPMode mode;
+    
+    static CPU* instance;
 public:
-    CPU();
+    CPU(CHIPMode mode, Memory& mem, GPU& gpu, TimersManager& timers);
 	void cycle();
+    //do we need getters??
 	/*const Memory& getMemory();
 	const GPU& getGpu();
 	const Keyboard& getBoard();
 	const Timers& getTimers();*/
-    static CPU* instance;
     static CPU* getInstance() { return CPU::instance; };
 };
 
