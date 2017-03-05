@@ -35,6 +35,7 @@ class Keyboard
 
 public:
 	void init();
+	unsigned char isPressed(unsigned char index);
 };
 
 #endif /* Keyboard_hpp */

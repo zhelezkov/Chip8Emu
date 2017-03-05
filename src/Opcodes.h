@@ -29,14 +29,6 @@ struct OpcodeData {
 #define OP(addr, name, mask, descr, exec) {addr, Opcode(name, mask, descr, exec) }
 #define END_OPS };
 
-#define nnn 000
-#define kk 00
-#define x 0
-#define y 0
-#define n 0
-#define E 0xE
-#define A 0xA
-
 #define INIT_OPS \
 BEGIN_OPS \
     OP(0x0|nnn, "SYS", None, "[Deprecated] Jump to a machine code routine at nnn.", fn_nop), \

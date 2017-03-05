@@ -9,7 +9,7 @@
 #include "Memory.hpp"
 #include "GPU.hpp"
 #include "TimersManager.hpp"
-//#include "Keyboard.hpp"
+#include "Keyboard.hpp"
 #include "CHIP.h"
 #include "Opcodes.h"
 
@@ -28,7 +28,7 @@ private:
 	Memory& memory;
 	GPU& gpu;
 	TimersManager& timersManager;
-	//Keyboard board;
+	Keyboard& board;
 
 	CHIPMode mode;
     
@@ -36,11 +36,26 @@ private:
 public:
     CPU(CHIPMode mode, Memory& mem, GPU& gpu, TimersManager& timers);
 	void cycle();
-    //do we need getters??
-	/*const Memory& getMemory();
-	const GPU& getGpu();
-	const Keyboard& getBoard();
-	const Timers& getTimers();*/
+	Memory& getMemory() const;
+	GPU& getGpu() const;
+	TimersManager& getTimers() const;
+	Keyboard& getBoard() const;
+
+	unsigned char getRegister(unsigned char index) const;
+	void setRegister(unsigned char index, unsigned char val);
+
+	unsigned short getAddrRegister() const;
+	void setAddrRegister(unsigned short val);
+
+	unsigned short getPC() const;
+	void setPC(unsigned short val);
+
+	unsigned char getSP() const;
+	void setSP(unsigned char val);
+
+	unsigned short getStack(unsigned char index) const;
+	unsigned short setStack(unsigned char index, unsigned short val);
+
     static CPU* getInstance() { return CPU::instance; };
 };
 

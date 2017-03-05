@@ -14,7 +14,7 @@ private:
 	unsigned char data[MEM_SIZE];
 
 public:
-	unsigned char operator[](int i);
+	unsigned char& operator[](int i);
 	void clear();
 };
 

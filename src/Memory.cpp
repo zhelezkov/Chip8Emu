@@ -10,7 +10,7 @@ void Memory::clear() {
         data[i] = 0;
 }
 
-unsigned char Memory::operator[](int i) {
+unsigned char& Memory::operator[](int i) {
     if (i < MEM_START || i >= MEM_SIZE) throw "Bad index";
     return data[i];
 }

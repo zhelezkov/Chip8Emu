@@ -27,3 +27,13 @@ unsigned char GPU::operator()(int x, int y) const
 	if (x < 0 || x >= width || y >= height || y < 0) throw "Bad Index";
 	return gfx[x][y];
 }
+
+int GPU::getWidth()
+{
+	return width;
+}
+
+int GPU::getHeight()
+{
+	return height;
+}

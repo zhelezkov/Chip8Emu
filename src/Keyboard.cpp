@@ -15,3 +15,8 @@ void Keyboard::init()
 	//for (int i = 0; i < 50; ++i)
 		//memory[i] = font[i];
 }
+
+unsigned char Keyboard::isPressed(unsigned char index)
+{
+	return key[index];
+}

@@ -4,12 +4,19 @@
 //
 
 #include "Opcode.hpp"
-#include "CPU.hpp"
 #include "Instructions.h"
+
 
 Opcode::Opcode(const char* name, const OpMask mask, const char* description, void (*exec)(const CPU*, const OpcodeData), void (*write)()) : exec(exec), write(write), name(name), mask(mask), description(description) {
 }
 
+#define nnn 000
+#define kk 00
+#define x 0
+#define y 0
+#define n 0
+#define E 0xE
+#define A 0xA
 
 const Opcode& getOpcode(const OpcodeData opcode) {
     INIT_OPS
@@ -39,7 +46,6 @@ const Opcode& getOpcode(const OpcodeData opcode) {
             return ops[0xFFFF];
     }
 };
-
 
 #undef nnn
 #undef kk

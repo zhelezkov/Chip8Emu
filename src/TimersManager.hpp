@@ -16,10 +16,10 @@ public:
     TimersManager();
 	void update();
 	
-	double getSoundTimer();
+	unsigned char getSoundTimer();
 	void setSoundTimer(unsigned char v);
 
-	double getDelayTimer();
+	unsigned char getDelayTimer();
 	void setDelayTimer(unsigned char v);
 };
 

@@ -24,5 +24,8 @@ public:
     CHIPMode getMode() const { return mode; };
 	void clearScreen();
 	unsigned char operator()(int i, int j) const;
+
+	int getWidth();
+	int getHeight();
 };
 #endif /* GPU_hpp */

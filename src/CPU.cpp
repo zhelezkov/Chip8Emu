@@ -18,6 +18,7 @@ CPU::CPU(CHIPMode mode, Memory& mem, GPU& gpu, TimersManager& timers) :memory(me
         stack[i] = 0;
     
     gpu.setMode(mode);
+
 }
 
 void CPU::cycle()
@@ -33,22 +34,77 @@ void CPU::cycle()
 
 }
 
-/*const Memory& CPU::getMemory()
+Memory& CPU::getMemory() const
 {
-	//return memory;
+	return memory;
 }
 
-const GPU& CPU::getGpu()
+GPU& CPU::getGpu() const
 {
-	//return gpu;
+	return gpu;
 }
 
-const Keyboard& CPU::getBoard()
+TimersManager& CPU::getTimers() const
 {
-	//return board;
+	return timersManager;
 }
 
-const Timers& CPU::getTimers()
+Keyboard& CPU::getBoard() const
 {
-	//return timer;
-}*/
+	return board;
+}
+
+unsigned char CPU::getRegister(unsigned char index) const
+{
+	if(index < 0 || index >= REGISTERS_COUNT) throw "Bad index";
+	return V[index];
+}
+
+void CPU::setRegister(unsigned char index, unsigned char val)
+{
+	if (index < 0 || index >= REGISTERS_COUNT) throw "Bad index";
+	V[index] = val;
+}
+
+unsigned short CPU::getAddrRegister() const
+{
+	return I;
+}
+
+void CPU::setAddrRegister(unsigned short val)
+{
+	I = val;
+}
+
+unsigned short CPU::getPC() const
+{
+	return PC;
+}
+
+void CPU::setPC(unsigned short val)
+{
+	PC = val;
+}
+
+unsigned char CPU::getSP() const
+{
+	return SP;
+}
+
+void CPU::setSP(unsigned char val)
+{
+	SP = val;
+}
+
+
+unsigned short CPU::getStack(unsigned char index) const
+{
+	if (index < 0 || index >= STACK_SIZE) throw "Bad index";
+	return stack[index];
+}
+
+unsigned short CPU::setStack(unsigned char index, unsigned short val)
+{
+	if (index < 0 || index >= STACK_SIZE) throw "Bad index";
+	stack[index] = val;
+}
