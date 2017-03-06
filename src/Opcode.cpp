@@ -6,8 +6,7 @@
 #include "Opcode.hpp"
 #include "Instructions.h"
 
-
-Opcode::Opcode(const char* name, const OpMask mask, const char* description, void (*exec)(const CPU*, const OpcodeData), void (*write)()) : exec(exec), write(write), name(name), mask(mask), description(description) {
+Opcode::Opcode(const char* name, const OpMask mask, const char* description, void (*exec)(CPU* const, const OpcodeData), void (*write)()) : exec(exec), write(write), name(name), mask(mask), description(description) {
 }
 
 #define nnn 000

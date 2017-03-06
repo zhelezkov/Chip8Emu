@@ -23,8 +23,8 @@ public:
     void setMode(const CHIPMode mode);
     CHIPMode getMode() const { return mode; };
 	void clearScreen();
-	unsigned char operator()(int i, int j) const;
-
+	byte operator()(const int i, const int j) const;
+    
 	int getWidth();
 	int getHeight();
 };

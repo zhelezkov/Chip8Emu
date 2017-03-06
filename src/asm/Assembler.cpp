@@ -4,3 +4,7 @@
 //
 
 #include "Assembler.hpp"
+
+int main() {
+    return 0;
+}

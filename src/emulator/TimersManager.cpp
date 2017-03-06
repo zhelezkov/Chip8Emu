@@ -17,7 +17,9 @@ void TimersManager::update()
 
 	if (sound_timer > 0)
 	{
-		if (sound_timer == 1) std::cout << "BEEP!" << std::endl;
+        if (sound_timer == 1) {
+            //PLAY BEEP SOUND   
+        }
 		sound_timer--;
 	}
 }

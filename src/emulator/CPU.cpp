@@ -7,7 +7,7 @@
 
 CPU* CPU::instance = nullptr;
 
-CPU::CPU(CHIPMode mode, Memory& mem, GPU& gpu, TimersManager& timers) :memory(mem), gpu(gpu), timersManager(timers), mode(mode){
+CPU::CPU(CHIPMode mode, Memory& mem, GPU& gpu, TimersManager& timers, Keyboard& keyboard) :memory(mem), gpu(gpu), timersManager(timers), keyboard(keyboard), mode(mode){
     instance = this;
     PC = MEM_START;
     I = 0;
@@ -18,12 +18,11 @@ CPU::CPU(CHIPMode mode, Memory& mem, GPU& gpu, TimersManager& timers) :memory(me
         stack[i] = 0;
     
     gpu.setMode(mode);
-
 }
 
 void CPU::cycle()
 {
-    const unsigned short rawCode = memory[PC] | memory[PC + 1];
+    const ushort rawCode = memory[PC] | memory[PC + 1];
 	PC += 2;
 
 	const Opcode& opcode = getOpcode(rawCode);
@@ -49,61 +48,61 @@ TimersManager& CPU::getTimers() const
 	return timersManager;
 }
 
-Keyboard& CPU::getBoard() const
+Keyboard& CPU::getKeyboard() const
 {
-	return board;
+	return keyboard;
 }
 
-unsigned char CPU::getRegister(unsigned char index) const
+byte CPU::getRegister(byte index) const
 {
 	if(index < 0 || index >= REGISTERS_COUNT) throw "Bad index";
 	return V[index];
 }
 
-void CPU::setRegister(unsigned char index, unsigned char val)
+void CPU::setRegister(byte index, byte val)
 {
 	if (index < 0 || index >= REGISTERS_COUNT) throw "Bad index";
 	V[index] = val;
 }
 
-unsigned short CPU::getAddrRegister() const
+ushort CPU::getAddrRegister() const
 {
 	return I;
 }
 
-void CPU::setAddrRegister(unsigned short val)
+void CPU::setAddrRegister(ushort val)
 {
 	I = val;
 }
 
-unsigned short CPU::getPC() const
+ushort CPU::getPC() const
 {
 	return PC;
 }
 
-void CPU::setPC(unsigned short val)
+void CPU::setPC(ushort val)
 {
 	PC = val;
 }
 
-unsigned char CPU::getSP() const
+byte CPU::getSP() const
 {
 	return SP;
 }
 
-void CPU::setSP(unsigned char val)
+void CPU::setSP(byte val)
 {
 	SP = val;
 }
 
 
-unsigned short CPU::getStack(unsigned char index) const
+ushort CPU::getStack(byte index) const
 {
 	if (index < 0 || index >= STACK_SIZE) throw "Bad index";
 	return stack[index];
 }
 
-unsigned short CPU::setStack(unsigned char index, unsigned short val)
+ushort CPU::setStack(byte index, ushort val)
 {
 	if (index < 0 || index >= STACK_SIZE) throw "Bad index";
 	stack[index] = val;

@@ -6,8 +6,8 @@
 #ifndef CHIP_h
 #define CHIP_h
 
-typedef unsigned short u_short;
-typedef unsigned char byte;
+using ushort = unsigned short;
+using byte = unsigned char;
 
 enum CHIPMode {
     STANDART = 1,

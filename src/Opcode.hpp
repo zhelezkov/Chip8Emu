@@ -34,9 +34,9 @@ public:
         
     }
     
-    Opcode(const char* name, const OpMask mask, const char* description, void (*exec)(const CPU*, const OpcodeData) = nullptr, void (*write)() = nullptr);
+    Opcode(const char* name, const OpMask mask, const char* description, void (*exec)(CPU* const, const OpcodeData) = nullptr, void (*write)() = nullptr);
     
-    void (*exec)(const CPU*, const OpcodeData);
+    void (*exec)(CPU* const, const OpcodeData);
     void (*write)();
 private:
     const char* name;
