@@ -16,6 +16,8 @@ private:
 	byte data[MEM_SIZE];
 
 public:
+    void reset();
+    
 	byte& operator[](int i);
 	void clear();
 };

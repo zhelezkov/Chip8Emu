@@ -5,27 +5,31 @@
 
 #include "CPU.hpp"
 
-CPU* CPU::instance = nullptr;
-
-CPU::CPU(CHIPMode mode, Memory& mem, GPU& gpu, TimersManager& timers, Keyboard& keyboard) :memory(mem), gpu(gpu), timersManager(timers), keyboard(keyboard), mode(mode){
-    instance = this;
-    PC = MEM_START;
-    I = 0;
-    SP = 0;
-    for (int i = 0; i < REGISTERS_COUNT; i++)
-        V[i] = 0;
-    for (int i = 0; i < STACK_SIZE; i++)
-        stack[i] = 0;
+CPU::CPU(Memory& mem, GPU& gpu, TimersManager& timers, Keyboard& keyboard) :memory(mem), gpu(gpu), timersManager(timers), keyboard(keyboard) {
     
-	for (int i = 0; i < RPL_COUNT; i++)
-		RPL_flags[i] = 0;
-
-    gpu.setMode(mode);
+    reset();
 
 	exit = false;
 }
 
-void CPU::cycle()
+void CPU::reset() {
+    PC = MEM_START;
+    I = 0;
+    SP = 0;
+    for (int i = 0; i < V_REGISTERS_COUNT; i++)
+        V[i] = 0;
+    for (int i = 0; i < STACK_SIZE; i++)
+        stack[i] = 0;
+    for (int i = 0; i < R_REGISTERS_COUNT; i++)
+        R[i] = 0;
+    
+    gpu.reset();
+    memory.reset();
+    timersManager.reset();
+    keyboard.reset();
+}
+
+void CPU::tick()
 {
     const ushort rawCode = memory[PC] | memory[PC + 1];
 	PC += 2;
@@ -58,15 +62,15 @@ Keyboard& CPU::getKeyboard() const
 	return keyboard;
 }
 
-byte CPU::getRegister(byte index) const
+byte CPU::getRegisterV(byte index) const
 {
-	if(index < 0 || index >= REGISTERS_COUNT) throw "Bad index";
+	if(index < 0 || index >= V_REGISTERS_COUNT) throw "Bad index";
 	return V[index];
 }
 
-void CPU::setRegister(byte index, byte val)
+void CPU::setRegisterV(byte index, byte val)
 {
-	if (index < 0 || index >= REGISTERS_COUNT) throw "Bad index";
+	if (index < 0 || index >= V_REGISTERS_COUNT) throw "Bad index";
 	V[index] = val;
 }
 
@@ -113,14 +117,14 @@ void CPU::setStack(byte index, ushort val)
 	stack[index] = val;
 }
 
-ushort CPU::getRPL(byte index) const
+ushort CPU::getRegisterR(byte index) const
 {
-	if (index < 0 || index >= RPL_COUNT) throw "Bad index";
-	return RPL_flags[index];
+	if (index < 0 || index >= R_REGISTERS_COUNT) throw "Bad index";
+	return R[index];
 }
 
-void CPU::setRPL(byte index, byte val)
+void CPU::setRegisterR(byte index, byte val)
 {
-	if (index < 0 || index >= RPL_COUNT) throw "Bad index";
-	RPL_flags[index] = val;
+	if (index < 0 || index >= R_REGISTERS_COUNT) throw "Bad index";
+	R[index] = val;
 }

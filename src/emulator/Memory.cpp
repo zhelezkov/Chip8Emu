@@ -14,3 +14,7 @@ byte& Memory::operator[](int i) {
     if (i < MEM_START || i >= MEM_SIZE) throw "Bad index";
     return data[i];
 }
+
+void Memory::reset() {
+    clear();
+}

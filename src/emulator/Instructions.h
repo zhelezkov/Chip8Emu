@@ -38,7 +38,7 @@ void fn_0x00BN(CPU* const cpu, const OpcodeData data)
 	byte height = gpu.getHeight();
 	byte width = gpu.getWidth();
 
-	N /= gpu.getMode();
+	N /= gpu.getResolutionMode();
 	for (byte y = 0; y < height - N; y++)
 		for (byte x = 0; x < width; x++)
 			gpu.gfx[x][y] = gpu.gfx[x][y + N];
@@ -59,7 +59,7 @@ void fn_0x00CN(CPU* const cpu, const OpcodeData data)
 	byte height = gpu.getHeight();
 	byte width = gpu.getWidth();
 
-	N /= gpu.getMode();
+	N /= gpu.getResolutionMode();
 	for (byte y = height - 1; y >= N; y--)
 		for (byte x = 0; x < width; x++)
 			gpu.gfx[x][y] = gpu.gfx[x][y - N];
@@ -78,7 +78,7 @@ void fn_0x00FB(CPU* const cpu, const OpcodeData data)
 	GPU& gpu = cpu->getGpu();
 	byte height = gpu.getHeight();
 	byte width = gpu.getWidth();
-	byte N = 4 / gpu.getMode();
+	byte N = 4 / gpu.getResolutionMode();
 
 	for (byte y = 0; y < height; y++)
 	{
@@ -99,7 +99,7 @@ void fn_0x00FC(CPU* const cpu, const OpcodeData data)
 	GPU& gpu = cpu->getGpu();
 	byte height = gpu.getHeight();
 	byte width = gpu.getWidth();
-	byte N = 4 / gpu.getMode();
+	byte N = 4 / gpu.getResolutionMode();
 
 	for (byte y = 0; y < height; y++)
 	{
@@ -119,12 +119,12 @@ void fn_0x00FD(CPU* const cpu, const OpcodeData data) // 00FD - Quit the emulato
 
 void fn_0x00FE(CPU* const cpu, const OpcodeData data) // 00FE -  enable extended screen mode *CHIP48*
 {
-	cpu->getGpu().setMode(CHIPMode::STANDART);
+    cpu->getGpu().setResolutionMode(ResolutionMode::LOW);
 }
 
 void fn_0x00FF(CPU* const cpu, const OpcodeData data) // 00FE -  enable extended screen mode *SUPER CHIP*
 {
-	cpu->getGpu().setMode(CHIPMode::SUPER);
+    cpu->getGpu().setResolutionMode(ResolutionMode::HIGH);
 }
 
 void fn_0x1nnn(CPU* const cpu, const OpcodeData data) // 1NNN - jump to addr
@@ -150,7 +150,7 @@ void fn_0x3xkk(CPU* const cpu, const OpcodeData data) // 3XKK - skip next instru
 {
 //	if (V[((opcode & 0x0F00) >> 8)] == (opcode & 0x00FF)) PC += 2;
 
-	byte Vx = cpu->getRegister(op(0, data.n2, 0, 0));
+	byte Vx = cpu->getRegisterV(op(0, data.n2, 0, 0));
 
 	if (Vx == op(0, 0, data.n3, data.n4)) 
 		cpu->setPC(cpu->getPC() + 2);
@@ -160,7 +160,7 @@ void fn_0x4xkk(CPU* const cpu, const OpcodeData data) // 4XKK - skip next instru
 {
 //	if (V[((opcode & 0x0F00) >> 8)] != (opcode & 0x00FF)) PC += 2;
 
-	byte Vx = cpu->getRegister(op(0, data.n2, 0, 0));
+	byte Vx = cpu->getRegisterV(op(0, data.n2, 0, 0));
 
 	if (Vx != op(0, 0, data.n3, data.n4))
 		cpu->setPC(cpu->getPC() + 2);
@@ -170,8 +170,8 @@ void fn_0x5xy0(CPU* const cpu, const OpcodeData data) // 5XY0 - skip next instru
 {
 //	if (V[((opcode & 0x0F00) >> 8)] == V[((opcode & 0x00F0) >> 4)]) PC += 2;
 
-	byte Vx = cpu->getRegister(op(0, data.n2, 0, 0));
-	byte Vy = cpu->getRegister(op(0, 0, data.n3, 0));
+	byte Vx = cpu->getRegisterV(op(0, data.n2, 0, 0));
+	byte Vy = cpu->getRegisterV(op(0, 0, data.n3, 0));
 
 	if (Vx == Vy) cpu->setPC(cpu->getPC() + 2);
 }
@@ -183,7 +183,7 @@ void fn_0x6xkk(CPU* const cpu, const OpcodeData data) // 6XKK - set VX = Byte
 	byte index = op(0, data.n1, 0, 0);
 	byte val = op(0, 0, data.n3, data.n4);
 
-	cpu->setRegister(index, val);
+	cpu->setRegisterV(index, val);
 }
 
 void fn_0x7xkk(CPU* const cpu, const OpcodeData data) // 7XKK - set VX = VX + Byte
@@ -191,8 +191,8 @@ void fn_0x7xkk(CPU* const cpu, const OpcodeData data) // 7XKK - set VX = VX + By
 //	V[((opcode & 0x0F00) >> 8)] += opcode & 0x00FF;
 
 	byte index = op(0, data.n1, 0, 0);
-	byte val = op(0, 0, data.n3, data.n4) + cpu->getRegister(index);
-	cpu->setRegister(index, val);
+	byte val = op(0, 0, data.n3, data.n4) + cpu->getRegisterV(index);
+	cpu->setRegisterV(index, val);
 }
 
 void fn_0x8xy0(CPU* const cpu, const OpcodeData data) // 8XY0 - set VX = VY
@@ -201,9 +201,9 @@ void fn_0x8xy0(CPU* const cpu, const OpcodeData data) // 8XY0 - set VX = VY
 
 	byte index_X = op(0, data.n1, 0, 0);
 	byte index_Y = op(0, 0, data.n3, 0);
-	byte val_Y = cpu->getRegister(index_Y);
+	byte val_Y = cpu->getRegisterV(index_Y);
 
-	cpu->setRegister(index_X, val_Y);
+	cpu->setRegisterV(index_X, val_Y);
 }
 
 void fn_0x8xy1(CPU* const cpu, const OpcodeData data) // 8XY1 - set VX = VX | VY
@@ -211,12 +211,12 @@ void fn_0x8xy1(CPU* const cpu, const OpcodeData data) // 8XY1 - set VX = VX | VY
 //	V[((opcode & 0x0F00) >> 8)] |= V[((opcode & 0x00F0) >> 4)];
 
 	byte index_X = op(0, data.n1, 0, 0);
-	byte val_X = cpu->getRegister(index_X);
+	byte val_X = cpu->getRegisterV(index_X);
 
 	byte index_Y = op(0, 0, data.n3, 0);
-	byte val_Y = cpu->getRegister(index_Y);
+	byte val_Y = cpu->getRegisterV(index_Y);
 
-	cpu->setRegister(index_X, val_X | val_Y);
+	cpu->setRegisterV(index_X, val_X | val_Y);
 }
 
 void fn_0x8xy2(CPU* const cpu, const OpcodeData data) // 8XY2 - set VX = VX & VY
@@ -224,12 +224,12 @@ void fn_0x8xy2(CPU* const cpu, const OpcodeData data) // 8XY2 - set VX = VX & VY
 //	V[((opcode & 0x0F00) >> 8)] &= V[((opcode & 0x00F0) >> 4)];
 
 	byte index_X = op(0, data.n1, 0, 0);
-	byte val_X = cpu->getRegister(index_X);
+	byte val_X = cpu->getRegisterV(index_X);
 
 	byte index_Y = op(0, 0, data.n3, 0);
-	byte val_Y = cpu->getRegister(index_Y);
+	byte val_Y = cpu->getRegisterV(index_Y);
 
-	cpu->setRegister(index_X, val_X & val_Y);
+	cpu->setRegisterV(index_X, val_X & val_Y);
 }
 
 void fn_0x8xy3(CPU* const cpu, const OpcodeData data) // 8XY3 - set VX = VX ^ VY
@@ -237,12 +237,12 @@ void fn_0x8xy3(CPU* const cpu, const OpcodeData data) // 8XY3 - set VX = VX ^ VY
 //	V[((opcode & 0x0F00) >> 8)] ^= V[((opcode & 0x00F0) >> 4)];
 
 	byte index_X = op(0, data.n1, 0, 0);
-	byte val_X = cpu->getRegister(index_X);
+	byte val_X = cpu->getRegisterV(index_X);
 
 	byte index_Y = op(0, 0, data.n3, 0);
-	byte val_Y = cpu->getRegister(index_Y);
+	byte val_Y = cpu->getRegisterV(index_Y);
 
-	cpu->setRegister(index_X, val_X ^ val_Y);
+	cpu->setRegisterV(index_X, val_X ^ val_Y);
 }
 
 void fn_0x8xy4(CPU* const cpu, const OpcodeData data) // 8XY4 - set VX = VX + VY, VF = carry
@@ -258,19 +258,19 @@ void fn_0x8xy4(CPU* const cpu, const OpcodeData data) // 8XY4 - set VX = VX + VY
 //	V[((opcode & 0x0F00) >> 8)] = i;
 
 	byte index_X = op(0, data.n1, 0, 0);
-	byte val_X = cpu->getRegister(index_X);
+	byte val_X = cpu->getRegisterV(index_X);
 
 	byte index_Y = op(0, 0, data.n3, 0);
-	byte val_Y = cpu->getRegister(index_Y);
+	byte val_Y = cpu->getRegisterV(index_Y);
 
 	int i = (int)val_X + (int)val_Y;
 
 	if (i > 255)
-		cpu->setRegister(0xF, 1);
+		cpu->setRegisterV(0xF, 1);
 	else
-		cpu->setRegister(0xF, 0);
+		cpu->setRegisterV(0xF, 0);
 
-	cpu->setRegister(index_X, i); // byte to int ? check
+	cpu->setRegisterV(index_X, i); // byte to int ? check
 }
 
 void fn_0x8xy5(CPU* const cpu, const OpcodeData data) // 8XY5 - set VX = VX - VY, VF = NOT borrow
@@ -283,17 +283,17 @@ void fn_0x8xy5(CPU* const cpu, const OpcodeData data) // 8XY5 - set VX = VX - VY
 //	V[((opcode & 0x0F00) >> 8)] -= V[((opcode & 0x00F0) >> 4)]; //Vx - Vy
 
 	byte index_X = op(0, data.n1, 0, 0);
-	byte val_X = cpu->getRegister(index_X);
+	byte val_X = cpu->getRegisterV(index_X);
 
 	byte index_Y = op(0, 0, data.n3, 0);
-	byte val_Y = cpu->getRegister(index_Y);
+	byte val_Y = cpu->getRegisterV(index_Y);
 
 	if (val_X > val_Y)
-		cpu->setRegister(0xF, 1);
+		cpu->setRegisterV(0xF, 1);
 	else
-		cpu->setRegister(0xF, 0);
+		cpu->setRegisterV(0xF, 0);
 
-	cpu->setRegister(index_X, val_X - val_Y);
+	cpu->setRegisterV(index_X, val_X - val_Y);
 }
 
 void fn_0x8xy6(CPU* const cpu, const OpcodeData data) // 8XY6 - set VX = VX >> 1, VF = least-significant bit
@@ -302,10 +302,10 @@ void fn_0x8xy6(CPU* const cpu, const OpcodeData data) // 8XY6 - set VX = VX >> 1
 //	V[(opcode & 0x0F00) >> 8] >>= 1;
 
 	byte index_X = op(0, data.n1, 0, 0);
-	byte val_X = cpu->getRegister(index_X);
+	byte val_X = cpu->getRegisterV(index_X);
 
-	cpu->setRegister(0xF, val_X & 0x1);
-	cpu->setRegister(index_X, val_X >> 1);
+	cpu->setRegisterV(0xF, val_X & 0x1);
+	cpu->setRegisterV(index_X, val_X >> 1);
 }
 
 void fn_0x8xy7(CPU* const cpu, const OpcodeData data) // 8XY7 - set VX = VY - VX, VF = NOT borrow
@@ -318,17 +318,17 @@ void fn_0x8xy7(CPU* const cpu, const OpcodeData data) // 8XY7 - set VX = VY - VX
 //	V[((opcode & 0x0F00) >> 8)] = V[((opcode & 0x00F0) >> 4)] - V[((opcode & 0x0F00) >> 8)]; //Vy - Vx
 
 	byte index_X = op(0, data.n1, 0, 0);
-	byte val_X = cpu->getRegister(index_X);
+	byte val_X = cpu->getRegisterV(index_X);
 
 	byte index_Y = op(0, 0, data.n3, 0);
-	byte val_Y = cpu->getRegister(index_Y);
+	byte val_Y = cpu->getRegisterV(index_Y);
 
 	if (val_Y > val_X)
-		cpu->setRegister(0xF, 1);
+		cpu->setRegisterV(0xF, 1);
 	else
-		cpu->setRegister(0xF, 0);
+		cpu->setRegisterV(0xF, 0);
 
-	cpu->setRegister(index_X, val_Y - val_X);
+	cpu->setRegisterV(index_X, val_Y - val_X);
 }
 
 void fn_0x8xyE(CPU* const cpu, const OpcodeData data) // 8XYE - set VX = VX << 1, VF = most-significant bit
@@ -337,18 +337,18 @@ void fn_0x8xyE(CPU* const cpu, const OpcodeData data) // 8XYE - set VX = VX << 1
 //	V[((opcode & 0x0F00) >> 8)] <<= 1;
 
 	byte index_X = op(0, data.n1, 0, 0);
-	byte val_X = cpu->getRegister(index_X);
+	byte val_X = cpu->getRegisterV(index_X);
 
-	cpu->setRegister(0xF, (val_X >> 7) & 0x1);
-	cpu->setRegister(index_X, val_X << 1);
+	cpu->setRegisterV(0xF, (val_X >> 7) & 0x1);
+	cpu->setRegisterV(index_X, val_X << 1);
 }
 
 void fn_0x9xy0(CPU* const cpu, const OpcodeData data) // 9XY0 - skip next instruction if VX != VY
 {
 //	if (V[((opcode & 0x0F00) >> 8)] != V[((opcode & 0x00F0) >> 4)]) PC += 2;
 
-	byte Vx = cpu->getRegister(op(0, data.n2, 0, 0));
-	byte Vy = cpu->getRegister(op(0, 0, data.n3, 0));
+	byte Vx = cpu->getRegisterV(op(0, data.n2, 0, 0));
+	byte Vy = cpu->getRegisterV(op(0, 0, data.n3, 0));
 
 	if (Vx != Vy) cpu->setPC(cpu->getPC() + 2);
 }
@@ -365,7 +365,7 @@ void fn_0xBnnn(CPU* const cpu, const OpcodeData data) // BNNN - jump to Addr + V
 {
 //	PC = (opcode & 0x0FFF) + V[0];
 	
-	ushort newAddr = op(0, data.n2, data.n3, data.n4) + cpu->getRegister(0x0);
+	ushort newAddr = op(0, data.n2, data.n3, data.n4) + cpu->getRegisterV(0x0);
 	cpu->setPC(newAddr);
 }
 
@@ -400,8 +400,8 @@ void fn_0xDxyn(CPU* const cpu, const OpcodeData data) // DXYN - Draw sprite
 //		}
 //	}
 
-	ushort x = cpu->getRegister(data.n2);
-	ushort y = cpu->getRegister(data.n3);
+	ushort x = cpu->getRegisterV(data.n2);
+	ushort y = cpu->getRegisterV(data.n3);
 	ushort n = data.n4;
 	ushort I = cpu->getAddrRegister();
 	ushort pixel;
@@ -409,7 +409,7 @@ void fn_0xDxyn(CPU* const cpu, const OpcodeData data) // DXYN - Draw sprite
 	GPU& gpu = cpu->getGpu();
 	Memory& memory = cpu->getMemory();
 
-	cpu->setRegister(0xF, 0);
+	cpu->setRegisterV(0xF, 0);
 	if (n == 0) // 0xDXY0 - Draw a 16x16 sprite at I to VX, VY (8x16 in low res mode) *SUPER CHIP* 
 	{
 		for (byte yline = 0; yline < 16; yline++)
@@ -420,7 +420,7 @@ void fn_0xDxyn(CPU* const cpu, const OpcodeData data) // DXYN - Draw sprite
 				if ((pixel & (0x80 >> xline)) != 0)
 				{
 					if (gpu.gfx[(x + xline) % gpu.getWidth()][(y + yline) % gpu.getHeight()] == 1)
-						cpu->setRegister(0xF, 1);
+						cpu->setRegisterV(0xF, 1);
 
 					gpu.gfx[(x + xline) % gpu.getWidth()][(y + yline) % gpu.getHeight()] ^= 1;
 				}
@@ -432,7 +432,7 @@ void fn_0xDxyn(CPU* const cpu, const OpcodeData data) // DXYN - Draw sprite
 				if ((pixel & (0x80 >> xline)) != 0)
 				{
 					if (gpu.gfx[(x + xline + 8) % gpu.getWidth()][(y + yline) % gpu.getHeight()] == 1)
-						cpu->setRegister(0xF, 1);
+						cpu->setRegisterV(0xF, 1);
 
 					gpu.gfx[(x + xline + 8) % gpu.getWidth()][(y + yline) % gpu.getHeight()] ^= 1;
 				}
@@ -449,7 +449,7 @@ void fn_0xDxyn(CPU* const cpu, const OpcodeData data) // DXYN - Draw sprite
 				if ((pixel & (0x80 >> xline)) != 0)
 				{
 					if(gpu.gfx[(x + xline) % gpu.getWidth()][(y + yline) % gpu.getHeight()] == 1)
-						cpu->setRegister(0xF, 1);
+						cpu->setRegisterV(0xF, 1);
 
 					gpu.gfx[(x + xline) % gpu.getWidth()][(y + yline) % gpu.getHeight()] ^= 1;
 				}
@@ -464,7 +464,7 @@ void fn_0xEx9E(CPU* const cpu, const OpcodeData data) // EX9E - skip next instru
 //		PC += 2;
 
 	byte index_X = op(0, data.n1, 0, 0);
-	byte val_X = cpu->getRegister(index_X);
+	byte val_X = cpu->getRegisterV(index_X);
 
 	if (cpu->getKeyboard().isPressed(val_X) == 1)
 		cpu->setPC(cpu->getPC() + 2);
@@ -476,7 +476,7 @@ void fn_0xExA1(CPU* const cpu, const OpcodeData data) // EXA1 - skip next instru
 //		PC += 2;
 
 	byte index_X = op(0, data.n1, 0, 0);
-	byte val_X = cpu->getRegister(index_X);
+	byte val_X = cpu->getRegisterV(index_X);
 
 	if (cpu->getKeyboard().isPressed(val_X) == 0)
 		cpu->setPC(cpu->getPC() + 2);
@@ -488,7 +488,7 @@ void fn_0xFx07(CPU* const cpu, const OpcodeData data) // FX07 - set VX = delayti
 
 	byte index_X = op(0, data.n1, 0, 0);
 
-	cpu->setRegister(index_X, cpu->getTimers().getDelayTimer());
+	cpu->setRegisterV(index_X, cpu->getTimers().getDelayTimer());
 }
 
 void fn_0xFx0A(CPU* const cpu, const OpcodeData data) // FX0A - set VX = key, wait for keypress
@@ -510,7 +510,7 @@ void fn_0xFx0A(CPU* const cpu, const OpcodeData data) // FX0A - set VX = key, wa
 		if (cpu->getKeyboard().isPressed(n) == 1)
 		{
 			byte index_X = op(0, data.n1, 0, 0);
-			cpu->setRegister(index_X, n);
+			cpu->setRegisterV(index_X, n);
 
 			cpu->setPC(cpu->getPC() + 2);
 			break;
@@ -523,7 +523,7 @@ void fn_0xFx15(CPU* const cpu, const OpcodeData data) // FX15 - set delaytimer =
 //	delay_timer = V[((opcode & 0x0F00) >> 8)];
 
 	byte index_X = op(0, data.n1, 0, 0);
-	byte val_X = cpu->getRegister(index_X);
+	byte val_X = cpu->getRegisterV(index_X);
 
 	cpu->getTimers().setDelayTimer(val_X);
 }
@@ -533,7 +533,7 @@ void fn_0xFx18(CPU* const cpu, const OpcodeData data) // FX18 - set soundtimer =
 //	sound_timer = V[((opcode & 0x0F00) >> 8)];
 
 	byte index_X = op(0, data.n1, 0, 0);
-	byte val_X = cpu->getRegister(index_X);
+	byte val_X = cpu->getRegisterV(index_X);
 
 	cpu->getTimers().setSoundTimer(val_X);
 }
@@ -546,12 +546,12 @@ void fn_0xFx1E(CPU* const cpu, const OpcodeData data) // FX1E - set I = I + VX; 
 //		V[0xF] = 0;
 
 	byte index_X = op(0, data.n1, 0, 0);
-	ushort i = cpu->getAddrRegister() + cpu->getRegister(index_X);
+	ushort i = cpu->getAddrRegister() + cpu->getRegisterV(index_X);
 
 	if (i > 0xFFF)
-		cpu->setRegister(0xF, 1);
+		cpu->setRegisterV(0xF, 1);
 	else
-		cpu->setRegister(0xF, 0);
+		cpu->setRegisterV(0xF, 0);
 
 	cpu->setAddrRegister(i);
 }
@@ -561,7 +561,7 @@ void fn_0xFx29(CPU* const cpu, const OpcodeData data) // FX29 - point I to 5 byt
 //	I = V[((opcode & 0x0F00) >> 8)] * 0x5;
 
 	byte index_X = op(0, data.n1, 0, 0);
-	ushort Vx = cpu->getRegister(index_X);
+	ushort Vx = cpu->getRegisterV(index_X);
 
 	cpu->setAddrRegister(Vx * 0x5);
 }
@@ -574,7 +574,7 @@ void fn_0xFx33(CPU* const cpu, const OpcodeData data) // FX33 - store BCD of VX 
 
 	ushort I = cpu->getAddrRegister();
 	byte index_X = op(0, data.n2, 0, 0);
-	byte Vx = cpu->getRegister(index_X);
+	byte Vx = cpu->getRegisterV(index_X);
 
 	cpu->getMemory()[I] = Vx  / 100;
 	cpu->getMemory()[I + 1] = (Vx / 10) % 10;
@@ -590,7 +590,7 @@ void fn_0xFx55(CPU* const cpu, const OpcodeData data) // FX55 - store V0 .. VX i
 	ushort I = cpu->getAddrRegister();
 
 	for (byte i = 0; i <= index_X; i++)
-		cpu->getMemory()[I + i] = cpu->getRegister(i);
+		cpu->getMemory()[I + i] = cpu->getRegisterV(i);
 }
 
 void fn_0xFx65(CPU* const cpu, const OpcodeData data) // FX65 - read V0 ..VX from[I] ..[I + X]
@@ -602,13 +602,13 @@ void fn_0xFx65(CPU* const cpu, const OpcodeData data) // FX65 - read V0 ..VX fro
 	ushort I = cpu->getAddrRegister();
 
 	for (byte i = 0; i <= index_X; i++)
-		cpu->setRegister(i, cpu->getMemory()[I + i]);
+		cpu->setRegisterV(i, cpu->getMemory()[I + i]);
 }
 
 void fn_0xFx30(CPU* const cpu, const OpcodeData data) // FX30 - point I to 10 byte numeric sprite for value in VX *SUPER CHIP*
 {
 	byte index_X = op(0, data.n2, 0, 0);
-	byte Vx = cpu->getRegister(index_X);
+	byte Vx = cpu->getRegisterV(index_X);
 
 	cpu->setAddrRegister(Vx * 10 + 80);
 }
@@ -618,7 +618,7 @@ void fn_0xFx75(CPU* const cpu, const OpcodeData data) // FX75 - save V0...VX (X<
 	byte index_X = op(0, data.n2, 0, 0);
 
 	for (byte i = 0; i <= index_X; i++)
-		cpu->setRPL(i, cpu->getRegister(i));
+		cpu->setRegisterR(i, cpu->getRegisterV(i));
 }
 
 void fn_0xFx85(CPU* const cpu, const OpcodeData data) // FX85 - load V0...VX (X<8) from the HP48 flags *SUPER CHIP*
@@ -626,7 +626,7 @@ void fn_0xFx85(CPU* const cpu, const OpcodeData data) // FX85 - load V0...VX (X<
 	byte index_X = op(0, data.n2, 0, 0);
 
 	for (byte i = 0; i <= index_X; i++)
-		cpu->setRegister(i, cpu->getRPL(i));
+		cpu->setRegisterV(i, cpu->getRegisterR(i));
 }
 
 #endif /* Instructions_h */

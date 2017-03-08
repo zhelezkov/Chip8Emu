@@ -6,40 +6,43 @@
 #include "TimersManager.hpp"
 
 TimersManager::TimersManager() {
-    delay_timer = 0;
-    sound_timer = 0;
+}
+
+void TimersManager::reset() {
+    setDelayTimer(0);
+    setSoundTimer(0);
 }
 
 void TimersManager::update()
 {
-	if (delay_timer > 0)
-		delay_timer--;
+	if (delayTimer > 0)
+		delayTimer--;
 
-	if (sound_timer > 0)
+	if (soundTimer > 0)
 	{
-        if (sound_timer == 1) {
+        if (soundTimer == 1) {
             //PLAY BEEP SOUND   
         }
-		sound_timer--;
+		soundTimer--;
 	}
 }
 
 void TimersManager::setDelayTimer(unsigned char v)
 {
-	delay_timer = v;
+	delayTimer = v;
 }
 
 unsigned char TimersManager::getDelayTimer()
 {
-	return delay_timer;
+	return delayTimer;
 }
 
 void TimersManager::setSoundTimer(unsigned char v)
 {
-	sound_timer = v;
+	soundTimer = v;
 }
 
 unsigned char TimersManager::getSoundTimer()
 {
-	return sound_timer;
+	return soundTimer;
 }

@@ -10,10 +10,12 @@
 
 class TimersManager
 {
-	byte delay_timer;
-	byte sound_timer;
+	byte delayTimer;
+	byte soundTimer;
 public:
     TimersManager();
+    void reset();
+    
 	void update();
 	
     byte getSoundTimer();

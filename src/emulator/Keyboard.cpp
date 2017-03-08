@@ -5,7 +5,7 @@
 
 #include "Keyboard.hpp"
 
-void Keyboard::init()
+void Keyboard::reset()
 {
 	// reset the keys
 	for (int i = 0; i < 16; i++)

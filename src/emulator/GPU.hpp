@@ -11,17 +11,22 @@
 #define WIDTH 128
 #define HEIGHT 64
 
+enum ResolutionMode {
+    LOW = 1,
+    HIGH = 2
+};
+
 class GPU
 {
 private:
-    CHIPMode mode;
+    ResolutionMode resMode;
     int width, height;
     
 public:
-    GPU();
-    void setMode(const CHIPMode mode);
-    CHIPMode getMode() const { return mode; };
+    void setResolutionMode(const ResolutionMode mode);
+    ResolutionMode getResolutionMode() const { return resMode; };
 	void clearScreen();
+    void reset();
 	//byte operator()(const int i, const int j) const;
     
 	int getWidth();

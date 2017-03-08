@@ -13,7 +13,7 @@ Emulator::Emulator() {
     GPU gpu;
     TimersManager timers;
     Keyboard keyboard;
-    CPU cpu(STANDART, mem, gpu, timers, keyboard);
+    CPU cpu(mem, gpu, timers, keyboard);
     
     printf("EMULATOR STARTED");
 }

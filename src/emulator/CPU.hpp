@@ -14,39 +14,40 @@
 #include "Opcodes.h"
 
 #define STACK_SIZE 16
-#define REGISTERS_COUNT 16
-#define RPL_COUNT 8
+#define V_REGISTERS_COUNT 16
+#define R_REGISTERS_COUNT 8
 
 class CPU {
 private:
-	byte V[REGISTERS_COUNT];
+	byte V[V_REGISTERS_COUNT];
+    byte R[R_REGISTERS_COUNT];
+    
 	ushort I;
 	ushort PC;
 	byte SP;
 
 	ushort stack[STACK_SIZE];
-	byte RPL_flags[RPL_COUNT];
 
 	Memory& memory;
 	GPU& gpu;
 	TimersManager& timersManager;
 	Keyboard& keyboard;
-
-	CHIPMode mode;
     
-    static CPU* instance;
 public:	
 	bool exit;
 
-    CPU(CHIPMode mode, Memory& mem, GPU& gpu, TimersManager& timers, Keyboard& keyboard);
-	void cycle();
+    CPU(Memory& mem, GPU& gpu, TimersManager& timers, Keyboard& keyboard);
+    void reset();
+    
+	void tick();
+    
 	Memory& getMemory() const;
 	GPU& getGpu() const;
 	TimersManager& getTimers() const;
 	Keyboard& getKeyboard() const;
 
-	byte getRegister(byte index) const;
-	void setRegister(byte index, byte val);
+	byte getRegisterV(byte index) const;
+	void setRegisterV(byte index, byte val);
 
 	ushort getAddrRegister() const;
 	void setAddrRegister(ushort val);
@@ -60,10 +61,8 @@ public:
 	ushort getStack(byte index) const;
 	void setStack(byte index, ushort val);
 
-	ushort getRPL(byte index) const;
-	void setRPL(byte index, byte val);
-
-    static CPU* getInstance() { return CPU::instance; };
+	ushort getRegisterR(byte index) const;
+	void setRegisterR(byte index, byte val);
 };
 
 #endif /* CPU_hpp */

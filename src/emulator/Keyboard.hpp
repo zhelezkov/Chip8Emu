@@ -53,7 +53,7 @@ class Keyboard
 	};
 
 public:
-	void init();
+	void reset();
 	unsigned char isPressed(unsigned char index);
 };
 
