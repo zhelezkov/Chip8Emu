@@ -10,8 +10,8 @@ using ushort = unsigned short;
 using byte = unsigned char;
 
 enum CHIPMode {
-    STANDART = 1,
-    SUPER = 2
+	SUPER = 1,
+    STANDART = 2
 };
 
 #endif /* CHIP_h */

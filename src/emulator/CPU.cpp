@@ -17,7 +17,12 @@ CPU::CPU(CHIPMode mode, Memory& mem, GPU& gpu, TimersManager& timers, Keyboard& 
     for (int i = 0; i < STACK_SIZE; i++)
         stack[i] = 0;
     
+	for (int i = 0; i < RPL_COUNT; i++)
+		RPL_flags[i] = 0;
+
     gpu.setMode(mode);
+
+	exit = false;
 }
 
 void CPU::cycle()
@@ -102,8 +107,20 @@ ushort CPU::getStack(byte index) const
 	return stack[index];
 }
 
-ushort CPU::setStack(byte index, ushort val)
+void CPU::setStack(byte index, ushort val)
 {
 	if (index < 0 || index >= STACK_SIZE) throw "Bad index";
 	stack[index] = val;
+}
+
+ushort CPU::getRPL(byte index) const
+{
+	if (index < 0 || index >= RPL_COUNT) throw "Bad index";
+	return RPL_flags[index];
+}
+
+void CPU::setRPL(byte index, byte val)
+{
+	if (index < 0 || index >= RPL_COUNT) throw "Bad index";
+	RPL_flags[index] = val;
 }

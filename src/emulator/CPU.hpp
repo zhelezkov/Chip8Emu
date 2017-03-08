@@ -15,6 +15,7 @@
 
 #define STACK_SIZE 16
 #define REGISTERS_COUNT 16
+#define RPL_COUNT 8
 
 class CPU {
 private:
@@ -24,6 +25,7 @@ private:
 	byte SP;
 
 	ushort stack[STACK_SIZE];
+	byte RPL_flags[RPL_COUNT];
 
 	Memory& memory;
 	GPU& gpu;
@@ -33,7 +35,9 @@ private:
 	CHIPMode mode;
     
     static CPU* instance;
-public:
+public:	
+	bool exit;
+
     CPU(CHIPMode mode, Memory& mem, GPU& gpu, TimersManager& timers, Keyboard& keyboard);
 	void cycle();
 	Memory& getMemory() const;
@@ -54,7 +58,10 @@ public:
 	void setSP(byte val);
 
 	ushort getStack(byte index) const;
-	ushort setStack(byte index, ushort val);
+	void setStack(byte index, ushort val);
+
+	ushort getRPL(byte index) const;
+	void setRPL(byte index, byte val);
 
     static CPU* getInstance() { return CPU::instance; };
 };

@@ -14,7 +14,6 @@
 class GPU
 {
 private:
-	unsigned char gfx[WIDTH][HEIGHT];
     CHIPMode mode;
     int width, height;
     
@@ -23,9 +22,11 @@ public:
     void setMode(const CHIPMode mode);
     CHIPMode getMode() const { return mode; };
 	void clearScreen();
-	byte operator()(const int i, const int j) const;
+	//byte operator()(const int i, const int j) const;
     
 	int getWidth();
 	int getHeight();
+
+	unsigned char gfx[WIDTH][HEIGHT];
 };
 #endif /* GPU_hpp */

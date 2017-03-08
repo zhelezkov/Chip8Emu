@@ -7,13 +7,17 @@
 
 void Keyboard::init()
 {
-	// обнуление ключей
+	// reset the keys
 	for (int i = 0; i < 16; i++)
 		key[i] = 0;
 
-	// загрузка шрифтов
-	//for (int i = 0; i < 50; ++i)
+	// load the fonts
+	//for (int i = 0; i < 80; ++i)
 		//memory[i] = font[i];
+
+	// load the bigfonts
+	//for (int i = 80; i < 80 + 16 * 10; ++i)
+		//memory[i] = bigfont[i];
 }
 
 unsigned char Keyboard::isPressed(unsigned char index)

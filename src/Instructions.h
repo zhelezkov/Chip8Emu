@@ -28,6 +28,105 @@ void fn_0x00EE(CPU* const cpu, const OpcodeData data) // Return from a subroutin
 	cpu->setSP(index - 1);
 }
 
+// 00BN - scroll display N lines up *SUPER CHIP8*
+// 00BN - scroll display N/2 lines up  *CHIP48*
+void fn_0x00BN(CPU* const cpu, const OpcodeData data)
+{
+	// CHECK IT!
+	byte N = data.n4;
+	GPU& gpu = cpu->getGpu();
+	byte height = gpu.getHeight();
+	byte width = gpu.getWidth();
+
+	N /= gpu.getMode();
+	for (byte y = 0; y < height - N; y++)
+		for (byte x = 0; x < width; x++)
+			gpu.gfx[x][y] = gpu.gfx[x][y + N];
+
+	// wipe the bottom-most pixels
+	for (byte y = height - N; y < height; y++)
+		for (byte x = 0; x < width; x++)
+			gpu.gfx[x][y] = 0;
+}
+
+// 00CN - scroll display N lines down *SUPER CHIP8* 
+// 00CN - scroll display N/2 lines down  *CHIP48*
+void fn_0x00CN(CPU* const cpu, const OpcodeData data)
+{
+	// CHECK IT!
+	byte N = data.n4;
+	GPU& gpu = cpu->getGpu();
+	byte height = gpu.getHeight();
+	byte width = gpu.getWidth();
+
+	N /= gpu.getMode();
+	for (byte y = height - 1; y >= N; y--)
+		for (byte x = 0; x < width; x++)
+			gpu.gfx[x][y] = gpu.gfx[x][y - N];
+
+	// wipe the top-most pixels
+	for (byte y = 0; y < N; y++)
+		for (byte x = 0; x < width; x++)
+			gpu.gfx[x][y] = 0;
+}
+
+// 00FB - scroll display 4 pixels right *SUPER CHIP8*
+// 00FB - scroll display 2 pixels right *CHIP48*
+void fn_0x00FB(CPU* const cpu, const OpcodeData data) 
+{
+	// CHECK IT!
+	GPU& gpu = cpu->getGpu();
+	byte height = gpu.getHeight();
+	byte width = gpu.getWidth();
+	byte N = 4 / gpu.getMode();
+
+	for (byte y = 0; y < height; y++)
+	{
+		for (byte x = width; x >= N; x--)
+			gpu.gfx[x][y] = gpu.gfx[x - N][y];
+
+		// wipe the first N pixels
+		for(byte x = 0; x < N; x++)
+			gpu.gfx[x][y] = 0;
+	}
+}
+
+// 00FC - scroll display 4 pixels left *SUPER CHIP8*
+// 00FC - scroll display 2 pixels left *CHIP48*
+void fn_0x00FC(CPU* const cpu, const OpcodeData data)
+{
+	// CHECK IT!
+	GPU& gpu = cpu->getGpu();
+	byte height = gpu.getHeight();
+	byte width = gpu.getWidth();
+	byte N = 4 / gpu.getMode();
+
+	for (byte y = 0; y < height; y++)
+	{
+		for (byte x = 0; x < width - N; x--)
+			gpu.gfx[x][y] = gpu.gfx[x + N][y];
+
+		// wipe the last N pixels
+		for (byte x = width - N; x < width; x++)
+			gpu.gfx[x][y] = 0;
+	}
+}
+
+void fn_0x00FD(CPU* const cpu, const OpcodeData data) // 00FD - Quit the emulator *SUPER CHIP*
+{
+	cpu->exit = true;
+}
+
+void fn_0x00FE(CPU* const cpu, const OpcodeData data) // 00FE -  enable extended screen mode *CHIP48*
+{
+	cpu->getGpu().setMode(CHIPMode::STANDART);
+}
+
+void fn_0x00FF(CPU* const cpu, const OpcodeData data) // 00FE -  enable extended screen mode *SUPER CHIP*
+{
+	cpu->getGpu().setMode(CHIPMode::SUPER);
+}
+
 void fn_0x1nnn(CPU* const cpu, const OpcodeData data) // 1NNN - jump to addr
 {
 	//PC = opcode & 0x0FFF;
@@ -301,12 +400,60 @@ void fn_0xDxyn(CPU* const cpu, const OpcodeData data) // DXYN - Draw sprite
 //		}
 //	}
 
+	ushort x = cpu->getRegister(data.n2);
+	ushort y = cpu->getRegister(data.n3);
+	ushort n = data.n4;
+	ushort I = cpu->getAddrRegister();
+	ushort pixel;
+
+	GPU& gpu = cpu->getGpu();
+	Memory& memory = cpu->getMemory();
+
 	cpu->setRegister(0xF, 0);
-	for(int y = 0; y < cpu->getGpu().getHeight(); y++)
+	if (n == 0) // 0xDXY0 - Draw a 16x16 sprite at I to VX, VY (8x16 in low res mode) *SUPER CHIP* 
 	{
-		for (int x = 0; x < cpu->getGpu().getWidth(); x++)
+		for (byte yline = 0; yline < 16; yline++)
 		{
-			
+			pixel = memory[I + 2 * yline];
+			for (byte xline = 0; xline < 8; xline++)
+			{
+				if ((pixel & (0x80 >> xline)) != 0)
+				{
+					if (gpu.gfx[(x + xline) % gpu.getWidth()][(y + yline) % gpu.getHeight()] == 1)
+						cpu->setRegister(0xF, 1);
+
+					gpu.gfx[(x + xline) % gpu.getWidth()][(y + yline) % gpu.getHeight()] ^= 1;
+				}
+			}
+
+			pixel = memory[I + 1 + 2 * yline];
+			for (byte xline = 0; xline < 8; xline++)
+			{
+				if ((pixel & (0x80 >> xline)) != 0)
+				{
+					if (gpu.gfx[(x + xline + 8) % gpu.getWidth()][(y + yline) % gpu.getHeight()] == 1)
+						cpu->setRegister(0xF, 1);
+
+					gpu.gfx[(x + xline + 8) % gpu.getWidth()][(y + yline) % gpu.getHeight()] ^= 1;
+				}
+			}
+		}
+	}
+	else
+	{
+		for(byte yline = 0; yline < n; yline++)
+		{
+			pixel = memory[I + yline];
+			for (byte xline = 0; xline < 8; xline++)
+			{
+				if ((pixel & (0x80 >> xline)) != 0)
+				{
+					if(gpu.gfx[(x + xline) % gpu.getWidth()][(y + yline) % gpu.getHeight()] == 1)
+						cpu->setRegister(0xF, 1);
+
+					gpu.gfx[(x + xline) % gpu.getWidth()][(y + yline) % gpu.getHeight()] ^= 1;
+				}
+			}
 		}
 	}
 }
@@ -414,9 +561,9 @@ void fn_0xFx29(CPU* const cpu, const OpcodeData data) // FX29 - point I to 5 byt
 //	I = V[((opcode & 0x0F00) >> 8)] * 0x5;
 
 	byte index_X = op(0, data.n1, 0, 0);
-	ushort i = cpu->getRegister(index_X);
+	ushort Vx = cpu->getRegister(index_X);
 
-	cpu->setAddrRegister(i * 0x5);
+	cpu->setAddrRegister(Vx * 0x5);
 }
 
 void fn_0xFx33(CPU* const cpu, const OpcodeData data) // FX33 - store BCD of VX in [I], [I+1], [I+2]
@@ -440,7 +587,6 @@ void fn_0xFx55(CPU* const cpu, const OpcodeData data) // FX55 - store V0 .. VX i
 //		memory[I + i] = V[i];
 
 	byte index_X = op(0, data.n2, 0, 0);
-	byte Vx = cpu->getRegister(index_X);
 	ushort I = cpu->getAddrRegister();
 
 	for (byte i = 0; i <= index_X; i++)
@@ -453,11 +599,34 @@ void fn_0xFx65(CPU* const cpu, const OpcodeData data) // FX65 - read V0 ..VX fro
 //		V[i] = memory[I + i];
 
 	byte index_X = op(0, data.n2, 0, 0);
-	byte Vx = cpu->getRegister(index_X);
 	ushort I = cpu->getAddrRegister();
 
 	for (byte i = 0; i <= index_X; i++)
 		cpu->setRegister(i, cpu->getMemory()[I + i]);
+}
+
+void fn_0xFx30(CPU* const cpu, const OpcodeData data) // FX30 - point I to 10 byte numeric sprite for value in VX *SUPER CHIP*
+{
+	byte index_X = op(0, data.n2, 0, 0);
+	byte Vx = cpu->getRegister(index_X);
+
+	cpu->setAddrRegister(Vx * 10 + 80);
+}
+
+void fn_0xFx75(CPU* const cpu, const OpcodeData data) // FX75 - save V0...VX (X<8) in the RPL flags *SUPER CHIP*
+{
+	byte index_X = op(0, data.n2, 0, 0);
+
+	for (byte i = 0; i <= index_X; i++)
+		cpu->setRPL(i, cpu->getRegister(i));
+}
+
+void fn_0xFx85(CPU* const cpu, const OpcodeData data) // FX85 - load V0...VX (X<8) from the HP48 flags *SUPER CHIP*
+{
+	byte index_X = op(0, data.n2, 0, 0);
+
+	for (byte i = 0; i <= index_X; i++)
+		cpu->setRegister(i, cpu->getRPL(i));
 }
 
 #endif /* Instructions_h */
