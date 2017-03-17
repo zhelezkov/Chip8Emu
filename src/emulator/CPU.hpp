@@ -58,8 +58,8 @@ public:
 	byte getSP() const;
 	void setSP(byte val);
 
-	ushort getStack(byte index) const;
-	void setStack(byte index, ushort val);
+	ushort popStack();
+	void pushStack();
 
 	ushort getRegisterR(byte index) const;
 	void setRegisterR(byte index, byte val);

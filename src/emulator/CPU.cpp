@@ -105,16 +105,12 @@ void CPU::setSP(byte val)
 }
 
 
-ushort CPU::getStack(byte index) const
-{
-	if (index < 0 || index >= STACK_SIZE) throw "Bad index";
-	return stack[index];
+ushort CPU::popStack() {
+	return stack[SP--];
 }
 
-void CPU::setStack(byte index, ushort val)
-{
-	if (index < 0 || index >= STACK_SIZE) throw "Bad index";
-	stack[index] = val;
+void CPU::pushStack() {
+    stack[SP++] = PC;
 }
 
 ushort CPU::getRegisterR(byte index) const

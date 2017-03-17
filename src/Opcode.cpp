@@ -16,15 +16,17 @@ Opcode::Opcode(const char* name, const OpMask mask, const char* description, voi
 #define n 0
 #define E 0xE
 #define A 0xA
-#define B 0xB
-#define C 0xC
 
 const Opcode& getOpcode(const OpcodeData opcode) {
     INIT_OPS
     switch (opcode.n1) {
         case 0x0:
-			if (opcode.n3 == B || opcode.n3 == C) return ops[op(0, 0, opcode.n3, 0)];
-			else return ops[op(opcode.n1, 0, opcode.n3, opcode.n4)];
+            switch (opcode.n3) {
+                case 0xB:
+                case 0xC:
+                    return ops[op(0, 0, opcode.n3, 0)];
+            }
+            return ops[op(0, 0, opcode.n3, opcode.n4)];
         case 0x1:
         case 0x2:
         case 0x3:
@@ -55,5 +57,3 @@ const Opcode& getOpcode(const OpcodeData opcode) {
 #undef y
 #undef E
 #undef A
-#undef B
-#undef C

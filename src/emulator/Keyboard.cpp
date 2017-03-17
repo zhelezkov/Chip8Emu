@@ -20,7 +20,6 @@ void Keyboard::reset()
 		//memory[i] = bigfont[i];
 }
 
-unsigned char Keyboard::isPressed(unsigned char index)
-{
+bool Keyboard::isPressed(unsigned char index) {
 	return key[index];
 }

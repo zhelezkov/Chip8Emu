@@ -16,12 +16,12 @@ struct OpcodeData {
     
     union {
         struct {
-            unsigned short n4 : 4;
-            unsigned short n3 : 4;
-            unsigned short n2 : 4;
-            unsigned short n1 : 4;
+            ushort n4 : 4;
+            ushort n3 : 4;
+            ushort n2 : 4;
+            ushort n1 : 4;
         };
-        unsigned short rawCode;
+        ushort rawCode;
     };
 };
 
@@ -34,8 +34,8 @@ BEGIN_OPS \
     OP(0x0|nnn, "SYS", None, "[Deprecated] Jump to a machine code routine at nnn.", fn_nop), \
     OP(0x00E0, "CLS", None, "Clear the display.", fn_0x00E0), \
     OP(0x00EE, "RET", None, "Return from a subroutine.", fn_0x00EE), \
-	OP(0x00B|n, "SCU", N, "Scroll display N lines up.", fn_0x00BN), \
-	OP(0x00C|n, "SCD", N, "Scroll display N lines down.", fn_0x00CN), \
+	OP(0x00B|n, "SCU", N, "Scroll display N lines up.", fn_0x00Bn), \
+	OP(0x00C|n, "SCD", N, "Scroll display N lines down.", fn_0x00Cn), \
 	OP(0x00FB, "SCR", None, "Scroll display 4 pixels right.", fn_0x00FB), \
 	OP(0x00FC, "SCL", None, "Scroll display 4 pixels left.", fn_0x00FC), \
 	OP(0x00FD, "EXIT", None, "Quit the emulator.", fn_0x00FD), \
@@ -54,9 +54,9 @@ BEGIN_OPS \
     OP(0x8|x|y|3, "XOR", VxVy, "Set Vx = Vx XOR Vy.", fn_0x8xy3), \
     OP(0x8|x|y|4, "ADD", VxVy, "Set Vx = Vx + Vy, set VF = carry.", fn_0x8xy4), \
     OP(0x8|x|y|5, "SUB", VxVy, "Set Vx = Vx - Vy, set VF = NOT borrow.", fn_0x8xy5), \
-    OP(0x8|x|y|6, "SHR", VxVy, "Set Vx = Vx SHR 1.", fn_0x8xy6), \
+    OP(0x8|x|y|6, "SHR", Vx, "Set Vx = Vx SHR 1.", fn_0x8xy6), \
     OP(0x8|x|y|7, "SUBN", VxVy, "Set Vx = Vy - Vx, set VF = NOT borrow.", fn_0x8xy7), \
-    OP(0x8|x|y|E, "SHL", VxVy, "Set Vx = Vx SHL 1.", fn_0x8xyE), \
+    OP(0x8|x|y|E, "SHL", Vx, "Set Vx = Vx SHL 1.", fn_0x8xyE), \
     OP(0x9|x|y|0, "SNE", VxVy, "Skip next instruction if Vx != Vy.", fn_0x9xy0), \
     OP(0xA|nnn, "LD", IAddr, "Set I = nnn.", fn_0xAnnn), \
     OP(0xB|nnn, "JP", V0Addr, "Jump to location nnn + V0.", fn_0xBnnn), \

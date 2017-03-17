@@ -21,14 +21,16 @@ class GPU
 private:
     ResolutionMode resMode;
     int width, height;
-	unsigned char gfx[WIDTH][HEIGHT];
+    byte* videoMem;
 
 public:
+    GPU() : videoMem(nullptr) { };
     void setResolutionMode(const ResolutionMode mode);
     ResolutionMode getResolutionMode() const { return resMode; };
 	void clearScreen();
     void reset();
-	byte& operator()(const int i, const int j);
+    byte getPixel(int x, int y);
+    void setPixel(byte pix, int x, int y);
     
 	int getWidth();
 	int getHeight();

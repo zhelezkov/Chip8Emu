@@ -13,8 +13,7 @@ void TimersManager::reset() {
     setSoundTimer(0);
 }
 
-void TimersManager::update()
-{
+void TimersManager::update() {
 	if (delayTimer > 0)
 		delayTimer--;
 
@@ -27,22 +26,18 @@ void TimersManager::update()
 	}
 }
 
-void TimersManager::setDelayTimer(unsigned char v)
-{
+void TimersManager::setDelayTimer(byte v) {
 	delayTimer = v;
 }
 
-unsigned char TimersManager::getDelayTimer()
-{
+byte TimersManager::getDelayTimer() {
 	return delayTimer;
 }
 
-void TimersManager::setSoundTimer(unsigned char v)
-{
+void TimersManager::setSoundTimer(byte v) {
 	soundTimer = v;
 }
 
-unsigned char TimersManager::getSoundTimer()
-{
+byte TimersManager::getSoundTimer() {
 	return soundTimer;
 }

@@ -5,17 +5,20 @@
 
 #include "GPU.hpp"
 
-void GPU::clearScreen()
-{
-    for (int x = 0; x < width; x++)
-        for (int y = 0; y < height; y++)
-            gfx[x][y] = 0;
+void GPU::clearScreen() {
+    for (int i = 0; i < width * height; i++) {
+        videoMem[i] = 0;
+    }
 }
 
 void GPU::setResolutionMode(const ResolutionMode mode) {
-    this->resMode = resMode;
+    if (resMode == mode) return;
+    resMode = mode;
     width = WIDTH / resMode;
     height = HEIGHT / resMode;
+    if (videoMem)
+        delete[] videoMem;
+    videoMem = new byte[width * height];
 }
 
 void GPU::reset() {
@@ -23,10 +26,12 @@ void GPU::reset() {
     setResolutionMode(LOW);
 }
 
-byte& GPU::operator()(const int x, const int y)
-{
-	if (x < 0 || x >= width || y >= height || y < 0) throw "Bad Index";
-	return gfx[x][y];
+void GPU::setPixel(byte pix, int x, int y) {
+    videoMem[x + y * width] = pix;
+}
+
+byte GPU::getPixel(int x, int y) {
+    return videoMem[x + y * width];
 }
 
 int GPU::getWidth()

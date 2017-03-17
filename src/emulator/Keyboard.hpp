@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 
+//TODO
 class Keyboard
 {
 	unsigned char key[16];          // массив содержащий состояние клавиатуры:
@@ -54,7 +55,7 @@ class Keyboard
 
 public:
 	void reset();
-	unsigned char isPressed(unsigned char index);
+	bool isPressed(unsigned char index);
 };
 
 #endif /* Keyboard_hpp */
