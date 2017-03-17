@@ -23,11 +23,11 @@ void GPU::reset() {
     setResolutionMode(LOW);
 }
 
-/*byte GPU::operator()(const int x, const int y) const
+byte& GPU::operator()(const int x, const int y)
 {
 	if (x < 0 || x >= width || y >= height || y < 0) throw "Bad Index";
 	return gfx[x][y];
-}*/
+}
 
 int GPU::getWidth()
 {

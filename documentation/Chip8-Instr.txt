@@ -1,0 +1,52 @@
+00E0	CLS	Clear video memory
+00EE	RET	Return from subroutine
+/*0NNN	SYS NNN	Call CDP1802 subroutine at NNN |DELETED|*/
+00BN	SCU N	Scroll up N pixels (N/2 pixels in low res mode)
+00CN	SCD N	Scroll down N pixels (N/2 pixels in low res mode)
+00FB	SCR	Scroll right 4 pixels (2 pixels in low res mode)
+00FC	SCL	Scroll left 4 pixels (2 pixels in low res mode)
+00FD	EXIT	Exit the interpreter; this causes the VM to infinite loop
+00FE	LOW	Enter low resolution (64x32) mode; this is the default mode
+00FF	HIGH	Enter high resolution (128x64) mode
+
+1NNN	JP NNN	Jump to address NNN
+2NNN	CALL NNN	Call CHIP-8 subroutine at NNN
+3XNN	SE VX, NN	Skip next instruction if VX == NN
+4XNN	SNE VX, NN	Skip next instruction if VX != NN
+5XY0	SE VX, VY	Skip next instruction if VX == VY
+6XNN	LD VX, NN	VX = NN
+7XNN	ADD VX, NN	VX = VX + NN
+
+8XY0	LD VX, VY	VX = VY
+8XY1	OR VX, VY	VX = VX OR VY
+8XY2	AND VX, VY	VX = VX AND VY
+8XY3	XOR VX, VY	VX = VX XOR VY
+8XY4	ADD VX, VY	VX = VX + VY; VF = 1 if overflow else 0
+8XY5	SUB VX, VY	VX = VX - VY; VF = 1 if not borrow else 0
+8XY6	SHR VX	VF = LSB(VX); VX = VX » 1 (** see note)
+8XY7	SUBN VX, VY	VX = VY - VX; VF = 1 if not borrow else 0
+8XYE	SHL VX	VF = MSB(VX); VX = VX « 1 (** see note)
+
+9XY0	SNE VX, VY 	Skip next instruction if VX != VY
+ANNN	LD I, NNN	I = NNN
+BNNN	JP V0, NNN	Jump to address NNN + V0
+CXNN	RND VX, NN	VX = RND() AND NN
+
+DXYN	DRW VX, VY, N	Draw 8xN sprite at I to VX, VY; VF = 1 if collision else 0
+DXY0	DRW VX, VY, 0	Draw a 16x16 sprite at I to VX, VY (8x16 in low res mode) (*** see note)
+
+EX9E	SKP VX	Skip next instruction if key(VX) is pressed
+EXA1	SKNP VX	Skip next instruction if key(VX) is not pressed
+
+FX07	LD VX, DT	VX = DT
+FX0A	LD VX, K	Wait for key press, store key pressed in VX
+FX15	LD DT, VX	DT = VX
+FX18	LD ST, VX	ST = VX
+FX1E	ADD I, VX	I = I + VX; VF = 1 if I > 0xFFF else 0
+FX29	LD F, VX	I = address of 4x5 font character in VX (0..F) (* see note)
+FX33	BCD VX	Store BCD representation of VX at I (100), I+1 (10), and I+2 (1); I remains unchanged
+FX55	LD [I], VX	Store V0..VX (inclusive) to memory starting at I; I remains unchanged
+FX65	LD VX, [I]	Load V0..VX (inclusive) from memory starting at I; I remains unchanged
+FX30	LD HF, VX	I = address of 8x10 font character in VX (0..F) (* see note)
+FX75	LD R, VX	Store V0..VX (inclusive) into HP-RPL user flags R0..RX (X < 8)
+FX85	LD VX, R	Load V0..VX (inclusive) from HP-RPL user flags R0..RX (X < 8)

@@ -1,3 +1,8 @@
 build
+chip8.dir
+chip8asm.dir
+chip8emu.dir
+Win32
+Win64
 .DS_Store
 bin

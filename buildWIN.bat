@@ -1,2 +1,2 @@
 cd build
-cmake .. -G "Visual Studio 14 2015"
+cmake .. -G "Visual Studio 15 2017"

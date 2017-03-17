@@ -23,6 +23,7 @@ enum OpMask {
     FVx = 2, // F, Vx
     BVx = 2, // B, Vx
     VxI = 2, // Vx, I
+	N = 1	 // N
 };
 
 class CPU;

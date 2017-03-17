@@ -41,12 +41,12 @@ void fn_0x00BN(CPU* const cpu, const OpcodeData data)
 	N /= gpu.getResolutionMode();
 	for (byte y = 0; y < height - N; y++)
 		for (byte x = 0; x < width; x++)
-			gpu.gfx[x][y] = gpu.gfx[x][y + N];
+			gpu(x, y) = gpu(x, y + N);
 
 	// wipe the bottom-most pixels
 	for (byte y = height - N; y < height; y++)
 		for (byte x = 0; x < width; x++)
-			gpu.gfx[x][y] = 0;
+			gpu(x, y) = 0;
 }
 
 // 00CN - scroll display N lines down *SUPER CHIP8* 
@@ -62,12 +62,12 @@ void fn_0x00CN(CPU* const cpu, const OpcodeData data)
 	N /= gpu.getResolutionMode();
 	for (byte y = height - 1; y >= N; y--)
 		for (byte x = 0; x < width; x++)
-			gpu.gfx[x][y] = gpu.gfx[x][y - N];
+			gpu(x, y) = gpu(x, y - N);
 
 	// wipe the top-most pixels
 	for (byte y = 0; y < N; y++)
 		for (byte x = 0; x < width; x++)
-			gpu.gfx[x][y] = 0;
+			gpu(x, y) = 0;
 }
 
 // 00FB - scroll display 4 pixels right *SUPER CHIP8*
@@ -83,11 +83,11 @@ void fn_0x00FB(CPU* const cpu, const OpcodeData data)
 	for (byte y = 0; y < height; y++)
 	{
 		for (byte x = width; x >= N; x--)
-			gpu.gfx[x][y] = gpu.gfx[x - N][y];
+			gpu(x, y) = gpu(x - N, y);
 
 		// wipe the first N pixels
 		for(byte x = 0; x < N; x++)
-			gpu.gfx[x][y] = 0;
+			gpu(x, y) = 0;
 	}
 }
 
@@ -104,11 +104,11 @@ void fn_0x00FC(CPU* const cpu, const OpcodeData data)
 	for (byte y = 0; y < height; y++)
 	{
 		for (byte x = 0; x < width - N; x--)
-			gpu.gfx[x][y] = gpu.gfx[x + N][y];
+			gpu(x, y) = gpu(x + N, y);
 
 		// wipe the last N pixels
 		for (byte x = width - N; x < width; x++)
-			gpu.gfx[x][y] = 0;
+			gpu(x, y) = 0;
 	}
 }
 
@@ -419,10 +419,10 @@ void fn_0xDxyn(CPU* const cpu, const OpcodeData data) // DXYN - Draw sprite
 			{
 				if ((pixel & (0x80 >> xline)) != 0)
 				{
-					if (gpu.gfx[(x + xline) % gpu.getWidth()][(y + yline) % gpu.getHeight()] == 1)
+					if (gpu((x + xline) % gpu.getWidth(), (y + yline) % gpu.getHeight()) == 1)
 						cpu->setRegisterV(0xF, 1);
 
-					gpu.gfx[(x + xline) % gpu.getWidth()][(y + yline) % gpu.getHeight()] ^= 1;
+					gpu((x + xline) % gpu.getWidth(), (y + yline) % gpu.getHeight()) ^= 1;
 				}
 			}
 
@@ -431,10 +431,10 @@ void fn_0xDxyn(CPU* const cpu, const OpcodeData data) // DXYN - Draw sprite
 			{
 				if ((pixel & (0x80 >> xline)) != 0)
 				{
-					if (gpu.gfx[(x + xline + 8) % gpu.getWidth()][(y + yline) % gpu.getHeight()] == 1)
+					if (gpu((x + xline + 8) % gpu.getWidth(), (y + yline) % gpu.getHeight()) == 1)
 						cpu->setRegisterV(0xF, 1);
 
-					gpu.gfx[(x + xline + 8) % gpu.getWidth()][(y + yline) % gpu.getHeight()] ^= 1;
+					gpu((x + xline + 8) % gpu.getWidth(), (y + yline) % gpu.getHeight()) ^= 1;
 				}
 			}
 		}
@@ -448,10 +448,10 @@ void fn_0xDxyn(CPU* const cpu, const OpcodeData data) // DXYN - Draw sprite
 			{
 				if ((pixel & (0x80 >> xline)) != 0)
 				{
-					if(gpu.gfx[(x + xline) % gpu.getWidth()][(y + yline) % gpu.getHeight()] == 1)
+					if(gpu((x + xline) % gpu.getWidth(), (y + yline) % gpu.getHeight()) == 1)
 						cpu->setRegisterV(0xF, 1);
 
-					gpu.gfx[(x + xline) % gpu.getWidth()][(y + yline) % gpu.getHeight()] ^= 1;
+					gpu((x + xline) % gpu.getWidth(), (y + yline) % gpu.getHeight()) ^= 1;
 				}
 			}
 		}
