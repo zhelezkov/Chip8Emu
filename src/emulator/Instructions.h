@@ -20,10 +20,10 @@ void fn_0x00E0(CPU* const cpu, const OpcodeData data) {
 
 /// 0x00EE: Return from a subroutine
 void fn_0x00EE(CPU* const cpu, const OpcodeData data) {
-	byte index = cpu->getSP();
+	/*byte index = cpu->getSP();
 	ushort newPc = cpu->getStack(index - 1);
 	cpu->setPC(newPc);
-	cpu->setSP(index - 1);
+	cpu->setSP(index - 1);*/
 }
 
 /// 0x00Bn: - scroll display N lines up (N/2 in low res mode)

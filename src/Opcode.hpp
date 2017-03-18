@@ -9,7 +9,7 @@
 enum OpMask {
     None = 0,
     Addr = 1, // address
-    VxByte = 1, //Vx, byte
+    VxByte = 2, //Vx, byte
     Vx = 1, // Vx
     VxVy = 2, // Vx, Vy
     IAddr = 2, // I, address

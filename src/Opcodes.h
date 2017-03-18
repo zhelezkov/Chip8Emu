@@ -8,9 +8,10 @@
 
 #include <map>
 #include "Opcode.hpp"
+#include "CHIP.h"
 
 struct OpcodeData {
-    OpcodeData(int val) {
+    OpcodeData(ushort val) {
         rawCode = val;
     }
     
