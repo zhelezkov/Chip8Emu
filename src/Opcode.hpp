@@ -44,6 +44,14 @@ struct OpcodeData {
     };
 };
 
+#ifdef CHIP_EMU
+#define EXEC_DESCR CPU* const, const OpcodeData
+#elif CHIP_ASM
+#define EXEC_DESCR
+#else
+#define EXEC_DESCR
+#endif
+
 class CPU;
 
 class Opcode final {
@@ -52,10 +60,10 @@ public:
         
     }
     
-    Opcode(const char* name, const OpMask mask, const char* description, void (*exec)(CPU* const, const OpcodeData) = nullptr, void (*write)() = nullptr);
+    Opcode(const char* name, const OpMask mask, const char* description, void (*exec)(EXEC_DESCR) = nullptr);
     
-    void (*exec)(CPU* const, const OpcodeData);
-    void (*write)();
+    void (*exec)(EXEC_DESCR);
+    const char* getName() { return name; };
 private:
     const char* name;
     const OpMask mask;

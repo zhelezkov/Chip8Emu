@@ -5,13 +5,12 @@
 
 #include "Opcode.hpp"
 
+#include "Opcodes.h"
 #ifdef CHIP_EMU
 #include "emulator/Instructions.h"
-#else
-#include "Opcodes.h"
 #endif
 
-Opcode::Opcode(const char* name, const OpMask mask, const char* description, void (*exec)(CPU* const, const OpcodeData), void (*write)()) : exec(exec), write(write), name(name), mask(mask), description(description) {
+Opcode::Opcode(const char* name, const OpMask mask, const char* description, void (*exec)(EXEC_DESCR)) : exec(exec), name(name), mask(mask), description(description) {
 }
 
 #define nnn 000

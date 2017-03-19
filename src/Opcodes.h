@@ -56,7 +56,7 @@ BEGIN_OPS \
     OP(0xF|x|3|3, "LD", BVx, "Store BCD representation of Vx in memory locations I, I+1, and I+2.", fn(0xFx33)), \
     OP(0xF|x|5|5, "LD", IVx, "Store registers V0 through Vx in memory starting at location I.", fn(0xFx55)), \
     OP(0xF|x|6|5, "LD", VxI, "Read registers V0 through Vx from memory starting at location I.", fn(0xFx65)), \
-    OP(0xFFFF, "Unknown command", None, "Unknown command", fn(nop)), \
+    OP(0xFFFF, "NOP", None, "Unknown command", fn(nop)), \
     /************ Super CHIP-8 functions ************/ \
     OP(0x00B|n, "SCU", N, "Scroll display N lines up.", fn(0x00Bn)), \
     OP(0x00C|n, "SCD", N, "Scroll display N lines down.", fn(0x00Cn)), \
