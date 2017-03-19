@@ -3,11 +3,9 @@
 //  Chip8Asm
 //
 
-/*#ifndef Assembler_hpp
+#ifndef Assembler_hpp
 #define Assembler_hpp
 
-//#include "OpCodes.hpp"
-
-//TODO: probably all write functions should be located here
+#include "Opcodes.h"
 
 #endif /* Assembler_hpp */

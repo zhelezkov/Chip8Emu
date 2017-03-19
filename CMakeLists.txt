@@ -14,14 +14,18 @@ foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 	set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
 endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 
-include_directories(src src/emulator)
+include_directories(src)
 
 file(GLOB chip8 src/*.cpp src/*.h*)
 file(GLOB chip8asm src/asm/*)
+file(GLOB chip8disasm src/disasm/*)
 file(GLOB chip8emu src/emulator/*)
 
-add_library(chip8 ${chip8})
-add_executable(chip8emu ${chip8emu})
-target_link_libraries(chip8emu chip8)
-add_executable(chip8asm ${chip8asm})
-target_link_libraries(chip8asm chip8)
+add_executable(chip8emu ${chip8} ${chip8emu})
+target_compile_definitions(chip8emu PRIVATE CHIP_EMU)
+
+add_executable(chip8asm ${chip8} ${chip8asm})
+target_compile_definitions(chip8asm PRIVATE CHIP_ASM)
+
+add_executable(chip8disasm ${chip8} ${chip8disasm})
+target_compile_definitions(chip8disasm PRIVATE CHIP_DISASM)

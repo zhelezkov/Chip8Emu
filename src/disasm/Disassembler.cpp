@@ -1,16 +1,16 @@
 //
-//  DisAssembler.cpp
+//  Disassembler.cpp
 //  Chip8Asm
 //
 
-#include "DisAssembler.hpp"
+#include "Disassembler.hpp"
 
-DisAssembler::DisAssembler(const char *in, const char* out) : in(in), out(out)
+Disassembler::Disassembler(const char *in, const char* out) : in(in), out(out)
 {
 
 }
 
-bool DisAssembler::make()
+bool Disassembler::make()
 {
     std::ifstream inFILE(in, std::ios::binary | std::ios::in);
     std::ofstream outFILE(out, std::ios::out);

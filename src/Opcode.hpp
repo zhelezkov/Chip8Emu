@@ -6,6 +6,8 @@
 #ifndef Opcode_hpp
 #define Opcode_hpp
 
+#include "CHIP.h"
+
 enum OpMask {
     None = 0,
     Addr = 1, // address
@@ -26,8 +28,23 @@ enum OpMask {
 	N = 1	 // N
 };
 
+struct OpcodeData {
+    OpcodeData(ushort val) {
+        rawCode = val;
+    }
+    
+    union {
+        struct {
+            ushort n4 : 4;
+            ushort n3 : 4;
+            ushort n2 : 4;
+            ushort n1 : 4;
+        };
+        ushort rawCode;
+    };
+};
+
 class CPU;
-struct OpcodeData;
 
 class Opcode final {
 public:

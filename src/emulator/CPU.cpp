@@ -52,7 +52,7 @@ GPU& CPU::getGpu() const
 	return gpu;
 }
 
-TimersManager& CPU::getTimers() const
+TimersManager& CPU::getTimersManager() const
 {
 	return timersManager;
 }

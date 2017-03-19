@@ -43,7 +43,7 @@ public:
     
 	Memory& getMemory() const;
 	GPU& getGpu() const;
-	TimersManager& getTimers() const;
+	TimersManager& getTimersManager() const;
 	Keyboard& getKeyboard() const;
 
 	byte getRegisterV(byte index) const;
