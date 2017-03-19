@@ -9,7 +9,7 @@
 #include <map>
 #include "Opcode.hpp"
 
-#define BEGIN_OPS static std::map<unsigned char, Opcode> ops = {
+#define BEGIN_OPS static std::map<ushort, Opcode> ops = {
 #define OP(addr, name, mask, descr, exec) {addr, Opcode(name, mask, descr, exec) }
 #define END_OPS };
 

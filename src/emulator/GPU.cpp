@@ -21,9 +21,10 @@ void GPU::setResolutionMode(const ResolutionMode mode) {
     videoMem = new byte[width * height];
 }
 
+
 void GPU::reset() {
-    clearScreen();
-    setResolutionMode(LOW);
+	setResolutionMode(LOW);
+	clearScreen();
 }
 
 void GPU::setPixel(byte pix, int x, int y) {
