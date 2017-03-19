@@ -6,7 +6,7 @@
 #include "GPU.hpp"
 
 void GPU::clearScreen() {
-    for (int i = 0; i < width * height; i++) {
+    for (ushort i = 0; i < width * height; i++) {
         videoMem[i] = 0;
     }
 }
@@ -27,20 +27,12 @@ void GPU::reset() {
 	clearScreen();
 }
 
-void GPU::setPixel(byte pix, int x, int y) {
+void GPU::setPixel(byte pix, ushort x, ushort y) {
+    assert((x + y * width) < width * height);
     videoMem[x + y * width] = pix;
 }
 
-byte GPU::getPixel(int x, int y) {
+byte GPU::getPixel(ushort x, ushort y) {
+    assert((x + y * width) < width * height);
     return videoMem[x + y * width];
-}
-
-int GPU::getWidth()
-{
-	return width;
-}
-
-int GPU::getHeight()
-{
-	return height;
 }

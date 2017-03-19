@@ -11,7 +11,7 @@ void Memory::clear() {
 }
 
 byte& Memory::operator[](int i) {
-    if (i < MEM_START || i >= MEM_SIZE) throw "Bad index";
+    assert(i >= MEM_START && i < MEM_SIZE);
     return data[i];
 }
 

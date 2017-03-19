@@ -64,13 +64,13 @@ Keyboard& CPU::getKeyboard() const
 
 byte CPU::getRegisterV(byte index) const
 {
-	if(index < 0 || index >= V_REGISTERS_COUNT) throw "Bad index";
+	assert(index >= 0 && index < V_REGISTERS_COUNT);
 	return V[index];
 }
 
 void CPU::setRegisterV(byte index, byte val)
 {
-	if (index < 0 || index >= V_REGISTERS_COUNT) throw "Bad index";
+	assert(index >= 0 && index < V_REGISTERS_COUNT);
 	V[index] = val;
 }
 
@@ -104,7 +104,6 @@ void CPU::setSP(byte val)
 	SP = val;
 }
 
-
 ushort CPU::popStack() {
 	return stack[SP--];
 }
@@ -115,12 +114,12 @@ void CPU::pushStack() {
 
 ushort CPU::getRegisterR(byte index) const
 {
-	if (index < 0 || index >= R_REGISTERS_COUNT) throw "Bad index";
+	assert(index >= 0 && index < R_REGISTERS_COUNT);
 	return R[index];
 }
 
 void CPU::setRegisterR(byte index, byte val)
 {
-	if (index < 0 || index >= R_REGISTERS_COUNT) throw "Bad index";
+	assert(index >= 0 && index < R_REGISTERS_COUNT);
 	R[index] = val;
 }

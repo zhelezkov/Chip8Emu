@@ -20,7 +20,7 @@ class GPU
 {
 private:
     ResolutionMode resMode;
-    int width, height;
+    ushort width, height;
     byte* videoMem;
 
 public:
@@ -29,10 +29,10 @@ public:
     ResolutionMode getResolutionMode() const { return resMode; };
 	void clearScreen();
     void reset();
-    byte getPixel(int x, int y);
-    void setPixel(byte pix, int x, int y);
+    byte getPixel(ushort x, ushort y);
+    void setPixel(byte pix, ushort x, ushort y);
     
-	int getWidth();
-	int getHeight();
+    ushort getWidth() { return width; };
+    ushort getHeight() { return height; };
 };
 #endif /* GPU_hpp */

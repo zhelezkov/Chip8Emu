@@ -17,8 +17,7 @@ void TimersManager::update() {
 	if (delayTimer > 0)
 		delayTimer--;
 
-	if (soundTimer > 0)
-	{
+	if (soundTimer > 0) {
         if (soundTimer == 1) {
             //PLAY BEEP SOUND   
         }
