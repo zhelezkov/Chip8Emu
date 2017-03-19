@@ -7,6 +7,7 @@
 
 #ifdef CHIP_EMU
 #include "emulator/Instructions.h"
+#include "Opcodes.h"
 #else
 #include "Opcodes.h"
 #endif
