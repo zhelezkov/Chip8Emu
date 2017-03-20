@@ -249,7 +249,7 @@ void fn_0xFx75(std::ofstream& out, const OpcodeData data) {
 
 }
 
-/// FX85 - load V0...VX (X<8) from the HP48 flags
+/// FX85 - load V0...VX (X<8) from the RPL flags
 void fn_0xFx85(std::ofstream& out, const OpcodeData data) {
 
 }

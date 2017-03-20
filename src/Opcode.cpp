@@ -17,13 +17,16 @@
 Opcode::Opcode(const char* name, const OpMask mask, const char* description, void (*exec)(EXEC_DESCR)) : exec(exec), name(name), mask(mask), description(description) {
 }
 
-#define nnn 000
-#define kk 00
+#define k 0
 #define x 0
 #define y 0
 #define n 0
-#define E 0xE
 #define A 0xA
+#define B 0xB
+#define C 0xC
+#define D 0xD
+#define E 0xE
+#define F 0xF
 
 const Opcode& getOpcode(const OpcodeData opcode) {
     INIT_OPS
@@ -59,9 +62,13 @@ const Opcode& getOpcode(const OpcodeData opcode) {
     }
 };
 
-#undef nnn
-#undef kk
+#undef n
+#undef k
 #undef x
 #undef y
-#undef E
 #undef A
+#undef B
+#undef C
+#undef D
+#undef E
+#undef F

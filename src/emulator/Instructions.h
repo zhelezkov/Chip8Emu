@@ -520,7 +520,7 @@ void fn_0xFx75(CPU* const cpu, const OpcodeData data) {
         cpu->setRegisterR(i, cpu->getRegisterV(i));
 }
 
-/// FX85 - load V0...VX (X<8) from the HP48 flags
+/// FX85 - load V0...VX (X<8) from the RPL flags
 void fn_0xFx85(CPU* const cpu, const OpcodeData data) {
     byte indexX = data.n2;
     
