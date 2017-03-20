@@ -216,7 +216,7 @@ void fn_0x00FE(std::ofstream& out, const OpcodeData data) {
 
 /// 0x00FF -  enter high res mode
 void fn_0x00FF(std::ofstream& out, const OpcodeData data) {
-    out << "HIGHT" << std::endl;
+    out << "HIGH" << std::endl;
 }
 
 /// 0xFx30 - point I to 10 byte numeric sprite for value in VX

@@ -24,11 +24,6 @@ bool Disassembler::disassemble()
     if (!inFile.is_open())
     {
         logFile << "Error: unable to open file '" << in << "'" << std::endl;
-
-        inFile.close();
-        outFile.close();
-        logFile.close();
-
         return false;
     }
 
@@ -40,10 +35,6 @@ bool Disassembler::disassemble()
     if (size > 0x0FFF - 0x200)
     {
         logFile << "Error: file '" << in << "' is too large." << std::endl;
-        inFile.close();
-        outFile.close();
-        logFile.close();
-
         return false;
     }
     inFile.seekg(0, inFile.beg);
@@ -61,9 +52,6 @@ bool Disassembler::disassemble()
     }
 
     logFile << "Build successful." << std::endl;
-    inFile.close();
-    outFile.close();
-    logFile.close();
 
     return true;
 }
