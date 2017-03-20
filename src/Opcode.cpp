@@ -8,6 +8,10 @@
 #include "Opcodes.h"
 #ifdef CHIP_EMU
 #include "emulator/Instructions.h"
+#elif CHIP_DISASM
+#include "disasm/Instructions.h"
+#elif CHIP_ASM
+//#include "asm/Instructions.h"
 #endif
 
 Opcode::Opcode(const char* name, const OpMask mask, const char* description, void (*exec)(EXEC_DESCR)) : exec(exec), name(name), mask(mask), description(description) {

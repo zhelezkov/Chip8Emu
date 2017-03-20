@@ -7,6 +7,7 @@
 #define Opcode_hpp
 
 #include "CHIP.h"
+#include <fstream>
 
 enum OpMask {
     None = 0,
@@ -48,8 +49,8 @@ struct OpcodeData {
 #define EXEC_DESCR CPU* const, const OpcodeData
 #elif CHIP_ASM
 #define EXEC_DESCR
-#else
-#define EXEC_DESCR
+#elif CHIP_DISASM
+#define EXEC_DESCR std::ofstream&, const OpcodeData
 #endif
 
 class CPU;

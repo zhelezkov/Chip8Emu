@@ -17,7 +17,7 @@ class Disassembler
 
 public:
     Disassembler(const char *in, const char* out);
-    bool make();
+    bool disassemble();
 };
 
 #endif /* Disassembler_hpp */

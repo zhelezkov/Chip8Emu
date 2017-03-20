@@ -15,7 +15,9 @@
 
 #ifdef CHIP_EMU
 #define fn(name) fn_##name
-#else
+#elif CHIP_DISASM
+#define fn(name) fn_##name
+#elif CHIP_ASM
 #define fn(name) nullptr
 #endif
 
