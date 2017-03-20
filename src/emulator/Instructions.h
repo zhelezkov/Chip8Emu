@@ -499,7 +499,7 @@ void fn_0x00FE(CPU* const cpu, const OpcodeData data) {
     cpu->getGpu().setResolutionMode(ResolutionMode::LOW);
 }
 
-/// 0x00FE -  enter high res mode
+/// 0x00FF -  enter high res mode
 void fn_0x00FF(CPU* const cpu, const OpcodeData data) {
     cpu->getGpu().setResolutionMode(ResolutionMode::HIGH);
 }

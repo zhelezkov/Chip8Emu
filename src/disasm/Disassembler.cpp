@@ -12,57 +12,65 @@ Disassembler::Disassembler(const char *in, const char* out) : in(in), out(out)
 
 bool Disassembler::disassemble()
 {
-    std::ifstream inFILE(in, std::ios::binary | std::ios::in);
-    std::ofstream outFILE(out, std::ios::out);
-    std::ofstream logFILE(this->log, std::ios::out);
+    std::ifstream inFile(in, std::ios::binary | std::ios::in);
+    std::ofstream outFile(out, std::ios::out);
+    std::ofstream logFile(this->log, std::ios::out);
 
-    if (!inFILE.is_open())
+    // set output flags
+    outFile.setf(std::ios::hex, std::ios::basefield);
+    outFile.setf(std::ios::uppercase);
+
+    // check file for opened
+    if (!inFile.is_open())
     {
-        logFILE << "Error: unable to open file '" << in << "'" << std::endl;
+        logFile << "Error: unable to open file '" << in << "'" << std::endl;
 
-        inFILE.close();
-        outFILE.close();
-        logFILE.close();
+        inFile.close();
+        outFile.close();
+        logFile.close();
 
         return false;
     }
 
-    logFILE << "OK: file is opened." << std::endl;
+    logFile << "OK: file is opened." << std::endl;
     // Check file size
-    inFILE.seekg(0, inFILE.end);
-    int size = inFILE.tellg();
-    logFILE << "File size: " << size << std::endl;
+    inFile.seekg(0, inFile.end);
+    int size = inFile.tellg();
+    logFile << "File size: " << size << "bytes." << std::endl;
     if (size > 0x0FFF - 0x200)
     {
-        logFILE << "Error: file '" << in << "' is too large." << std::endl;
-        inFILE.close();
-        outFILE.close();
-        logFILE.close();
+        logFile << "Error: file '" << in << "' is too large." << std::endl;
+        inFile.close();
+        outFile.close();
+        logFile.close();
 
         return false;
     }
-    inFILE.seekg(0, inFILE.beg);
+    inFile.seekg(0, inFile.beg);
 
     // Parsing
     ushort ch;
-    for (int i = 0; i < size; i++)
+    byte n1, n2;
+    for (int i = 0; i < size; i+=2)
     {
-        inFILE >> ch;
+        n1 = inFile.get();
+        n2 = inFile.get();
+        ch = (n1 << 8) + n2;
         const Opcode op = getOpcode(ch);
-        op.exec(outFILE, OpcodeData(ch));
+        if(op.exec) op.exec(outFile, OpcodeData(ch));
     }
 
-    logFILE << "Build successful." << std::endl;
-    inFILE.close();
-    outFILE.close();
-    logFILE.close();
+    logFile << "Build successful." << std::endl;
+    inFile.close();
+    outFile.close();
+    logFile.close();
 
     return true;
 }
 
 int main()
 {
-    Disassembler disAsm("in.txt", "out.txt");
+    Disassembler disAsm("test", "out.txt");
     disAsm.disassemble();
     return 0;
 }
