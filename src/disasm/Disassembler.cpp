@@ -49,20 +49,6 @@ bool Disassembler::disassemble()
         ch = (n1 << 8) + n2;
         const Opcode op = getOpcode(ch);
         if(op.exec) op.exec(outFile, OpcodeData(ch));
-        else
-        {
-            OpcodeData data(ch);
-            outFile << "DB " << data.n1 << data.n2 << data.n3 << data.n4 << std::endl;
-            for (int j = i + 2; j < size; j += 2)
-            {
-                n1 = inFile.get();
-                n2 = inFile.get();
-                ch = (n1 << 8) + n2;
-                data = ch;
-                outFile << "DB " << data.n1 << data.n2 << data.n3 << data.n4 << std::endl;
-            }
-            break;
-        }
     }
 
     logFile << "Build successful." << std::endl;
