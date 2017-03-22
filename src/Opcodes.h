@@ -25,7 +25,7 @@
 
 #define INIT_OPS \
 BEGIN_OPS \
-    OP(op(0,n,n,n), "SYS", None, "[Deprecated] Jump to a machine code routine at nnn.", fn(nop)), \
+    OP(op(0,n,n,n), "SYS", None, "[Deprecated] Jump to a machine code routine at nnn.", nullptr), \
     OP(op(0,0,E,0), "CLS", None, "Clear the display.", fn(0x00E0)), \
     OP(op(0,0,E,E), "RET", None, "Return from a subroutine.", fn(0x00EE)), \
 	OP(op(1,n,n,n), "JP", Addr, "Jump to addr nnn.", fn(0x1nnn)), \
@@ -60,7 +60,7 @@ BEGIN_OPS \
     OP(op(F,x,3,3), "LD", BVx, "Store BCD representation of Vx in memory locations I, I+1, and I+2.", fn(0xFx33)), \
     OP(op(F,x,5,5), "LD", IVx, "Store registers V0 through Vx in memory starting at location I.", fn(0xFx55)), \
     OP(op(F,x,6,5), "LD", VxI, "Read registers V0 through Vx from memory starting at location I.", fn(0xFx65)), \
-    OP(op(F,F,F,F), "NOP", None, "Unknown command", fn(nop)), \
+    OP(op(F,F,F,F), "NOP", None, "Unknown command", nullptr), \
     /************ Super CHIP-8 functions ************/ \
     OP(op(0,0,B,n), "SCU", N, "Scroll display N lines up.(N/2 in low res)", fn(0x00Bn)), \
     OP(op(0,0,C,n), "SCD", N, "Scroll display N lines down.(N/2 in low res)", fn(0x00Cn)), \
