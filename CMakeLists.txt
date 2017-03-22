@@ -1,17 +1,22 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.8)
 project(Chip8Dev CXX)
+
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+find_package(SDL2 REQUIRED)
+find_package(OpenGL REQUIRED)
 
 set (CMAKE_CXX_STANDARD 11)
 
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin)
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+set(RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 	string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
-	set( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
-	set( CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
-	set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR})
+	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR})
+	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR})
 endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 
 include_directories(src)
@@ -20,8 +25,13 @@ file(GLOB chip8 src/*.cpp src/*.h*)
 file(GLOB chip8asm src/asm/*)
 file(GLOB chip8disasm src/disasm/*)
 file(GLOB chip8emu src/emulator/*)
+file(GLOB utilsPath src/utils/*)
+
+add_library(utils ${utilsPath})
 
 add_executable(chip8emu ${chip8} ${chip8emu})
+target_include_directories(chip8emu PRIVATE ${SDL2_INCLUDE_DIR})
+target_link_libraries(chip8emu ${SDL2_LIBRARY} ${OPENGL_gl_LIBRARY} utils)
 target_compile_definitions(chip8emu PRIVATE CHIP_EMU)
 
 add_executable(chip8asm ${chip8} ${chip8asm})

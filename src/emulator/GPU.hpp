@@ -12,8 +12,8 @@
 #define HEIGHT 64
 
 enum ResolutionMode {
-    LOW = 1,
-    HIGH = 2
+    LOW = 2,
+    HIGH = 1
 };
 
 class GPU
@@ -25,12 +25,14 @@ private:
 
 public:
     GPU() : videoMem(nullptr) { };
+    ~GPU();
     void setResolutionMode(const ResolutionMode mode);
     ResolutionMode getResolutionMode() const { return resMode; };
 	void clearScreen();
     void reset();
     byte getPixel(ushort x, ushort y);
     void setPixel(byte pix, ushort x, ushort y);
+    void xorPixel(ushort x, ushort y);
     
     ushort getWidth() { return width; };
     ushort getHeight() { return height; };

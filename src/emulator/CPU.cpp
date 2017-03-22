@@ -5,14 +5,24 @@
 
 #include "CPU.hpp"
 
-CPU::CPU(Memory& mem, GPU& gpu, TimersManager& timers, Keyboard& keyboard) :memory(mem), gpu(gpu), timersManager(timers), keyboard(keyboard) {
+CPU::CPU(Memory* mem, GPU* gpu, TimersManager* timers, Keyboard* keyboard) :memory(mem), gpu(gpu), timersManager(timers), keyboard(keyboard) {
     
     reset();
+}
 
-	exit = false;
+CPU::CPU() : memory(new Memory()), gpu(new GPU()), timersManager(new TimersManager()), keyboard(new Keyboard()) {
+    reset();
+}
+
+CPU::~CPU() {
+    delete memory;
+    delete gpu;
+    delete timersManager;
+    delete keyboard;
 }
 
 void CPU::reset() {
+    exit = false;
     PC = MEM_START;
     I = 0;
     SP = 0;
@@ -23,47 +33,41 @@ void CPU::reset() {
     for (int i = 0; i < R_REGISTERS_COUNT; i++)
         R[i] = 0;
     
-    gpu.reset();
-    memory.reset();
-    timersManager.reset();
-    keyboard.reset();
+    gpu->reset();
+    memory->reset();
+    timersManager->reset();
+    keyboard->reset();
 }
 
-void CPU::tick()
-{
-    const ushort rawCode = memory[PC] | memory[PC + 1];
+void CPU::tick() {
+    const ushort rawCode = getMemory()[PC] << 8 | getMemory()[PC + 1];
 	PC += 2;
 
 	const Opcode& opcode = getOpcode(rawCode);
-    
-	opcode.exec(this, rawCode);
+    //printf("PC: %d, OP: %s RawCode: %d\n", PC, opcode.getName(), rawCode);
+    opcode.exec(this, rawCode);
 
-	//timer.update();
+	//timersManager->update();
 
 }
 
-Memory& CPU::getMemory() const
-{
-	return memory;
+Memory& CPU::getMemory() const {
+	return *memory;
 }
 
-GPU& CPU::getGpu() const
-{
-	return gpu;
+GPU& CPU::getGpu() const {
+	return *gpu;
 }
 
-TimersManager& CPU::getTimersManager() const
-{
-	return timersManager;
+TimersManager& CPU::getTimersManager() const {
+	return *timersManager;
 }
 
-Keyboard& CPU::getKeyboard() const
-{
-	return keyboard;
+Keyboard& CPU::getKeyboard() const {
+	return *keyboard;
 }
 
-byte CPU::getRegisterV(byte index) const
-{
+byte CPU::getRegisterV(byte index) const {
 	assert(index >= 0 && index < V_REGISTERS_COUNT);
 	return V[index];
 }
@@ -105,7 +109,7 @@ void CPU::setSP(byte val)
 }
 
 ushort CPU::popStack() {
-	return stack[SP--];
+	return stack[--SP];
 }
 
 void CPU::pushStack() {

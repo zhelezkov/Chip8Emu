@@ -44,7 +44,7 @@ void fn_0x3xkk(CPU* const cpu, const OpcodeData data) {
 
 /// 0x4xkk - skip next instruction if VX != kk
 void fn_0x4xkk(CPU* const cpu, const OpcodeData data) {
-	byte Vx = cpu->getRegisterV(op(0, data.n2, 0, 0));
+	byte Vx = cpu->getRegisterV(data.n2);
 
 	if (Vx != op(0, 0, data.n3, data.n4))
 		cpu->setPC(cpu->getPC() + 2);
@@ -122,14 +122,9 @@ void fn_0x8xy4(CPU* const cpu, const OpcodeData data) {
 	byte indexY = data.n3;
 	byte valY = cpu->getRegisterV(indexY);
 
-	int res = (int)valX + (int)valY;
+    cpu->setRegisterV(0xF, valX > ((valX + valY) & 0xFF));
 
-	if (res > 255)
-		cpu->setRegisterV(0xF, 1);
-	else
-		cpu->setRegisterV(0xF, 0);
-
-	cpu->setRegisterV(indexX, res); //TODO byte to int ? check
+	cpu->setRegisterV(indexX, valX + valY);
 }
 
 /// 0x8xy5 - set Vx = Vx - Vy, VF = 1 if not borrow else 0
@@ -140,10 +135,7 @@ void fn_0x8xy5(CPU* const cpu, const OpcodeData data) {
 	byte indexY = data.n3;
 	byte valY = cpu->getRegisterV(indexY);
 
-	if (valX > valY)
-		cpu->setRegisterV(0xF, 1);
-	else
-		cpu->setRegisterV(0xF, 0);
+    cpu->setRegisterV(0xF, valX > valY);
 
 	cpu->setRegisterV(indexX, valX - valY);
 }
@@ -165,10 +157,7 @@ void fn_0x8xy7(CPU* const cpu, const OpcodeData data) {
 	byte indexY = data.n3;
 	byte valY = cpu->getRegisterV(indexY);
 
-	if (valY > valX)
-		cpu->setRegisterV(0xF, 1);
-	else
-		cpu->setRegisterV(0xF, 0);
+    cpu->setRegisterV(0xF, valY > valX);
 
 	cpu->setRegisterV(indexX, valY - valX);
 }
@@ -242,7 +231,7 @@ void fn_0xDxyn(CPU* const cpu, const OpcodeData data) {
 	Memory& memory = cpu->getMemory();
 
 	cpu->setRegisterV(0xF, 0);
-	if (n == 0) // 0xDXY0 - Draw a 16x16 sprite at I to VX, VY (8x16 in low res mode) *SUPER CHIP* 
+	/*if (n == 0) // 0xDXY0 - Draw a 16x16 sprite at I to VX, VY (8x16 in low res mode) *SUPER CHIP*
 	{
 		for (byte yline = 0; yline < 16; yline++)
 		{
@@ -265,29 +254,29 @@ void fn_0xDxyn(CPU* const cpu, const OpcodeData data) {
 				{
 					if (gpu.getPixel((x + xline + 8) % gpu.getWidth(), (y + yline) % gpu.getHeight()) == 1)
 						cpu->setRegisterV(0xF, 1);
-
+                    else
+                        cpu->setRegisterV(0xF, 0);
 					//gpu.xorPixel((x + xline + 8) % gpu.getWidth(), (y + yline) % gpu.getHeight()) ^= 1;
 				}
 			}
 		}
 	}
-	else
-	{
-		for(byte yline = 0; yline < n; yline++)
-		{
-			pixel = memory[I + yline];
-			for (byte xline = 0; xline < 8; xline++)
-			{
-				if ((pixel & (0x80 >> xline)) != 0)
-				{
-					if(gpu.getPixel((x + xline) % gpu.getWidth(), (y + yline) % gpu.getHeight()) == 1)
-						cpu->setRegisterV(0xF, 1);
-
-					//gpu.xorPixel((x + xline) % gpu.getWidth(), (y + yline) % gpu.getHeight()) ^= 1;
+	else {*/
+		for(byte yLine = 0; yLine < n; yLine++) {
+			pixel = memory[I + yLine];
+			for (byte xLine = 0; xLine < 8; xLine++) {
+				if ((pixel & (0x80 >> xLine)) != 0) {
+                    if(gpu.getPixel((x + xLine) & (gpu.getWidth() - 1), (y + yLine) & (gpu.getHeight() - 1)) == 1)
+                        cpu->setRegisterV(0xF, 1);
+                    else
+                        cpu->setRegisterV(0xF, 0);
+                    
+                    //printf("XORING: %d %d", (x + xLine) % gpu.getWidth(), (y + yLine) % gpu.getHeight());
+					gpu.xorPixel((x + xLine) & (gpu.getWidth() - 1), (y + yLine) & (gpu.getHeight() - 1));
 				}
 			}
 		}
-	}
+	//}
 }
 
 /// 0xEx9E - skip next instruction if key Vx down
@@ -320,14 +309,14 @@ void fn_0xFx0A(CPU* const cpu, const OpcodeData data) {
     //TODO make proper way to wait, check PC
 
 	cpu->setPC(cpu->getPC() - 2);
-	for (byte n = 0; n < 16; n++)
-	{
-		if (cpu->getKeyboard().isPressed(n))
-		{
+	for (byte n = 0; n < 16; n++) {
+		if (cpu->getKeyboard().isPressed(n)) {
 			byte indexX = data.n2;
 			cpu->setRegisterV(indexX, n);
 
 			cpu->setPC(cpu->getPC() + 2);
+            
+            cpu->getKeyboard().keyUp(n);
 			break;
 		}
 	}
@@ -367,7 +356,7 @@ void fn_0xFx29(CPU* const cpu, const OpcodeData data) {
 	byte indexX = data.n2;
 	ushort Vx = cpu->getRegisterV(indexX);
 
-	cpu->setAddrRegister(Vx * 0x5); // TODO CHECK
+	cpu->setAddrRegister(Vx * 0x5);
 }
 
 /// 0xFx33 - store BCD of VX in [I], [I+1], [I+2]
@@ -377,9 +366,9 @@ void fn_0xFx33(CPU* const cpu, const OpcodeData data) {
 	byte Vx = cpu->getRegisterV(indexX);
     Memory& mem = cpu->getMemory();
 
-	mem[I] = Vx  / 100;
+	mem[I] = Vx / 100;
 	mem[I + 1] = (Vx / 10) % 10;
-	mem[I + 2] = (Vx % 100) % 10; //CHECK!
+	mem[I + 2] = Vx % 10;
 }
 
 /// 0xFx55 - store V0 .. VX (inclusive) in [I] .. [I + X]

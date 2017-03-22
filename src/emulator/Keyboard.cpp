@@ -11,15 +11,16 @@ void Keyboard::reset()
 	for (int i = 0; i < 16; i++)
 		key[i] = 0;
 
-	// load the fonts
-	//for (int i = 0; i < 80; ++i)
-		//memory[i] = font[i];
-
-	// load the bigfonts
-	//for (int i = 80; i < 80 + 16 * 10; ++i)
-		//memory[i] = bigfont[i];
 }
 
-bool Keyboard::isPressed(unsigned char index) {
+bool Keyboard::isPressed(byte index) {
 	return key[index];
+}
+
+void Keyboard::keyDown(byte index) {
+    key[index] = true;
+}
+
+void Keyboard::keyUp(byte index) {
+    key[index] = false;
 }

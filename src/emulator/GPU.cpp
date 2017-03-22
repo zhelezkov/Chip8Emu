@@ -5,6 +5,10 @@
 
 #include "GPU.hpp"
 
+GPU::~GPU() {
+    delete[] videoMem;
+}
+
 void GPU::clearScreen() {
     for (ushort i = 0; i < width * height; i++) {
         videoMem[i] = 0;
@@ -12,7 +16,7 @@ void GPU::clearScreen() {
 }
 
 void GPU::setResolutionMode(const ResolutionMode mode) {
-    if (resMode == mode) return;
+    //if (resMode == mode) return;
     resMode = mode;
     width = WIDTH / resMode;
     height = HEIGHT / resMode;
@@ -21,18 +25,25 @@ void GPU::setResolutionMode(const ResolutionMode mode) {
     videoMem = new byte[width * height];
 }
 
-
 void GPU::reset() {
 	setResolutionMode(LOW);
 	clearScreen();
 }
 
 void GPU::setPixel(byte pix, ushort x, ushort y) {
-    assert((x + y * width) < width * height);
-    videoMem[x + y * width] = pix;
+    ushort index = (x + y * width);
+    assert(index < width * height);
+    videoMem[index] = pix;
 }
 
 byte GPU::getPixel(ushort x, ushort y) {
-    assert((x + y * width) < width * height);
-    return videoMem[x + y * width];
+    ushort index = (x + y * width);
+    assert(index < width * height);
+    return videoMem[index];
+}
+
+void GPU::xorPixel(ushort x, ushort y) {
+    ushort index = (x + y * width);
+    assert(index < width * height);
+    videoMem[index] ^= 1;
 }

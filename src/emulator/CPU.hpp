@@ -28,15 +28,18 @@ private:
 
 	ushort stack[STACK_SIZE];
 
-	Memory& memory;
-	GPU& gpu;
-	TimersManager& timersManager;
-	Keyboard& keyboard;
+	Memory* memory;
+	GPU* gpu;
+	TimersManager* timersManager;
+	Keyboard* keyboard;
     
 public:	
 	bool exit;
 
-    CPU(Memory& mem, GPU& gpu, TimersManager& timers, Keyboard& keyboard);
+    CPU(Memory* mem, GPU* gpu, TimersManager* timers, Keyboard* keyboard);
+    CPU();
+    ~CPU();
+    
     void reset();
     
 	void tick();

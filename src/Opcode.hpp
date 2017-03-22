@@ -64,7 +64,7 @@ public:
     Opcode(const char* name, const OpMask mask, const char* description, void (*exec)(EXEC_DESCR) = nullptr);
     
     void (*exec)(EXEC_DESCR);
-    const char* getName() { return name; };
+    const char* getName() const { return name; };
 private:
     const char* name;
     const OpMask mask;
