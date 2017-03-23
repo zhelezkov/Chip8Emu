@@ -8,12 +8,12 @@
 
 #include "CHIP.h"
 
-#define WIDTH 128
-#define HEIGHT 64
+#define WIDTH 64
+#define HEIGHT 32
 
 enum ResolutionMode {
-    LOW = 2,
-    HIGH = 1
+    LOW = 1,
+    HIGH = 2
 };
 
 class GPU

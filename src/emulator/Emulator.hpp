@@ -8,10 +8,6 @@
 
 #include "CHIP.h"
 
-#include "CPU.hpp"
-#include "Memory.hpp"
-#include "TimersManager.hpp"
-
 class Emulator {
 private:
     SDL_Window* window;
@@ -27,6 +23,8 @@ public:
     Emulator();
     ~Emulator();
     void run();
+    void render();
+    void swap();
     bool loadRom();
 };
 

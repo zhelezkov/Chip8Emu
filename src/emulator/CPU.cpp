@@ -3,15 +3,18 @@
 //  Chip8Emulator
 //
 
+#include "Memory.hpp"
+#include "GPU.hpp"
+#include "TimersManager.hpp"
+#include "Keyboard.hpp"
+#include "Opcodes.h"
+
 #include "CPU.hpp"
 
 CPU::CPU(Memory* mem, GPU* gpu, TimersManager* timers, Keyboard* keyboard) :memory(mem), gpu(gpu), timersManager(timers), keyboard(keyboard) {
-    
-    reset();
 }
 
 CPU::CPU() : memory(new Memory()), gpu(new GPU()), timersManager(new TimersManager()), keyboard(new Keyboard()) {
-    reset();
 }
 
 CPU::~CPU() {
@@ -37,6 +40,8 @@ void CPU::reset() {
     memory->reset();
     timersManager->reset();
     keyboard->reset();
+    
+    LOG_F(INFO, "CPU reseted");
 }
 
 void CPU::tick() {

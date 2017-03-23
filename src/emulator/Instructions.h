@@ -6,8 +6,14 @@
 #ifndef Instructions_h
 #define Instructions_h
 
-#include "CPU.hpp"
+//TODO make instructions.cpp and keep it as header only
+
 #include <cstdlib>
+#include "CPU.hpp"
+#include "GPU.hpp"
+#include "Memory.hpp"
+#include "Keyboard.hpp"
+#include "TimersManager.hpp"
 
 void fn_nop(CPU* const cpu, const OpcodeData data) {
     throw "Unknown op";
@@ -266,13 +272,13 @@ void fn_0xDxyn(CPU* const cpu, const OpcodeData data) {
 			pixel = memory[I + yLine];
 			for (byte xLine = 0; xLine < 8; xLine++) {
 				if ((pixel & (0x80 >> xLine)) != 0) {
-                    if(gpu.getPixel((x + xLine) & (gpu.getWidth() - 1), (y + yLine) & (gpu.getHeight() - 1)) == 1)
+                    if(gpu.getPixel((x + xLine) % (gpu.getWidth()), (y + yLine) % (gpu.getHeight())) == 1)
                         cpu->setRegisterV(0xF, 1);
-                    else
-                        cpu->setRegisterV(0xF, 0);
+                    //else
+                    //    cpu->setRegisterV(0xF, 0);
                     
                     //printf("XORING: %d %d", (x + xLine) % gpu.getWidth(), (y + yLine) % gpu.getHeight());
-					gpu.xorPixel((x + xLine) & (gpu.getWidth() - 1), (y + yLine) & (gpu.getHeight() - 1));
+					gpu.xorPixel((x + xLine) % (gpu.getWidth()), (y + yLine) % (gpu.getHeight()));
 				}
 			}
 		}

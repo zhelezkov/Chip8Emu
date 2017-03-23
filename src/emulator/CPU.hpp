@@ -6,12 +6,7 @@
 #ifndef CPU_hpp
 #define CPU_hpp
 
-#include "Memory.hpp"
-#include "GPU.hpp"
-#include "TimersManager.hpp"
-#include "Keyboard.hpp"
 #include "CHIP.h"
-#include "Opcodes.h"
 
 #define STACK_SIZE 16
 #define V_REGISTERS_COUNT 16

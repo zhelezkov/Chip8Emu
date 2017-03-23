@@ -19,13 +19,14 @@ foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR})
 endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 
-include_directories(src)
 
 file(GLOB chip8 src/*.cpp src/*.h*)
 file(GLOB chip8asm src/asm/*)
 file(GLOB chip8disasm src/disasm/*)
 file(GLOB chip8emu src/emulator/*)
 file(GLOB utilsPath src/utils/*)
+
+include_directories(src src/utils)
 
 add_library(utils ${utilsPath})
 
