@@ -168,10 +168,11 @@ void Emulator::initWindow() {
     
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
     CHECK_F(renderer != nullptr, "Error during creating renderer: %s", SDL_GetError());
-
     
     screenTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 64, 32);
     CHECK_F(screenTexture != nullptr, "Error during creating texture: %s", SDL_GetError());
+
+	LOG_F(INFO, "Window successfully created");
 }
 
 int main(int argc, char* argv[]) {

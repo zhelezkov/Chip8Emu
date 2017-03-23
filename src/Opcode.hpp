@@ -7,6 +7,7 @@
 #define Opcode_hpp
 
 #include <fstream>
+#include "CHIP.h"
 
 enum OpMask {
     None = 0,

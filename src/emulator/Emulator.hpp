@@ -10,10 +10,10 @@
 
 class Emulator {
 private:
-    SDL_Window* window;
-    SDL_Renderer* renderer;
-    SDL_Texture* screenTexture;
-    CPU* cpu;
+    SDL_Window* window = nullptr;
+    SDL_Renderer* renderer = nullptr;
+    SDL_Texture* screenTexture = nullptr;
+    CPU* cpu = nullptr;
    
     void initWindow();
     void initEmulator();

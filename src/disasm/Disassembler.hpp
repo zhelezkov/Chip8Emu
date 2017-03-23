@@ -7,6 +7,7 @@
 #define Disassembler_hpp
 
 #include "Opcodes.h"
+#include "CHIP.h"
 #include <fstream>
 
 class Disassembler
