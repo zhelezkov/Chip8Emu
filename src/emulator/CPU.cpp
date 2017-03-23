@@ -121,14 +121,12 @@ void CPU::pushStack() {
     stack[SP++] = PC;
 }
 
-ushort CPU::getRegisterR(byte index) const
-{
+byte CPU::getRegisterR(byte index) const {
 	assert(index >= 0 && index < R_REGISTERS_COUNT);
 	return R[index];
 }
 
-void CPU::setRegisterR(byte index, byte val)
-{
+void CPU::setRegisterR(byte index, byte val) {
 	assert(index >= 0 && index < R_REGISTERS_COUNT);
 	R[index] = val;
 }
