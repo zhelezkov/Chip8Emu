@@ -10,7 +10,7 @@
 #include <cstdlib>
 
 void fn_nop(CPU* const cpu, const OpcodeData data) {
-    throw "Unknown op";
+    //throw "Unknown op";
 }
 
 /// 0x00E0 - clears the screen

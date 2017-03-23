@@ -48,7 +48,8 @@ bool Disassembler::disassemble()
         n2 = inFile.get();
         ch = (n1 << 8) + n2;
         const Opcode op = getOpcode(ch);
-        if(op.exec) op.exec(outFile, OpcodeData(ch));
+        //if(op.exec) op.exec(outFile, OpcodeData(ch));
+        op.exec(outFile, OpcodeData(ch));
     }
 
     logFile << "Build successful." << std::endl;
@@ -58,7 +59,7 @@ bool Disassembler::disassemble()
 
 int main()
 {
-    Disassembler disAsm("PONG2", "out.txt");
+    Disassembler disAsm("BLINKY", "out.txt");
     disAsm.disassemble();
     return 0;
 }

@@ -10,7 +10,7 @@
 #include <fstream>
 
 void fn_nop(std::ofstream& out, const OpcodeData data) {
-    throw "Unknown op";
+    out << "byte #" << data.n1 << data.n2 << data.n3 << data.n4 << std::endl;
 }
 
 /// 0x00E0 - clears the screen

@@ -8,6 +8,7 @@
 
 #include "CHIP.h"
 #include <fstream>
+#include <string>
 
 enum OpMask {
     None = 0,
@@ -46,14 +47,18 @@ struct OpcodeData {
 };
 
 #ifdef CHIP_EMU
+//#include "emulator/Instructions.h"
 #define EXEC_DESCR CPU* const, const OpcodeData
 #elif CHIP_ASM
-#define EXEC_DESCR
+//#include "asm/Instructions.h"
+#define EXEC_DESCR std::ofstream&, const std::string&
 #elif CHIP_DISASM
+//#include "disasm/Instructions.h"
 #define EXEC_DESCR std::ofstream&, const OpcodeData
 #endif
 
 class CPU;
+extern void fn_nop(EXEC_DESCR);
 
 class Opcode final {
 public:
@@ -61,7 +66,7 @@ public:
         
     }
     
-    Opcode(const char* name, const OpMask mask, const char* description, void (*exec)(EXEC_DESCR) = nullptr);
+    Opcode(const char* name, const OpMask mask, const char* description, void (*exec)(EXEC_DESCR) = fn_nop);
     
     void (*exec)(EXEC_DESCR);
     const char* getName() { return name; };
