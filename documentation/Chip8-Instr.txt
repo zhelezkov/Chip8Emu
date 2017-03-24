@@ -50,3 +50,22 @@ FX65	LD VX, [I]	Load V0..VX (inclusive) from memory starting at I; I remains unc
 FX30	LD HF, VX	I = address of 8x10 font character in VX (0..F) (* see note)
 FX75	LD R, VX	Store V0..VX (inclusive) into HP-RPL user flags R0..RX (X < 8)
 FX85	LD VX, R	Load V0..VX (inclusive) from HP-RPL user flags R0..RX (X < 8)
+
+binary: byte %1..1..11
+hex:    byte #A10F
+dec:    byte 12
+
+[label:] - map<string, ushort>
+[comand] [arg1] [arg2]
+[name] var [register]
+[name] equ [value]
+
+(;+.*)?[ |,|\t]*([\w-\[\]:#%\.]+)?[ |,|\t]*([^\w-\[\]:#%\. ,\n;]+)? //regex
+(;+.*)?[\s|,]*([\w-\[\]:#%\.]+)?[\s|,]*([^\w-\[\]:#%\. ,\s;]+)? //with all spaces
+[\\s|,]*(;+.*)?[\\s|,]*([\\w-\\[\\]:#%\\.]+)?[\\s|,]*([^\\w-\\[\\]:#%\\. ,\\s;]+)? //C++
+
+(;+.*)? //comments
+[\s|,]* //spaces
+    ([\w-\[\]:#%\.]+)? //comand
+[\s|,]* //spaces
+([^\w-\[\]:#%\. ,\s;]+)? //errors

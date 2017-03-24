@@ -4,7 +4,7 @@
 //
 
 #include "Assembler.hpp"
-
+#include <regex>
 
 Assembler::Assembler(const char * in, const char * out) : in(in), out(out)
 {
@@ -26,16 +26,30 @@ bool Assembler::Assemble()
     logFile << "OK: file is opened." << std::endl;
 
     std::string s;
+    std::cmatch result;
+    std::regex regular("[\\s|,]*(;+.*)?[\\s|,]*([\\w-\\[\\]:#%\\.]+)?[\\s|,]*([^\\w-\\[\\]:#%\\. ,\\s;]+)?");
     while (getline(inFile, s))
     {
+        std::regex_search(s.c_str(), result, regular);
+        for (int i = 1; i < result.size(); i++)
+            if(result[i] != "") outFile << result[i] << ' ';
 
+        while (result.suffix().str() != "")
+        {
+            s = result.suffix().str();
+            std::regex_search(s.c_str(), result, regular);
+            for (int i = 1; i < result.size(); i++)
+                if (result[i] != "") outFile << result[i] << ' ';
+        }
+
+        outFile << "\n";
     }
 
     return true;
 }
 
 int main() {
-    Assembler Asm("in.asm", "out.txt");
+    Assembler Asm("in.c8", "out.txt");
     Asm.Assemble();
     return 0;
 }
