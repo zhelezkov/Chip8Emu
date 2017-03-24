@@ -30,16 +30,12 @@ bool Assembler::Assemble()
     std::regex regular("[\\s|,]*(;+.*)?[\\s|,]*([\\w-\\[\\]:#%\\.]+)?[\\s|,]*([^\\w-\\[\\]:#%\\. ,\\s;]+)?");
     while (getline(inFile, s))
     {
-        std::regex_search(s.c_str(), result, regular);
-        for (int i = 1; i < result.size(); i++)
-            if(result[i] != "") outFile << result[i] << ' ';
-
-        while (result.suffix().str() != "")
+        while (std::regex_search(s.c_str(), result, regular) && s != "")
         {
-            s = result.suffix().str();
-            std::regex_search(s.c_str(), result, regular);
             for (int i = 1; i < result.size(); i++)
                 if (result[i] != "") outFile << result[i] << ' ';
+
+            s = result.suffix().str();
         }
 
         outFile << "\n";
