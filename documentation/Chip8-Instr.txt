@@ -1,4 +1,4 @@
-00E0	CLS	Clear video memory
+﻿00E0	CLS	Clear video memory
 00EE	RET	Return from subroutine
 /*0NNN	SYS NNN	Call CDP1802 subroutine at NNN |DELETED|*/
 00BN	SCU N	Scroll up N pixels (N/2 pixels in low res mode)
@@ -56,16 +56,18 @@ hex:    byte #A10F
 dec:    byte 12
 
 [label:] - map<string, ushort>
-[comand] [arg1] [arg2]
+[command] [arg1] [arg2]
 [name] var [register]
 [name] equ [value]
 
+[<метка>:] <мнемокод> [<операнды>] [;<комментарий>]
+
 (;+.*)?[ |,|\t]*([\w-\[\]:#%\.]+)?[ |,|\t]*([^\w-\[\]:#%\. ,\n;]+)? //regex
 (;+.*)?[\s|,]*([\w-\[\]:#%\.]+)?[\s|,]*([^\w-\[\]:#%\. ,\s;]+)? //with all spaces
-[\\s|,]*(;+.*)?[\\s|,]*([\\w-\\[\\]:#%\\.]+)?[\\s|,]*([^\\w-\\[\\]:#%\\. ,\\s;]+)? //C++
+(;+.*)?[\\s|,]*([\\w-\\[\\]:#%\\.]+)?[\\s|,]*([^\\w-\\[\\]:#%\\. ,\\s;]+)? //C++
 
 (;+.*)? //comments
 [\s|,]* //spaces
-    ([\w-\[\]:#%\.]+)? //comand
+    ([\w-\[\]:#%\.]+)? //command
 [\s|,]* //spaces
 ([^\w-\[\]:#%\. ,\s;]+)? //errors
