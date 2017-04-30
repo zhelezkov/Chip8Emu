@@ -223,7 +223,8 @@ bool Assembler::Assemble()
 	if (ERROR) goto END;
 
 	/*********************************** command and memory parse *************************/
-	int curMem = 0x200;
+    {
+    int curMem = 0x200;
 	const std::pair<int, int> NILtoken = { -1, -1 };
 	// string == label + cmd + comments
 	for (int strNum = 0; strNum < ovector.size(); strNum++)
@@ -296,6 +297,7 @@ bool Assembler::Assemble()
 			file[strNum].first = -1;
 		}
 	}
+    }
 	if (ERROR) goto END;
 
 

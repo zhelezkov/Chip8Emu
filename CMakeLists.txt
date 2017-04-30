@@ -4,6 +4,7 @@ project(Chip8Dev CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
+find_package(PCRE REQUIRED)
 
 set (CMAKE_CXX_STANDARD 11)
 
@@ -36,6 +37,8 @@ target_link_libraries(chip8emu ${SDL2_LIBRARY} ${OPENGL_gl_LIBRARY} utils)
 target_compile_definitions(chip8emu PRIVATE CHIP_EMU)
 
 add_executable(chip8asm ${chip8} ${chip8asm})
+target_include_directories(chip8asm PRIVATE ${PCRE_INCLUDE_DIRS})
+target_link_libraries(chip8asm ${PCRE_LIBRARY})
 target_compile_definitions(chip8asm PRIVATE CHIP_ASM)
 
 add_executable(chip8disasm ${chip8} ${chip8disasm})
