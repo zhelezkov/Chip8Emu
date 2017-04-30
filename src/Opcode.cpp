@@ -14,7 +14,7 @@
 #include "asm/Instructions.h"
 #endif
 
-Opcode::Opcode(const char* name, const OpMask mask, const char* description, void (*exec)(EXEC_DESCR)) : exec(exec), name(name), mask(mask), description(description) {
+Opcode::Opcode(const char* name, const OpMask mask, const std::vector<typeArg> arguments, const char* description, void (*exec)(EXEC_DESCR)) : exec(exec), name(name), mask(mask), arguments(arguments), description(description) {
 }
 
 #define k 0
@@ -28,8 +28,8 @@ Opcode::Opcode(const char* name, const OpMask mask, const char* description, voi
 #define E 0xE
 #define F 0xF
 
+INIT_OPS
 const Opcode& getOpcode(const OpcodeData opcode) {
-    INIT_OPS
     switch (opcode.n1) {
         case 0x0:
             switch (opcode.n3) {
@@ -61,6 +61,16 @@ const Opcode& getOpcode(const OpcodeData opcode) {
             return ops[0xFFFF];
     }
 };
+
+std::map<ushort, Opcode>::iterator getBeginOps()
+{
+	return ops.begin();
+}
+
+std::map<ushort, Opcode>::iterator getEndOps()
+{
+	return ops.end();
+}
 
 #undef n
 #undef k

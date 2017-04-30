@@ -7,8 +7,27 @@
 #define Opcode_hpp
 
 #include <fstream>
+#include <vector>
 #include "CHIP.h"
 #include <string>
+
+enum typeArg {
+	name,
+	number,
+	reg,
+	addr,
+	dt,
+	st
+};
+
+static const std::string typeArgStr[]{
+	"string-name",
+	"number",
+	"register",
+	"address",
+	"Delay timer",
+	"Sound timer"
+};
 
 enum OpMask {
     None = 0,
@@ -62,15 +81,18 @@ extern void fn_nop(EXEC_DESCR);
 
 class Opcode final {
 public:
-    Opcode() : Opcode("", None, "") {
+	Opcode() : Opcode("", None, {}, "") {
         
     }
     
-    Opcode(const char* name, const OpMask mask, const char* description, void (*exec)(EXEC_DESCR) = fn_nop);
+    Opcode(const char* name, const OpMask mask, const std::vector<typeArg> arguments, const char* description, void (*exec)(EXEC_DESCR) = fn_nop);
     
     void (*exec)(EXEC_DESCR);
     const char* getName() const { return name; };
+	const std::vector<typeArg> getArgs() const { return arguments; }
+
 private:
+	const std::vector<typeArg> arguments;
     const char* name;
     const OpMask mask;
     const char* description;
