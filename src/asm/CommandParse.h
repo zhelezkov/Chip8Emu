@@ -35,7 +35,7 @@ bool CheckArg(StringToken str, typeArg _correctType)
 	if (_correctType == number)
 	{
 		// + equ + label
-		if (type == BIN || type == HEX || type == DEC || equ.count(str.commandStr) || labels.count(str.commandStr + ":")) return true;
+		if (type == BIN || type == HEX || type == DEC || equ.count(str.commandStr) || labels.count(str.commandStr)) return true;
 		else return false;
 	}
 
@@ -49,6 +49,48 @@ bool CheckArg(StringToken str, typeArg _correctType)
 	if (_correctType == addr)
 	{
 		if (type == ADDR) return true;
+		else return false;
+	}
+
+	if (_correctType == addr)
+	{
+		if (type == ADDR) return true;
+		else return false;
+	}
+
+	if (_correctType == i)
+	{
+		if (type == I) return true;
+		else return false;
+	}
+
+	if (_correctType == b)
+	{
+		if (type == B) return true;
+		else return false;
+	}
+
+	if (_correctType == v0)
+	{
+		if (str.commandStr == "v0" || str.commandStr == "V0") return true;
+		else return false;
+	}
+
+	if (_correctType == f)
+	{
+		if (type == F) return true;
+		else return false;
+	}
+
+	if (_correctType == hf)
+	{
+		if (type == HF) return true;
+		else return false;
+	}
+
+	if (_correctType == r)
+	{
+		if (type == R) return true;
 		else return false;
 	}
 
@@ -69,6 +111,9 @@ bool CheckArg(StringToken str, typeArg _correctType)
 
 bool Check(int strNum, const std::pair<int, int>& CommandToken, const std::vector<typeArg>& arguments, bool debug)
 {
+	std::string cmd = ovector[strNum][CommandToken.first].commandStr;
+	std::transform(cmd.begin(), cmd.end(), cmd.begin(), toupper);
+
 	/**************************************** check count of arguments *****************************/
 	if (CommandToken.second - CommandToken.first != arguments.size())
 	{
@@ -78,7 +123,7 @@ bool Check(int strNum, const std::pair<int, int>& CommandToken, const std::vecto
 
 	/******************************************** Redefinition *************************************/
 	// ONLY FOR VAR, EQU
-	if(ovector[strNum][CommandToken.first].commandStr == "EQU" || ovector[strNum][CommandToken.first].commandStr == "VAR")
+	if(cmd == "EQU" || cmd == "VAR")
 		if (Redefinition(ovector[strNum][CommandToken.first + 1].commandStr))
 		{
 			errors.push_back(StringNumber(strNum) + " Redefinition: " + ovector[strNum][CommandToken.first + 1].commandStr);
@@ -108,10 +153,10 @@ bool CheckCommand(int strNum, const std::pair<int, int>& CommandToken, int& curM
 		str[CommandToken.first].type = CMD;
 		arguments = { name, number };
 		file[strNum].first = -1;
-		equ[str[CommandToken.first + 1].commandStr] = strToNumber(str[CommandToken.first + 2].commandStr);
 
 		if (Check(strNum, CommandToken, arguments, true))
 		{
+			equ[str[CommandToken.first + 1].commandStr] = strToNumber(str[CommandToken.first + 2].commandStr);
 			file[strNum].second = false;
 			return true;
 		}
@@ -128,10 +173,10 @@ bool CheckCommand(int strNum, const std::pair<int, int>& CommandToken, int& curM
 		str[CommandToken.first].type = CMD;
 		arguments = { name, reg };
 		file[strNum].first = -1;
-		var[str[CommandToken.first + 1].commandStr] = strToNumber(str[CommandToken.first + 2].commandStr);
 		
 		if (Check(strNum, CommandToken, arguments, true))
 		{
+			var[str[CommandToken.first + 1].commandStr] = strToNumber(str[CommandToken.first + 2].commandStr);
 			file[strNum].second = false;
 			return true;
 		}

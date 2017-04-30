@@ -16,8 +16,14 @@ enum typeArg {
 	number,
 	reg,
 	addr,
+	i,
+	b,
 	dt,
-	st
+	st,
+	v0,
+	f,
+	hf,
+	r
 };
 
 static const std::string typeArgStr[]{
@@ -25,8 +31,14 @@ static const std::string typeArgStr[]{
 	"number",
 	"register",
 	"address",
+	"I",
+	"BCD",
 	"Delay timer",
-	"Sound timer"
+	"Sound timer",
+	"V0",
+	"font - F",
+	"HyperFont - HF",
+	"RPL - R"
 };
 
 enum OpMask {

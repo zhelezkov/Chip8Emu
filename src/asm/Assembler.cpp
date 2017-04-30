@@ -153,7 +153,9 @@ bool Assembler::Assemble()
 					/******************** add label ******************/
 					else
 					{
-						labels[ovector[strNum][TokenNum].commandStr] = strNum;
+						std::string label = ovector[strNum][TokenNum].commandStr;
+						label.erase(label.end() - 1);
+						labels[label] = strNum;
 					}
 				}
 				continue;

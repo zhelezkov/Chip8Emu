@@ -119,6 +119,13 @@ bool checkStrForST(std::string s)
 	else return false;
 }
 
+bool checkStrForHF(std::string s)
+{
+	std::transform(s.begin(), s.end(), s.begin(), toupper);
+	if (s == "HF")return true;
+	else return false;
+}	 
+
 bool checkTypeForArg(typeToken type)
 {
 	return type != LABEL && type != COMMENT && type != NIL;

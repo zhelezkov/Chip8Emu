@@ -76,6 +76,11 @@ struct StringToken
 				if (checkStrForRegister(commandStr)) type = REG;
 				if (checkStrForDT(commandStr)) type = DT;
 				if (checkStrForST(commandStr)) type = ST;
+				if (checkStrForHF(commandStr)) type = HF;
+				if (commandStr == "I" || commandStr == "i") type = I;
+				if (commandStr == "B" || commandStr == "b") type = B;
+				if (commandStr == "R" || commandStr == "r") type = R;
+				if (commandStr == "F" || commandStr == "f") type = F;
 
 				if (type == NIL) type = NAME;
 			}

@@ -7,6 +7,11 @@ enum typeToken {
 	DT,
 	ST,
 	ADDR, // [i]
+	I,	  // I
+	B,    // BCD == 'b'
+	F,
+	HF,
+	R,
 	LABEL,
 	CMD,
 	REG,
@@ -22,6 +27,11 @@ static const std::string typeTokenStr[] = {
 	"DT",
 	"ST",
 	"ADDR",
+	"I",
+	"B",
+	"F",
+	"HF",
+	"RPL",
 	"LABEL",
 	"CMD",
 	"REG",
