@@ -12,6 +12,8 @@
 #include "StringToken.hpp"
 #include "HelpFunctions.h"
 #include <vector>
+#include <string>
+#include <algorithm>
 
 extern std::vector <std::pair<int, bool>> file;		  // in Assembler.cpp
 extern std::vector <std::string> errors;			  // in Assembler.cpp
@@ -21,23 +23,26 @@ extern std::map<std::string, byte> equ;				  // in Assembler.cpp
 extern bool ERROR;									  // in Assembler.cpp
 extern std::vector<std::vector<StringToken>> ovector; // in Assembler.cpp
 
-bool CheckArg(typeToken type, typeArg _correctType)
+bool CheckArg(StringToken str, typeArg _correctType)
 {
+	typeToken type = str.type;
 	if (_correctType == name)
 	{
-		if (type == UNK) return true;
+		if (type == NAME) return true;
 		else return false;
 	}
 
 	if (_correctType == number)
 	{
-		if (type == BIN || type == HEX || type == DEC) return true;
+		// + equ + label
+		if (type == BIN || type == HEX || type == DEC || equ.count(str.commandStr) || labels.count(str.commandStr + ":")) return true;
 		else return false;
 	}
 
 	if (_correctType == reg)
 	{
-		if (type == REG) return true;
+		// + var
+		if (type == REG || var.count(str.commandStr)) return true;
 		else return false;
 	}
 
@@ -62,74 +67,125 @@ bool CheckArg(typeToken type, typeArg _correctType)
 	return false;
 }
 
-typeToken typeArgTotypeToken(typeArg type)
-{
-
-}
-
-bool Check(int strNum, const std::pair<int, int>& CommandToken, const std::vector<typeArg>& arguments)
+bool Check(int strNum, const std::pair<int, int>& CommandToken, const std::vector<typeArg>& arguments, bool debug)
 {
 	/**************************************** check count of arguments *****************************/
 	if (CommandToken.second - CommandToken.first != arguments.size())
 	{
-		errors.push_back(StringNumber(strNum) + " Error count of arguments.");
+		if(debug) errors.push_back(StringNumber(strNum) + " Error count of arguments.");
 		return false;
 	}
 
 	/******************************************** Redefinition *************************************/
-	for(int i = 0; i < arguments.size(); i++)
-		if(arguments[i] != reg)
-			if (Redefinition(ovector[strNum][CommandToken.first + 1 + i].commandStr))
-			{
-				errors.push_back(StringNumber(strNum) + " Redefinition: " + ovector[strNum][CommandToken.first + 1].commandStr);
-				return false;
-			}
+	// ONLY FOR VAR, EQU
+	if(ovector[strNum][CommandToken.first].commandStr == "EQU" || ovector[strNum][CommandToken.first].commandStr == "VAR")
+		if (Redefinition(ovector[strNum][CommandToken.first + 1].commandStr))
+		{
+			errors.push_back(StringNumber(strNum) + " Redefinition: " + ovector[strNum][CommandToken.first + 1].commandStr);
+			return false;
+		}
 
 	/********************************* Correct type of arguments **********************************/
 	for(int i = 0; i < arguments.size(); i++)
-		if (!CheckArg(ovector[strNum][CommandToken.first + 1 + i].type, arguments[i]))
+		if (!CheckArg(ovector[strNum][CommandToken.first + 1 + i], arguments[i]))
 		{
-			errors.push_back(StringNumber(strNum) + ' ' + std::to_string(i + 1) + "th argument should be the " + typeArgStr[arguments[i]] + ": " + ovector[strNum][CommandToken.first + 1].commandStr);
+			if (debug) errors.push_back(StringNumber(strNum) + ' ' + std::to_string(i + 1) + "th argument should be the " + typeArgStr[arguments[i]] + ": " + ovector[strNum][CommandToken.first + 1].commandStr);
 			return false;
 		}
+
+	return true;
 }
 
 bool CheckCommand(int strNum, const std::pair<int, int>& CommandToken, int& curMem)
 {
 	std::vector<StringToken>& str = ovector[strNum];
 	std::string cmd = ovector[strNum][CommandToken.first].commandStr;
+	std::transform(cmd.begin(), cmd.end(), cmd.begin(), toupper);
 	std::vector<typeArg> arguments;
 	
+	if (cmd == "EQU")
+	{
+		str[CommandToken.first].type = CMD;
+		arguments = { name, number };
+		file[strNum].first = -1;
+		equ[str[CommandToken.first + 1].commandStr] = strToNumber(str[CommandToken.first + 2].commandStr);
+
+		if (Check(strNum, CommandToken, arguments, true))
+		{
+			file[strNum].second = false;
+			return true;
+		}
+		else
+		{
+			file[strNum].second = true;
+			ERROR = true;
+			return false;
+		}
+	}
+
+	if (cmd == "VAR")
+	{
+		str[CommandToken.first].type = CMD;
+		arguments = { name, reg };
+		file[strNum].first = -1;
+		var[str[CommandToken.first + 1].commandStr] = strToNumber(str[CommandToken.first + 2].commandStr);
+		
+		if (Check(strNum, CommandToken, arguments, true))
+		{
+			file[strNum].second = false;
+			return true;
+		}
+		else
+		{
+			file[strNum].second = true;
+			ERROR = true;
+			return false;
+		}
+	}
+
+	if (cmd == "BYTE")
+	{
+		str[CommandToken.first].type = CMD;
+		arguments = { number };
+		file[strNum].first = curMem;
+		curMem += 2;
+
+		if (Check(strNum, CommandToken, arguments, true))
+		{
+			file[strNum].second = false;
+			return true;
+		}
+		else
+		{
+			file[strNum].second = true;
+			ERROR = true;
+			return false;
+		}
+	}
+
 	for (auto it = getBeginOps(); it != getEndOps(); it++)
 	{
 		arguments = (*it).second.getArgs();
-		if (Check(strNum, CommandToken, arguments))
+		if (cmd == (*it).second.getName())
 		{
+			bool debug = true;
+			if (cmd != "LD" || cmd != "SE" || cmd != "SNE" || cmd != "JP" || cmd != "ADD") debug = false;
+
 			str[CommandToken.first].type = CMD;
-			for (int i = 0; i < arguments.size(); i++)
-			{
-				str[CommandToken.first + 1 + i].type = typeArgTotypeToken(arguments[i]);
-			}
-
 			file[strNum].first = curMem;
-			file[strNum].second = false;
-
-			if (cmd == "equ")
-			{
-				curMem -= 2;
-				file[strNum].first = -1;
-				equ[str[CommandToken.first + 1].commandStr] = strToNumber(str[CommandToken.first + 2].commandStr);
-			}
-
-			if (cmd == "var")
-			{
-				curMem -= 2;
-				file[strNum].first = -1;
-				var[str[CommandToken.first + 1].commandStr] = strToNumber(str[CommandToken.first + 2].commandStr);
-			}
-
 			curMem += 2;
-			return true;
+
+			if (Check(strNum, CommandToken, arguments, debug))
+			{
+				file[strNum].second = false;
+				return true;
+			}
+			else
+			{
+				file[strNum].second = true;
+				ERROR = true;
+				if (debug) return false;
+			}
 		}
 	}
 

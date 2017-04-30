@@ -277,7 +277,15 @@ bool Assembler::Assemble()
 			}
 
 			/************************** parse command *****************************/
-			if (CommandToken == NILtoken) continue;
+			if (CommandToken == NILtoken)
+				if(LabelsToken != NILtoken)
+				{
+					file[strNum].first = curMem;
+					file[strNum].second = false;
+					curMem += 2;
+					continue;
+				}
+
 			CheckCommand(strNum, CommandToken, curMem);
 		}
 		/******************** empty str or comments **************/
@@ -311,7 +319,7 @@ bool Assembler::Assemble()
 	}
 
 	// print our log
-	logFile << "Errors: \n";
+	logFile << "Errors: " << errors.size() << "\n";
 	for (int i = 0; i < errors.size(); i++)
 		logFile << errors[i] << "\n";
 	logFile << "\n";
@@ -335,7 +343,7 @@ bool Assembler::Assemble()
 	}
 	logFile << "\n";
 
-    logFile << "Time: " << clock() - start;
+    logFile << "Time: " << std::dec << clock() - start;
     return true;
 }
 

@@ -8,41 +8,10 @@
 
 #include <string>
 #include <tuple>
+#include "HelpFunctions.h"
+#include "typeToken.h"
 
 const int lengthToken = 15;
-enum typeToken {
-	UNK,
-	DT,
-	ST,
-	ADDR, // [i]
-	LABEL,
-	CMD,
-	REG,
-	HEX,
-	DEC,
-	BIN,
-	VAR,
-	CONST,
-	COMMENT,
-	NIL
-};
-
-std::string typeTokenStr[] = {
-	"UNK",
-	"DT",
-	"ST",
-	"ADDR",
-	"LABEL",
-	"CMD",
-	"REG",
-	"HEX",
-	"DEC",
-	"BIN",
-	"VAR",
-	"CONST",
-	"COMMENT",
-	"NIL"
-};
 
 struct StringToken
 {
@@ -108,7 +77,7 @@ struct StringToken
 				if (checkStrForDT(commandStr)) type = DT;
 				if (checkStrForST(commandStr)) type = ST;
 
-				if (type == NIL) type = UNK;
+				if (type == NIL) type = NAME;
 			}
 		}
 		else type = NIL;

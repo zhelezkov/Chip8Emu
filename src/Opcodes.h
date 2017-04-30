@@ -60,22 +60,22 @@ BEGIN_OPS \
     OP(op(F,x,1,5), "LD", DTVx, args(reg), "Set delay timer = Vx.", fn(0xFx15)), \
     OP(op(F,x,1,8), "LD", STVx, args(reg), "Set sound timer = Vx.", fn(0xFx18)), \
     OP(op(F,x,1,E), "ADD", IVx, args(reg), "Set I = I + Vx.", fn(0xFx1E)), \
-    OP(op(F,x,2,9), "LD", FVx, { reg }, "Set I = location of sprite for digit Vx.", fn(0xFx29)), \
-    OP(op(F,x,3,3), "LD", BVx, { reg }, "Store BCD representation of Vx in memory locations I, I+1, and I+2.", fn(0xFx33)), \
-    OP(op(F,x,5,5), "LD", IVx, { reg }, "Store registers V0 through Vx in memory starting at location I.", fn(0xFx55)), \
-    OP(op(F,x,6,5), "LD", VxI, { reg }, "Read registers V0 through Vx from memory starting at location I.", fn(0xFx65)), \
-    OP(op(F,F,F,F), "NOP", None, { }, "Unknown command", fn(nop)), \
+    OP(op(F,x,2,9), "LD", FVx, args(reg), "Set I = location of sprite for digit Vx.", fn(0xFx29)), \
+    OP(op(F,x,3,3), "LD", BVx, args(reg), "Store BCD representation of Vx in memory locations I, I+1, and I+2.", fn(0xFx33)), \
+    OP(op(F,x,5,5), "LD", IVx, args(reg), "Store registers V0 through Vx in memory starting at location I.", fn(0xFx55)), \
+    OP(op(F,x,6,5), "LD", VxI, args(reg), "Read registers V0 through Vx from memory starting at location I.", fn(0xFx65)), \
+    OP(op(F,F,F,F), "NOP", None, args(), "Unknown command", fn(nop)), \
     /************ Super CHIP-8 functions ************/ \
-    OP(op(0,0,B,n), "SCU", N, { number }, "Scroll display N lines up.(N/2 in low res)", fn(0x00Bn)), \
-    OP(op(0,0,C,n), "SCD", N, { number }, "Scroll display N lines down.(N/2 in low res)", fn(0x00Cn)), \
-    OP(op(0,0,F,B), "SCR", None, { }, "Scroll display 4 pixels right.(2 pix in low res)", fn(0x00FB)), \
-    OP(op(0,0,F,C), "SCL", None, { }, "Scroll display 4 pixels left.(2 pix in low res)", fn(0x00FC)), \
-    OP(op(0,0,F,D), "EXIT", None, { }, "Quit the emulator.", fn(0x00FD)), \
-    OP(op(0,0,F,E), "LOW", None, { }, "Enter low res screen mode", fn(0x00FE)), \
-    OP(op(0,0,F,F), "HIGH", None, { }, "Enter high res screen mode", fn(0x00FF)), \
-    OP(op(F,x,3,0), "LD", Vx, { reg }, "Point I to 10 byte numeric sprite for value in VX.", fn(0xFx30)), \
-    OP(op(F,x,7,5), "LD", Vx, { reg }, "Save V0...VX (X<8) in the RPL flags.", fn(0xFx75)), \
-    OP(op(F,x,8,5), "LD", Vx, { reg }, "Load V0...VX (X<8) from the RPL flags.", fn(0xFx85)) \
+    OP(op(0,0,B,n), "SCU", N, args(number), "Scroll display N lines up.(N/2 in low res)", fn(0x00Bn)), \
+    OP(op(0,0,C,n), "SCD", N, args(number), "Scroll display N lines down.(N/2 in low res)", fn(0x00Cn)), \
+    OP(op(0,0,F,B), "SCR", None, args(), "Scroll display 4 pixels right.(2 pix in low res)", fn(0x00FB)), \
+    OP(op(0,0,F,C), "SCL", None, args(), "Scroll display 4 pixels left.(2 pix in low res)", fn(0x00FC)), \
+    OP(op(0,0,F,D), "EXIT", None, args(), "Quit the emulator.", fn(0x00FD)), \
+    OP(op(0,0,F,E), "LOW", None, args(), "Enter low res screen mode", fn(0x00FE)), \
+    OP(op(0,0,F,F), "HIGH", None, args(), "Enter high res screen mode", fn(0x00FF)), \
+    OP(op(F,x,3,0), "LD", Vx, args(reg), "Point I to 10 byte numeric sprite for value in VX.", fn(0xFx30)), \
+    OP(op(F,x,7,5), "LD", Vx, args(reg), "Save V0...VX (X<8) in the RPL flags.", fn(0xFx75)), \
+    OP(op(F,x,8,5), "LD", Vx, args(reg), "Load V0...VX (X<8) from the RPL flags.", fn(0xFx85)) \
 END_OPS
 
 extern const Opcode& getOpcode(const OpcodeData opcode);

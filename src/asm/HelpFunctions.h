@@ -10,7 +10,9 @@
 #include <map>
 #include <set>
 #include <string>
+#include <algorithm>
 #include "Opcodes.h"
+#include "typeToken.h"
 #include "CHIP.h"
 
 extern std::map<std::string, ushort> labels; // in Assembler.cpp
@@ -92,23 +94,29 @@ bool checkStrForRegister(const std::string& s)
 	else return false;
 }
 
-bool checkStrForCommand(const std::string& s)
+bool checkStrForCommand(std::string s)
 {
+	std::transform(s.begin(), s.end(), s.begin(), toupper);
 	for (auto it = getBeginOps(); it != getEndOps(); it++)
 	{
-
+		if (s == (*it).second.getName())
+			return true;
 	}
-
+	return false;
 }
 
-bool checkStrForDT(const std::string& s)
+bool checkStrForDT(std::string s)
 {
-
+	std::transform(s.begin(), s.end(), s.begin(), toupper);
+	if(s == "DT" )return true;
+	else return false;
 }
 
-bool checkStrForST(const std::string& s)
+bool checkStrForST(std::string s)
 {
-
+	std::transform(s.begin(), s.end(), s.begin(), toupper);
+	if (s == "ST")return true;
+	else return false;
 }
 
 bool checkTypeForArg(typeToken type)
