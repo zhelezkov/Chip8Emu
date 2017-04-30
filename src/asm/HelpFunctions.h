@@ -158,6 +158,10 @@ byte strToNumber(std::string str)
 
 bool Redefinition(const std::string& str)
 {
+	std::string temp = str;
+	std::transform(temp.begin(), temp.end(), temp.begin(), toupper);
+	if (temp == "EQU" || temp == "VAR" || temp == "BYTE") return true;
+
 	return labels.count(str) || equ.count(str) || var.count(str) || checkStrForRegister(str) || checkStrForCommand(str);
 }
 #endif HelpFunctions_h /* HelpFunctions.h */
