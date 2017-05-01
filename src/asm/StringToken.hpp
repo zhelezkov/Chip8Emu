@@ -8,8 +8,8 @@
 
 #include <string>
 #include <tuple>
-#include "HelpFunctions.h"
 #include "typeToken.h"
+#include "HelpFunctions.h"
 
 const int lengthToken = 15;
 
@@ -99,4 +99,4 @@ struct StringToken
 	}
 };
 
-#endif StringToken_hpp /* StringToken.hpp */
+#endif /* StringToken.hpp */

@@ -10,6 +10,8 @@
 #include <vector>
 #include "CHIP.h"
 #include <string>
+#include <vector>
+#include <tuple>
 
 enum typeArg {
 	name,
@@ -82,7 +84,9 @@ struct OpcodeData {
 #define EXEC_DESCR CPU* const, const OpcodeData
 #elif CHIP_ASM
 //#include "asm/Instructions.h"
-#define EXEC_DESCR std::ofstream&, const std::string&
+#include "asm/StringToken.hpp"
+#include "asm/Defines.h"
+#define EXEC_DESCR std::ofstream&, VECTOR_TYPE&
 #elif CHIP_DISASM
 //#include "disasm/Instructions.h"
 #define EXEC_DESCR std::ofstream&, const OpcodeData

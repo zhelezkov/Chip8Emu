@@ -1,16 +1,9 @@
-//
-//  Assembler.hpp
-//  Chip8Asm
-//
+#pragma once
+#include <tuple>
+#include <vector>
+#include "asm/StringToken.hpp"
 
-#ifndef Assembler_hpp
-#define Assembler_hpp
-
-#include "Opcodes.h"
-#include "Defines.h"
-#include <fstream>
-
-/*struct TokenIndexes {
+struct TokenIndexes {
 	std::pair<int, int> LabelToken;
 	std::pair<int, int> CommandToken;
 	std::pair<int, int> CommentToken;
@@ -29,16 +22,4 @@
 #define ARGS(i) std::get<1>(ovector[i])
 #define CMD_IND(i) std::get<2>(ovector[i]).CommandToken
 #define LABEL_IND(i) std::get<2>(ovector[i]).LabelToken
-#define COMMENT_IND(i) std::get<2>(ovector[i]).CommentToken*/
-
-class Assembler
-{
-    const char* in;
-    const char* out;
-    const char* log = "Assembler.log";
-
-public:
-    Assembler(const char *in, const char* out);
-    bool Assemble();
-};
-#endif /* Assembler_hpp */
+#define COMMENT_IND(i) std::get<2>(ovector[i]).CommentToken

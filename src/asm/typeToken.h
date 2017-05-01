@@ -1,4 +1,10 @@
-#pragma once
+//
+//  typeToken.h
+//  Chip8Asm
+//
+
+#ifndef typeToken_h
+#define typeToken_h
 
 #include <string>
 
@@ -41,3 +47,5 @@ static const std::string typeTokenStr[] = {
 	"COMMENT",
 	"NIL"
 };
+
+#endif /* typeToken.h */

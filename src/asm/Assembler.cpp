@@ -22,7 +22,7 @@ std::map<std::string, ushort> labels;			// labels
 std::map<std::string, byte> var;				// names of registers (var)					
 std::map<std::string, byte> equ;				// const (equ)	
 bool ERROR = false;								// global error
-std::vector<std::vector<StringToken>> ovector;	// parsed file here
+std::vector<VECTOR_TYPE> ovector;				// parsed file here
 
 Assembler::Assembler(const char * in, const char * out) : in(in), out(out)
 {
@@ -31,8 +31,8 @@ Assembler::Assembler(const char * in, const char * out) : in(in), out(out)
 
 bool Assembler::Assemble()
 {
-    std::ifstream inFile(in, std::ios::binary | std::ios::in);
-    std::ofstream outFile(out, std::ios::out);
+    std::ifstream inFile(in, std::ios::in);
+    std::ofstream outFile(out, std::ios::binary | std::ios::out);
     std::ofstream logFile(this->log, std::ios::out);
 
 	std::ofstream temp("Assemble.txt", std::ios::out);
@@ -84,20 +84,20 @@ bool Assembler::Assemble()
 	std::string s;
 	while (getline(inFile, s))
 	{
-		ovector.push_back(std::vector<StringToken>());
+		ovector.push_back(NEWSTR);
 		int offset = 0;
 		int strNum = ovector.size() - 1;
 		int TokenNum;
 
 		while (offset < s.length())
 		{
-			ovector[strNum].push_back(StringToken());
-			TokenNum = ovector[strNum].size() - 1;
-			if (pcre_exec(re, 0, s.c_str(), s.length(), offset, 0, ovector[strNum][TokenNum].arr, lengthToken) < 0)
+			STRING(strNum).push_back(StringToken());
+			TokenNum = STRING(strNum).size() - 1;
+			if (pcre_exec(re, 0, s.c_str(), s.length(), offset, 0, TOKEN(strNum, TokenNum).arr, lengthToken) < 0)
 				break;
 
-			ovector[strNum][TokenNum].Parse(s);
-			offset = ovector[strNum][TokenNum].arr[1];
+			TOKEN(strNum, TokenNum).Parse(s);
+			offset = TOKEN(strNum, TokenNum).arr[1];
 		}
 	}
 
@@ -105,55 +105,55 @@ bool Assembler::Assemble()
 	for (int strNum = 0; strNum < ovector.size(); strNum++)
 	{
 		bool errorStr = false;
-		for (int TokenNum = 0; TokenNum < ovector[strNum].size(); TokenNum++)
+		for (int TokenNum = 0; TokenNum < STRING(strNum).size(); TokenNum++)
 		{
 			/********************** invalid symbol **********************/
-			if (ovector[strNum][TokenNum].error)
+			if (TOKEN(strNum, TokenNum).error)
 			{
-				errors.push_back(StringNumber(strNum) + " Illegal symbol: " + ovector[strNum][TokenNum].errorStr);
+				errors.push_back(StringNumber(strNum) + " Illegal symbol: " + ERROR_STR(strNum, TokenNum));
 				ERROR = true;
 				errorStr = true;
 				continue;
 			}
 
 			/***************** empty command - next string **************/
-			if (ovector[strNum][TokenNum].commandStr == "")
+			if (CMD_STR(strNum, TokenNum) == "")
 			{
 				continue;
 			}
 
 			/****************** check for valid label *******************/
-			if (ovector[strNum][TokenNum].type == LABEL)
+			if (TOKEN(strNum, TokenNum).type == LABEL)
 			{
 				/******************** empty label ********************/
-				if (ovector[strNum][TokenNum].commandStr.length() == 1)
+				if (CMD_STR(strNum, TokenNum).length() == 1)
 				{
-					errors.push_back(StringNumber(strNum) + " Empty label: " + ovector[strNum][TokenNum].commandStr);
+					errors.push_back(StringNumber(strNum) + " Empty label: " + CMD_STR(strNum, TokenNum));
 					ERROR = true;
 					errorStr = true;
 					continue;
 				}
 
 				/********************* label has invalid symbols ******************/
-				if (!checkForValidStr(ovector[strNum][TokenNum].commandStr, 0, ovector[strNum][TokenNum].commandStr.length() - 1))
+				if (!checkForValidStr(CMD_STR(strNum, TokenNum), 0, CMD_STR(strNum, TokenNum).length() - 1))
 				{
-					errors.push_back(StringNumber(strNum) + " Invalid label: " + ovector[strNum][TokenNum].commandStr);
+					errors.push_back(StringNumber(strNum) + " Invalid label: " + CMD_STR(strNum, TokenNum));
 					ERROR = true;
 					errorStr = true;
 				}
 				else
 				{
 					/********************* Redefinition **********************/
-					if (Redefinition(ovector[strNum][TokenNum].commandStr))
+					if (Redefinition(CMD_STR(strNum, TokenNum)))
 					{
-						errors.push_back(StringNumber(strNum) + " Redefinition: " + ovector[strNum][TokenNum].commandStr);
+						errors.push_back(StringNumber(strNum) + " Redefinition: " + CMD_STR(strNum, TokenNum));
 						ERROR = true;
 						errorStr = true;
 					}
 					/******************** add label ******************/
 					else
 					{
-						std::string label = ovector[strNum][TokenNum].commandStr;
+						std::string label = CMD_STR(strNum, TokenNum);
 						label.erase(label.end() - 1);
 						labels[label] = strNum;
 					}
@@ -162,11 +162,11 @@ bool Assembler::Assemble()
 			}
 
 			/*************** check for valid hex number *****************/
-			if (ovector[strNum][TokenNum].type == HEX)
+			if (TOKEN(strNum, TokenNum).type == HEX)
 			{
-				if (!checkStrForHexNumber(ovector[strNum][TokenNum].commandStr, 1))
+				if (!checkStrForHexNumber(CMD_STR(strNum, TokenNum), 1))
 				{
-					errors.push_back(StringNumber(strNum) + " Invalid hex number: " + ovector[strNum][TokenNum].commandStr);
+					errors.push_back(StringNumber(strNum) + " Invalid hex number: " + CMD_STR(strNum, TokenNum));
 					ERROR = true;
 					errorStr = true;
 				}
@@ -174,11 +174,11 @@ bool Assembler::Assemble()
 			}
 
 			/*************** check for valid bin number *****************/
-			if (ovector[strNum][TokenNum].type == BIN)
+			if (TOKEN(strNum, TokenNum).type == BIN)
 			{
-				if (!checkStrForBinNumber(ovector[strNum][TokenNum].commandStr, 1))
+				if (!checkStrForBinNumber(CMD_STR(strNum, TokenNum), 1))
 				{
-					errors.push_back(StringNumber(strNum) + " Invalid bin number: " + ovector[strNum][TokenNum].commandStr);
+					errors.push_back(StringNumber(strNum) + " Invalid bin number: " + CMD_STR(strNum, TokenNum));
 					ERROR = true;
 					errorStr = true;
 				}
@@ -187,11 +187,11 @@ bool Assembler::Assemble()
 			}
 
 			/***************** check for valid dec number ***************/
-			if (ovector[strNum][TokenNum].type == DEC)
+			if (TOKEN(strNum, TokenNum).type == DEC)
 			{
-				if (!checkStrForDecNumber(ovector[strNum][TokenNum].commandStr))
+				if (!checkStrForDecNumber(CMD_STR(strNum, TokenNum)))
 				{
-					errors.push_back(StringNumber(strNum) + " Invalid dec number: " + ovector[strNum][TokenNum].commandStr);
+					errors.push_back(StringNumber(strNum) + " Invalid dec number: " + CMD_STR(strNum, TokenNum));
 					ERROR = true;
 					errorStr = true;
 				}
@@ -199,11 +199,11 @@ bool Assembler::Assemble()
 			}
 
 			/*************** check for instruction [I] / [i] ************/
-			if (ovector[strNum][TokenNum].commandStr.front() == '[')
+			if (CMD_STR(strNum, TokenNum).front() == '[')
 			{
-				if (ovector[strNum][TokenNum].commandStr != "[I]" && ovector[strNum][TokenNum].commandStr != "[i]")
+				if (CMD_STR(strNum, TokenNum) != "[I]" && CMD_STR(strNum, TokenNum) != "[i]")
 				{
-					errors.push_back(StringNumber(strNum) + " Unknown command: " + ovector[strNum][TokenNum].commandStr);
+					errors.push_back(StringNumber(strNum) + " Unknown command: " + CMD_STR(strNum, TokenNum));
 					ERROR = true;
 					errorStr = true;
 				}
@@ -212,9 +212,9 @@ bool Assembler::Assemble()
 			}
 
 			/****************************** default *********************/
-			if (!checkForValidStr(ovector[strNum][TokenNum].commandStr))
+			if (!checkForValidStr(CMD_STR(strNum, TokenNum)))
 			{
-				errors.push_back(StringNumber(strNum) + " Invalid symbols: " + ovector[strNum][TokenNum].commandStr);
+				errors.push_back(StringNumber(strNum) + " Invalid symbols: " + CMD_STR(strNum, TokenNum));
 			}
 		}
 
@@ -223,7 +223,7 @@ bool Assembler::Assemble()
 	if (ERROR) goto END;
 
 	/*********************************** command and memory parse *************************/
-    {
+
     int curMem = 0x200;
 	const std::pair<int, int> NILtoken = { -1, -1 };
 	// string == label + cmd + comments
@@ -234,39 +234,43 @@ bool Assembler::Assemble()
 		while (1)
 		{
 			int curInd = LabelsToken.second + 1;
-			if(curInd < ovector[strNum].size())
-				if(ovector[strNum][curInd].type == LABEL)
+			if(curInd < STRING(strNum).size())
+				if(TOKEN(strNum, curInd).type == LABEL)
 					LabelsToken.second++;
 				else break;
 			else break;
 		}
 		if (LabelsToken.first > LabelsToken.second) LabelsToken = NILtoken;
+		LABEL_IND(strNum) = LabelsToken;
 
 		/********************* cmd ****************************/
 		std::pair<int, int> CommandToken = { LabelsToken.second + 1,  LabelsToken.second };
 		while (1)
 		{
 			int curInd = CommandToken.second + 1;
-			if (curInd < ovector[strNum].size())
-				if (checkTypeForArg(ovector[strNum][curInd].type))
+			if (curInd < STRING(strNum).size())
+				if (checkTypeForArg(TOKEN(strNum, curInd).type))
 					CommandToken.second++;
 				else break;
 			else break;
 		}
 		if (CommandToken.first > CommandToken.second) CommandToken = NILtoken;
+		CMD_IND(strNum) = CommandToken;
 
 		/******************* comments *************************/
 		std::pair<int, int> CommentToken = { CommandToken.second + 1, CommandToken.second };
 		while (1)
 		{
-			if (CommentToken.second + 1 < ovector[strNum].size())
-				if (ovector[strNum][CommentToken.second + 1].type == COMMENT || ovector[strNum][CommentToken.second + 1].type == NIL)
+			int curInd = CommentToken.second + 1;
+			if (curInd < STRING(strNum).size())
+				if (TOKEN(strNum, curInd).type == COMMENT || TOKEN(strNum, curInd).type == NIL)
 					CommentToken.second++;
 				else break;
 			else break;
 			CommentToken.second++;
 		}
 		if (CommentToken.first > CommentToken.second) CommentToken = NILtoken;
+		COMMENT_IND(strNum) = CommentToken;
 
 		if (LabelsToken != NILtoken || CommandToken != NILtoken)
 		{
@@ -289,7 +293,7 @@ bool Assembler::Assemble()
 					continue;
 				}
 
-			CheckCommand(strNum, CommandToken, curMem);
+			CheckCommand(strNum, curMem);
 		}
 		/******************** empty str or comments **************/
 		else
@@ -297,12 +301,15 @@ bool Assembler::Assemble()
 			file[strNum].first = -1;
 		}
 	}
-    }
+
 	if (ERROR) goto END;
 
 
 	/************************************ make bin file **********************************/
-
+	for (int strNum = 0; strNum < ovector.size(); strNum++)
+	{
+		if(CMD_IND(strNum) != NILtoken) ParseCommand(outFile, strNum);
+	}
 
 	END:
 	// print parsed file
@@ -315,9 +322,9 @@ bool Assembler::Assemble()
 		if(file[strNum].first != -1)
 			temp << "[0x" << std::hex << file[strNum].first << "] ";
 		
-		for (int TokenNum = 0; TokenNum < ovector[strNum].size(); TokenNum++)
+		for (int TokenNum = 0; TokenNum < STRING(strNum).size(); TokenNum++)
 		{
-			temp << ovector[strNum][TokenNum].parsedStr + "(" + typeTokenStr[ovector[strNum][TokenNum].type] + ") ";
+			temp << TOKEN(strNum, TokenNum).parsedStr + "(" + typeTokenStr[TOKEN(strNum, TokenNum).type] + ") ";
 		}
 		temp << "\n";
 	}

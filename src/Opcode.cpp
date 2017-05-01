@@ -3,7 +3,6 @@
 //  Chip8
 //
 
-#include "Opcode.hpp"
 #include "Opcodes.h"
 
 #ifdef CHIP_EMU

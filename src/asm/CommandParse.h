@@ -21,7 +21,7 @@ extern std::map<std::string, ushort> labels;		  // in Assembler.cpp
 extern std::map<std::string, byte> var;				  // in Assembler.cpp					
 extern std::map<std::string, byte> equ;				  // in Assembler.cpp	
 extern bool ERROR;									  // in Assembler.cpp
-extern std::vector<std::vector<StringToken>> ovector; // in Assembler.cpp
+extern std::vector<std::tuple<std::vector<StringToken>, std::vector<typeArg>, TokenIndexes>> ovector; // in Assembler.cpp
 
 bool CheckArg(StringToken str, typeArg _correctType)
 {
@@ -109,13 +109,13 @@ bool CheckArg(StringToken str, typeArg _correctType)
 	return false;
 }
 
-bool Check(int strNum, const std::pair<int, int>& CommandToken, const std::vector<typeArg>& arguments, bool debug)
+bool Check(int strNum, const std::vector<typeArg>& arguments, bool debug)
 {
-	std::string cmd = ovector[strNum][CommandToken.first].commandStr;
+	std::string cmd = CMD_STR(strNum, CMD_IND(strNum).first);
 	std::transform(cmd.begin(), cmd.end(), cmd.begin(), toupper);
 
 	/**************************************** check count of arguments *****************************/
-	if (CommandToken.second - CommandToken.first != arguments.size())
+	if (CMD_IND(strNum).second - CMD_IND(strNum).first != arguments.size())
 	{
 		if(debug) errors.push_back(StringNumber(strNum) + " Error count of arguments.");
 		return false;
@@ -124,39 +124,39 @@ bool Check(int strNum, const std::pair<int, int>& CommandToken, const std::vecto
 	/******************************************** Redefinition *************************************/
 	// ONLY FOR VAR, EQU
 	if(cmd == "EQU" || cmd == "VAR")
-		if (Redefinition(ovector[strNum][CommandToken.first + 1].commandStr))
+		if (Redefinition(CMD_STR(strNum, CMD_IND(strNum).first + 1)))
 		{
-			errors.push_back(StringNumber(strNum) + " Redefinition: " + ovector[strNum][CommandToken.first + 1].commandStr);
+			errors.push_back(StringNumber(strNum) + " Redefinition: " + CMD_STR(strNum, CMD_IND(strNum).first + 1));
 			return false;
 		}
 
 	/********************************* Correct type of arguments **********************************/
 	for(int i = 0; i < arguments.size(); i++)
-		if (!CheckArg(ovector[strNum][CommandToken.first + 1 + i], arguments[i]))
+		if (!CheckArg(TOKEN(strNum, CMD_IND(strNum).first + 1 + i), arguments[i]))
 		{
-			if (debug) errors.push_back(StringNumber(strNum) + ' ' + std::to_string(i + 1) + "th argument should be the " + typeArgStr[arguments[i]] + ": " + ovector[strNum][CommandToken.first + 1].commandStr);
+			if (debug) errors.push_back(StringNumber(strNum) + ' ' + std::to_string(i + 1) + "th argument should be the " + typeArgStr[arguments[i]] + ": " + CMD_STR(strNum, CMD_IND(strNum).first + 1 + i));
 			return false;
 		}
 
 	return true;
 }
 
-bool CheckCommand(int strNum, const std::pair<int, int>& CommandToken, int& curMem)
+bool CheckCommand(int strNum, int& curMem)
 {
-	std::vector<StringToken>& str = ovector[strNum];
-	std::string cmd = ovector[strNum][CommandToken.first].commandStr;
+	std::string cmd = CMD_STR(strNum, CMD_IND(strNum).first);
 	std::transform(cmd.begin(), cmd.end(), cmd.begin(), toupper);
 	std::vector<typeArg> arguments;
 	
 	if (cmd == "EQU")
 	{
-		str[CommandToken.first].type = CMD;
+		TOKEN(strNum, CMD_IND(strNum).first).type = CMD;
 		arguments = { name, number };
 		file[strNum].first = -1;
 
-		if (Check(strNum, CommandToken, arguments, true))
+		if (Check(strNum, arguments, true))
 		{
-			equ[str[CommandToken.first + 1].commandStr] = strToNumber(str[CommandToken.first + 2].commandStr);
+			ARGS(strNum) = arguments;
+			equ[CMD_STR(strNum, CMD_IND(strNum).first + 1)] = strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 2));
 			file[strNum].second = false;
 			return true;
 		}
@@ -170,13 +170,14 @@ bool CheckCommand(int strNum, const std::pair<int, int>& CommandToken, int& curM
 
 	if (cmd == "VAR")
 	{
-		str[CommandToken.first].type = CMD;
+		TOKEN(strNum, CMD_IND(strNum).first).type = CMD;
 		arguments = { name, reg };
 		file[strNum].first = -1;
 		
-		if (Check(strNum, CommandToken, arguments, true))
+		if (Check(strNum, arguments, true))
 		{
-			var[str[CommandToken.first + 1].commandStr] = strToNumber(str[CommandToken.first + 2].commandStr);
+			ARGS(strNum) = arguments;
+			var[CMD_STR(strNum, CMD_IND(strNum).first + 1)] = strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 2));
 			file[strNum].second = false;
 			return true;
 		}
@@ -190,13 +191,14 @@ bool CheckCommand(int strNum, const std::pair<int, int>& CommandToken, int& curM
 
 	if (cmd == "BYTE")
 	{
-		str[CommandToken.first].type = CMD;
+		TOKEN(strNum, CMD_IND(strNum).first).type = CMD;
 		arguments = { number };
 		file[strNum].first = curMem;
 		curMem += 2;
 
-		if (Check(strNum, CommandToken, arguments, true))
+		if (Check(strNum, arguments, true))
 		{
+			ARGS(strNum) = arguments;
 			file[strNum].second = false;
 			return true;
 		}
@@ -216,28 +218,32 @@ bool CheckCommand(int strNum, const std::pair<int, int>& CommandToken, int& curM
 			bool debug = true;
 			if (cmd != "LD" || cmd != "SE" || cmd != "SNE" || cmd != "JP" || cmd != "ADD") debug = false;
 
-			str[CommandToken.first].type = CMD;
-			file[strNum].first = curMem;
-			curMem += 2;
-
-			if (Check(strNum, CommandToken, arguments, debug))
+			if (Check(strNum, arguments, debug))
 			{
+				TOKEN(strNum, CMD_IND(strNum).first).type = CMD;
+				file[strNum].first = curMem;
+				curMem += 2;
+
+				ARGS(strNum) = arguments;
 				file[strNum].second = false;
 				return true;
 			}
 			else
 			{
-				file[strNum].second = true;
-				ERROR = true;
-				if (debug) return false;
+				if (debug)
+				{
+					file[strNum].second = true;
+					ERROR = true;
+					return false;
+				}
 			}
 		}
 	}
 
 	std::string errorStr = "";
 	errorStr += StringNumber(strNum) + " Unknown command \"" + cmd + "\" with arguments: ";
-	for (int i = CommandToken.first + 1; i <= CommandToken.second; i++)
-		errorStr += str[i].commandStr + ' ';
+	for (int i = CMD_IND(strNum).first + 1; i <= CMD_IND(strNum).second; i++)
+		errorStr += CMD_STR(strNum, i) + ' ';
 
 	errors.push_back(errorStr);
 	file[strNum].first = curMem;
@@ -248,9 +254,22 @@ bool CheckCommand(int strNum, const std::pair<int, int>& CommandToken, int& curM
 	return false;
 }
 
-void ParseCommand()
+void ParseCommand(std::ofstream& out, int strNum)
 {
-	
+	std::string cmd = CMD_STR(strNum, CMD_IND(strNum).first);
+	std::transform(cmd.begin(), cmd.end(), cmd.begin(), toupper);
+
+	if (cmd == "BYTE")
+	{
+		fn_nop(out, ovector[strNum]);
+		return;
+	}
+
+	for (auto it = getBeginOps(); it != getEndOps(); it++)
+	{
+		if (cmd == (*it).second.getName() && (*it).second.getArgs() == ARGS(strNum))
+			(*it).second.exec(out, ovector[strNum]);
+	}
 }
 
-#endif CommandParse_h /* CommandParse.h */
+#endif /* CommandParse.h */
