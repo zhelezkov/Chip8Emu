@@ -21,7 +21,7 @@ extern std::map<std::string, ushort> labels;		  // in Assembler.cpp
 extern std::map<std::string, byte> var;				  // in Assembler.cpp					
 extern std::map<std::string, byte> equ;				  // in Assembler.cpp	
 extern bool ERROR;									  // in Assembler.cpp
-extern std::vector<std::tuple<std::vector<StringToken>, std::vector<typeArg>, TokenIndexes>> ovector; // in Assembler.cpp
+extern std::vector<VECTOR_TYPE> ovector; // in Assembler.cpp
 
 bool CheckArg(StringToken str, typeArg _correctType)
 {
