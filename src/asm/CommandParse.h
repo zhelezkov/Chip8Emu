@@ -261,14 +261,14 @@ void ParseCommand(std::ofstream& out, int strNum)
 
 	if (cmd == "BYTE")
 	{
-		fn_nop(out, ovector[strNum]);
+		fn_nop(out, strNum);
 		return;
 	}
 
 	for (auto it = getBeginOps(); it != getEndOps(); it++)
 	{
 		if (cmd == (*it).second.getName() && (*it).second.getArgs() == ARGS(strNum))
-			(*it).second.exec(out, ovector[strNum]);
+			(*it).second.exec(out, strNum);
 	}
 }
 

@@ -86,7 +86,7 @@ struct OpcodeData {
 //#include "asm/Instructions.h"
 #include "asm/StringToken.hpp"
 #include "asm/Defines.h"
-#define EXEC_DESCR std::ofstream&, VECTOR_TYPE&
+#define EXEC_DESCR std::ofstream&, int
 #elif CHIP_DISASM
 //#include "disasm/Instructions.h"
 #define EXEC_DESCR std::ofstream&, const OpcodeData
