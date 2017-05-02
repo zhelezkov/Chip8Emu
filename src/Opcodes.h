@@ -56,7 +56,7 @@ BEGIN_OPS \
     OP(op(E,x,9,E), "SKP", args(reg), "Skip next instruction if key with the value of Vx is pressed.", fn(0xEx9E)), \
     OP(op(E,x,A,1), "SKNP", args(reg), "Skip next instruction if key with the value of Vx is not pressed.", fn(0xExA1)), \
     OP(op(F,x,0,7), "LD", args(reg, dt), "Set Vx = delay timer value.", fn(0xFx07)), \
-    OP(op(F,x,0,A), "LD", args(reg), "Wait for a key press, store the value of the key in Vx.", fn(0xFx0A)), \
+    OP(op(F,x,0,A), "LD", args(reg, key), "Wait for a key press, store the value of the key in Vx.", fn(0xFx0A)), \
     OP(op(F,x,1,5), "LD", args(dt, reg), "Set delay timer = Vx.", fn(0xFx15)), \
     OP(op(F,x,1,8), "LD", args(st, reg), "Set sound timer = Vx.", fn(0xFx18)), \
     OP(op(F,x,1,E), "ADD", args(i, reg), "Set I = I + Vx.", fn(0xFx1E)), \

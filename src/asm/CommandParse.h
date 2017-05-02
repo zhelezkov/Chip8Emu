@@ -94,6 +94,12 @@ bool CheckArg(StringToken str, typeArg _correctType)
 		else return false;
 	}
 
+	if (_correctType == key)
+	{
+		if (type == KEY) return true;
+		else return false;
+	}
+
 	if (_correctType == dt)
 	{
 		if (type == DT) return true;

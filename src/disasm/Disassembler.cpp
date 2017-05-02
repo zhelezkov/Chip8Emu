@@ -46,6 +46,7 @@ bool Disassembler::disassemble()
     {
         n1 = inFile.get();
         n2 = inFile.get();
+
         ch = (n1 << 8) + n2;
         const Opcode op = getOpcode(ch);
         //if(op.exec) op.exec(outFile, OpcodeData(ch));
@@ -59,7 +60,7 @@ bool Disassembler::disassemble()
 
 int main()
 {
-    Disassembler disAsm("BLITZ", "in.c8");
+    Disassembler disAsm("UFO", "in.c8");
     disAsm.disassemble();
     return 0;
 }

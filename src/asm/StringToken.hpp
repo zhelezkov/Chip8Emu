@@ -81,6 +81,7 @@ struct StringToken
 				if (commandStr == "B" || commandStr == "b") type = B;
 				if (commandStr == "R" || commandStr == "r") type = R;
 				if (commandStr == "F" || commandStr == "f") type = F;
+				if (commandStr == "K" || commandStr == "k") type = KEY;
 
 				if (type == NIL) type = NAME;
 			}

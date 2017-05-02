@@ -16,12 +16,16 @@ void fn_nop(std::ofstream& out, const OpcodeData data) {
 
 /// 0x00E0 - clears the screen
 void fn_0x00E0(std::ofstream& out, const OpcodeData data) {
-    out << "CLS" << std::endl;
+	if(data.rawCode == 0x00E0)
+		out << "CLS" << std::endl;
+	else fn_nop(out, data);
 }
 
 /// 0x00EE - return from a subroutine
 void fn_0x00EE(std::ofstream& out, const OpcodeData data) {
-    out << "RET" << std::endl;
+	if(data.rawCode == 0x00EE)
+		out << "RET" << std::endl;
+	else fn_nop(out, data);
 }
 
 /// 0x1nnn - jump to addr nnn
@@ -46,7 +50,9 @@ void fn_0x4xkk(std::ofstream& out, const OpcodeData data) {
 
 /// 0x5xy0 - skip next instruction if VX == VY
 void fn_0x5xy0(std::ofstream& out, const OpcodeData data) {
-    out << "SE V" << data.n2 << ", V" << data.n3 << std::endl;
+	if(data.n4 == 0)
+		out << "SE V" << data.n2 << ", V" << data.n3 << std::endl;
+	else fn_nop(out, data);
 }
 
 /// 0x6xkk - set Vx = kk
@@ -106,7 +112,9 @@ void fn_0x8xyE(std::ofstream& out, const OpcodeData data) {
 
 /// 0x9xy0 - skip next instruction if Vx != Vy
 void fn_0x9xy0(std::ofstream& out, const OpcodeData data) {
-    out << "SNE V" << data.n2 << ", V" << data.n3 << std::endl;
+	if(data.n4 == 0)
+		out << "SNE V" << data.n2 << ", V" << data.n3 << std::endl;
+	else fn_nop(out, data);
 }
 
 /// 0xAnnn - set I = Addr
@@ -187,17 +195,23 @@ void fn_0xFx65(std::ofstream& out, const OpcodeData data) {
 
 /// 0x00Bn: - scroll display N lines up (N/2 in low res mode)
 void fn_0x00Bn(std::ofstream& out, const OpcodeData data) {
-    out << "SCU " << "#" << data.n4 << std::endl;
+	if(data.n2 == 0)
+		out << "SCU " << "#" << data.n4 << std::endl;
+	else fn_nop(out, data);
 }
 
 /// 0x00Cn - scroll display N lines down (N/2 in low res mode)
 void fn_0x00Cn(std::ofstream& out, const OpcodeData data) {
-    out << "SCD " << "#" << data.n4 << std::endl;
+	if(data.n2 == 0)
+		out << "SCD " << "#" << data.n4 << std::endl;
+	else fn_nop(out, data);
 }
 
 /// 0x00FB - scroll right 4 pixels (2 pixels in low res mode)
 void fn_0x00FB(std::ofstream& out, const OpcodeData data) {
-    out << "SCR" << std::endl;
+	if(data.rawCode == 0x00FB)
+		out << "SCR" << std::endl;
+	else fn_nop(out, data);
 }
 
 /// 0x00FC - scroll left 4 pixels (2 pixels in low res mode)
@@ -207,17 +221,23 @@ void fn_0x00FC(std::ofstream& out, const OpcodeData data) {
 
 /// 0x00FD - Quit the emulator
 void fn_0x00FD(std::ofstream& out, const OpcodeData data) {
-    out << "EXIT" << std::endl;
+	if(data.rawCode == 0x00FD)
+		out << "EXIT" << std::endl;
+	else fn_nop(out, data);
 }
 
 /// 0x00FE -  enter low res mode
 void fn_0x00FE(std::ofstream& out, const OpcodeData data) {
-    out << "LOW" << std::endl;
+	if(data.rawCode == 0x00FE)
+		out << "LOW" << std::endl;
+	else fn_nop(out, data);
 }
 
 /// 0x00FF -  enter high res mode
 void fn_0x00FF(std::ofstream& out, const OpcodeData data) {
-    out << "HIGH" << std::endl;
+	if(data.rawCode == 0x00FF)
+		out << "HIGH" << std::endl;
+	else fn_nop(out, data);
 }
 
 /// 0xFx30 - point I to 10 byte numeric sprite for value in VX
