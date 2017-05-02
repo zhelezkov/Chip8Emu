@@ -59,7 +59,7 @@ bool Disassembler::disassemble()
 
 int main()
 {
-    Disassembler disAsm("BLINKY", "out.txt");
+    Disassembler disAsm("BLITZ", "in.c8");
     disAsm.disassemble();
     return 0;
 }
