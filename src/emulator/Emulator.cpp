@@ -16,6 +16,8 @@
 #include "TimersManager.hpp"
 #include "Keyboard.hpp"
 
+#include "Debugger.hpp"
+
 Emulator::Emulator() {
     initEmulator();
 }
@@ -78,7 +80,7 @@ void Emulator::swap() {
 }
 
 void Emulator::run() {
-    if (!window) initWindow();
+    if (window == nullptr) initWindow();
     SDL_RaiseWindow(window);
     
     Uint32 timer = SDL_GetTicks();
@@ -88,7 +90,7 @@ void Emulator::run() {
     int frames = 0;
     int ops = 0;
     
-    bool hasFocus = true;
+    bool hasAppFocus = true;
     
     Uint32 now;
     Uint32 elapsedTime = 0;
@@ -99,29 +101,26 @@ void Emulator::run() {
         now = SDL_GetTicks();
         
         while (SDL_PollEvent(&ev)) {
-            if (ev.type == SDL_QUIT) {
+            if (ev.type == SDL_QUIT || (ev.window.windowID == windowID && ev.window.event == SDL_WINDOWEVENT_CLOSE)) {
                 running = false;
                 break;
-            } else if (ev.type == SDL_KEYDOWN) {
-                SDL_Scancode key = ev.key.keysym.scancode;
-                if (key == SDL_SCANCODE_F1) {
-                    loadRom();
-                    break;
-                }
-                cpu->getKeyboard().keyDown(key);
-            } else if (ev.type == SDL_KEYUP) {
-                SDL_Scancode key = ev.key.keysym.scancode;
-                cpu->getKeyboard().keyUp(key);
-            } else if (ev.type == SDL_WINDOWEVENT) {
-                if (ev.window.event == SDL_WINDOWEVENT_FOCUS_LOST) {
-                    hasFocus = false;
-                } else if (ev.window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
-                    hasFocus = true;
-                }
+            }
+            
+            if (ev.window.windowID == windowID && ev.type == SDL_WINDOWEVENT)
+                handleWindowEvent(ev);
+            else if (hasDebugger && ev.window.windowID == debugger->getWindowID() && ev.type == SDL_WINDOWEVENT)
+                debugger->handleWindowEvent(ev);
+            
+            if (hasFocus()) {
+                handleKeyEvent(ev);
+            } else if (hasDebugger && debugger->hasFocus()) {
+                debugger->handleKeyEvent(ev);
             }
         }
         
-        if (!hasFocus) {
+        hasAppFocus = hasFocus() || (hasDebugger && debugger->hasFocus());
+        
+        if (!hasAppFocus) {
             //when window is not focused, vsync doesn't work, so don't waste cpu time
             SDL_Delay(100);
             continue;
@@ -154,17 +153,45 @@ void Emulator::run() {
     }
 }
 
+void Emulator::handleWindowEvent(SDL_Event& ev) {
+    if (ev.window.event == SDL_WINDOWEVENT_FOCUS_LOST) {
+        windowFocused = false;
+        DLOG_F(INFO, "Emulator window focus lost");
+    } else if (ev.window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
+        windowFocused = true;
+        DLOG_F(INFO, "Emulator window focus gained");
+    }
+}
+
+void Emulator::handleKeyEvent(SDL_Event& ev) {
+    if (ev.type == SDL_KEYDOWN) {
+        SDL_Scancode key = ev.key.keysym.scancode;
+        cpu->getKeyboard().keyDown(key);
+    } else if (ev.type == SDL_KEYUP) {
+        SDL_Scancode key = ev.key.keysym.scancode;
+        if (key == SDL_SCANCODE_F1) {
+            loadRom();
+        } else if (key == SDL_SCANCODE_G) {
+            if (debugger == nullptr) debugger = new Debugger();
+            hasDebugger = true;
+        }
+        cpu->getKeyboard().keyUp(key);
+    }
+}
+
 void Emulator::initWindow() {
     CHECK_F(SDL_Init(SDL_INIT_EVERYTHING) == 0, "Error during SDL initialization: %s", SDL_GetError());
     
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    //SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     //SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
     
     window = SDL_CreateWindow("CHIP-8 Emulator", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 320 * 2, 240 * 2, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
     CHECK_F(window != nullptr, "Error during creating window: %s", SDL_GetError());
+    
+    windowID = SDL_GetWindowID(window);
     
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
     CHECK_F(renderer != nullptr, "Error during creating renderer: %s", SDL_GetError());

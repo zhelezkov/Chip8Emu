@@ -8,17 +8,9 @@
 
 #include "CHIP.h"
 
+class Debugger;
+
 class Emulator {
-private:
-    SDL_Window* window = nullptr;
-    SDL_Renderer* renderer = nullptr;
-    SDL_Texture* screenTexture = nullptr;
-    CPU* cpu = nullptr;
-   
-    void initWindow();
-    void initEmulator();
-   
-    //void initEmulator();
 public:
     Emulator();
     ~Emulator();
@@ -26,6 +18,23 @@ public:
     void render();
     void swap();
     bool loadRom();
+    bool hasFocus() { return windowFocused; };
+private:
+    void initWindow();
+    void initEmulator();
+    void handleWindowEvent(SDL_Event& ev);
+    void handleKeyEvent(SDL_Event& ev);
+
+    SDL_Window* window = nullptr;
+    int windowID;
+    SDL_Renderer* renderer = nullptr;
+    SDL_Texture* screenTexture = nullptr;
+    CPU* cpu = nullptr;
+    
+    Debugger* debugger = nullptr;
+    
+    bool windowFocused = false;
+    bool hasDebugger = false;
 };
 
 #endif /* Emulator_hpp */
