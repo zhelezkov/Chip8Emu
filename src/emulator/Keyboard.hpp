@@ -9,10 +9,11 @@
 #include <map>
 #include "CHIP.h"
 
+byte sdlKeyToChipKey(ushort index);
+
 class Keyboard {
 private:
 	bool key[16];
-    
 public:
 	void reset();
 	bool isPressed(byte index);

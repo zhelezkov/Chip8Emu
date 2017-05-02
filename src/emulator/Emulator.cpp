@@ -177,6 +177,9 @@ void Emulator::handleKeyEvent(SDL_Event& ev) {
     if (ev.type == SDL_KEYDOWN) {
         SDL_Scancode key = ev.key.keysym.scancode;
         cpu->getKeyboard().keyDown(key);
+        if (cpu->waitingForKey()) {
+            cpu->keyPress(key);
+        }
     } else if (ev.type == SDL_KEYUP) {
         SDL_Scancode key = ev.key.keysym.scancode;
         if (key == SDL_SCANCODE_G) {
@@ -194,12 +197,6 @@ void Emulator::disableDebugger() {
 
 void Emulator::initWindow() {
     CHECK_F(SDL_Init(SDL_INIT_EVERYTHING) == 0, "Error during SDL initialization: %s", SDL_GetError());
-    
-    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    //SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    //SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
     
     window = SDL_CreateWindow("CHIP-8 Emulator", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 320 * 2, 240 * 2, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
     CHECK_F(window != nullptr, "Error during creating window: %s", SDL_GetError());

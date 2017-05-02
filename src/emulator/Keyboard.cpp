@@ -6,6 +6,7 @@
 #include <SDL.h>
 
 #include "Keyboard.hpp"
+#include "CPU.hpp"
 
 static std::map<SDL_Scancode, byte> sdlKeys = {
     {SDL_SCANCODE_X, 0},
@@ -41,4 +42,8 @@ void Keyboard::keyDown(ushort index) {
 
 void Keyboard::keyUp(ushort index) {
     key[sdlKeys[(SDL_Scancode) index]] = false;
+}
+
+byte sdlKeyToChipKey(ushort index) {
+    return sdlKeys[(SDL_Scancode) index];
 }

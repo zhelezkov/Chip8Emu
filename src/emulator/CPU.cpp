@@ -40,20 +40,20 @@ void CPU::reset() {
     memory->reset();
     timersManager->reset();
     keyboard->reset();
+    registerWaitingKey = -1;
     
     LOG_F(INFO, "CPU reseted");
 }
 
 void CPU::tick() {
+    if (waitingForKey()) {
+        return;
+    }
     const ushort rawCode = getMemory()[PC] << 8 | getMemory()[PC + 1];
 	PC += 2;
 
 	const Opcode& opcode = getOpcode(rawCode);
-    //printf("PC: %d, OP: %s RawCode: %d\n", PC, opcode.getName(), rawCode);
     opcode.exec(this, rawCode);
-
-	//timersManager->update();
-
 }
 
 Memory& CPU::getMemory() const {
@@ -129,4 +129,15 @@ byte CPU::getRegisterR(byte index) const {
 void CPU::setRegisterR(byte index, byte val) {
 	assert(index >= 0 && index < R_REGISTERS_COUNT);
 	R[index] = val;
+}
+
+void CPU::waitForKey(byte index) {
+    registerWaitingKey = index;
+}
+
+void CPU::keyPress(ushort key) {
+    CHECK_F(waitingForKey(), "Key press can be used only for waiting key");
+    
+    V[registerWaitingKey] = sdlKeyToChipKey(key);
+    registerWaitingKey = -1;
 }
