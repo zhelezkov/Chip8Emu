@@ -17,7 +17,7 @@
 
 extern std::vector <std::pair<int, bool>> file;		  // in Assembler.cpp
 extern std::vector <std::string> errors;			  // in Assembler.cpp
-extern std::map<std::string, ushort> labels;		  // in Assembler.cpp
+extern std::map<std::string, int> labels;			  // in Assembler.cpp
 extern std::map<std::string, byte> var;				  // in Assembler.cpp					
 extern std::map<std::string, byte> equ;				  // in Assembler.cpp	
 extern bool ERROR;									  // in Assembler.cpp

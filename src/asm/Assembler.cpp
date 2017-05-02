@@ -18,7 +18,7 @@
 extern const int lengthToken;					// in StringToken.hpp
 std::vector <std::pair<int, bool>> file;		// parsed file
 std::vector <std::string> errors;				// errors
-std::map<std::string, ushort> labels;			// labels 
+std::map<std::string, int> labels;				// labels 
 std::map<std::string, byte> var;				// names of registers (var)					
 std::map<std::string, byte> equ;				// const (equ)	
 bool ERROR = false;								// global error

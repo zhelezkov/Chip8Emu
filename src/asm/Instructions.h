@@ -13,7 +13,7 @@
 #include "Defines.h"
 
 extern std::vector <std::pair<int, bool>> file;		  // in Assembler.cpp
-extern std::map<std::string, ushort> labels;		  // in Assembler.cpp
+extern std::map<std::string, int> labels;			  // in Assembler.cpp
 extern std::map<std::string, byte> var;				  // in Assembler.cpp					
 extern std::map<std::string, byte> equ;				  // in Assembler.cpp	
 extern std::vector<VECTOR_TYPE> ovector;			  // in Assembler.cpp
@@ -21,7 +21,7 @@ extern std::vector<VECTOR_TYPE> ovector;			  // in Assembler.cpp
 void fn_nop(std::ofstream& out, int strNum) {
     //throw "Unknown op";
 	for (int i = CMD_IND(strNum).first + 1; i <= CMD_IND(strNum).second; i++)
-		out << strToNumber(CMD_STR(strNum, i));
+		out << (byte)strToNumber(CMD_STR(strNum, i));
 }
 
 /// 0x00E0 - clears the screen
@@ -36,7 +36,14 @@ void fn_0x00EE(std::ofstream& out, int strNum) {
 
 /// 0x1nnn - jump to addr nnn
 void fn_0x1nnn(std::ofstream& out, int strNum) {
-
+	/*if (TOKEN(strNum, CMD_IND(strNum).first + 1).type == LABEL)
+	{
+		out << (byte)file[labels[CMD_STR(strNum, CMD_IND(strNum).first + 1)]].first;
+	}
+	else
+	{
+		strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 1));
+	}*/
 }
 
 /// 0x2nnn - call subroutine at nnn

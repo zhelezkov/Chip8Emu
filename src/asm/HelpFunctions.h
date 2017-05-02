@@ -14,7 +14,7 @@
 #include "CHIP.h"
 #include "typeToken.h"
 
-extern std::map<std::string, ushort> labels; // in Assembler.cpp
+extern std::map<std::string, int> labels;	 // in Assembler.cpp
 extern std::map<std::string, byte> var;		 // in Assembler.cpp	
 extern std::map<std::string, byte> equ;		 // in Assembler.cpp 
 
@@ -41,7 +41,7 @@ bool checkStrForHF(std::string s);
 
 bool checkTypeForArg(typeToken type);
 
-byte strToNumber(std::string str);
+ushort strToNumber(std::string str);
 
 bool Redefinition(const std::string& str);
 

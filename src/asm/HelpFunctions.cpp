@@ -118,7 +118,7 @@ bool checkTypeForArg(typeToken type)
 	return type != LABEL && type != COMMENT && type != NIL;
 }
 
-byte strToNumber(std::string str)
+ushort strToNumber(std::string str)
 {
 	if (str.length() == 0) return 0;
 
