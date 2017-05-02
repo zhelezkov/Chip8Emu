@@ -312,20 +312,7 @@ void fn_0xFx07(CPU* const cpu, const OpcodeData data) {
 
 /// 0xFx0A - set Vx = key, wait for keypress
 void fn_0xFx0A(CPU* const cpu, const OpcodeData data) {
-    //TODO make proper way to wait, check PC
-
-	cpu->setPC(cpu->getPC() - 2);
-	for (byte n = 0; n < 16; n++) {
-		if (cpu->getKeyboard().isPressed(n)) {
-			byte indexX = data.n2;
-			cpu->setRegisterV(indexX, n);
-
-			cpu->setPC(cpu->getPC() + 2);
-            
-            cpu->getKeyboard().keyUp(n);
-			break;
-		}
-	}
+    cpu->waitForKey(data.n2);
 }
 
 /// 0xFx15 - set delayTimer = Vx

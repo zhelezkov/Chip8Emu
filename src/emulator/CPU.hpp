@@ -13,6 +13,44 @@
 #define R_REGISTERS_COUNT 8
 
 class CPU {
+public:
+    bool exit;
+    
+    CPU(Memory* mem, GPU* gpu, TimersManager* timers, Keyboard* keyboard);
+    CPU();
+    ~CPU();
+    
+    void reset();
+    
+    void tick();
+    
+    Memory& getMemory() const;
+    GPU& getGpu() const;
+    TimersManager& getTimersManager() const;
+    Keyboard& getKeyboard() const;
+    
+    byte getRegisterV(byte index) const;
+    void setRegisterV(byte index, byte val);
+    
+    ushort getAddrRegister() const;
+    void setAddrRegister(ushort val);
+    
+    ushort getPC() const;
+    void setPC(ushort val);
+    
+    byte getSP() const;
+    void setSP(byte val);
+    
+    ushort popStack();
+    void pushStack();
+    
+    byte getRegisterR(byte index) const;
+    void setRegisterR(byte index, byte val);
+    
+    void waitForKey(byte index);
+    bool waitingForKey() { return registerWaitingKey >= 0; };
+    
+    void keyPress(ushort);
 private:
 	byte V[V_REGISTERS_COUNT];
     byte R[R_REGISTERS_COUNT];
@@ -28,39 +66,7 @@ private:
 	TimersManager* timersManager;
 	Keyboard* keyboard;
     
-public:	
-	bool exit;
-
-    CPU(Memory* mem, GPU* gpu, TimersManager* timers, Keyboard* keyboard);
-    CPU();
-    ~CPU();
-    
-    void reset();
-    
-	void tick();
-    
-	Memory& getMemory() const;
-	GPU& getGpu() const;
-	TimersManager& getTimersManager() const;
-	Keyboard& getKeyboard() const;
-
-	byte getRegisterV(byte index) const;
-	void setRegisterV(byte index, byte val);
-
-	ushort getAddrRegister() const;
-	void setAddrRegister(ushort val);
-
-	ushort getPC() const;
-	void setPC(ushort val);
-
-	byte getSP() const;
-	void setSP(byte val);
-
-	ushort popStack();
-	void pushStack();
-
-	byte getRegisterR(byte index) const;
-	void setRegisterR(byte index, byte val);
+    int registerWaitingKey;
 };
 
 #endif /* CPU_hpp */
