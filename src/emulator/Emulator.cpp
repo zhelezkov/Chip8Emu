@@ -23,6 +23,9 @@ Emulator::Emulator() {
 }
 
 Emulator::~Emulator() {
+    delete debugger;
+    delete cpu;
+    
     SDL_DestroyTexture(screenTexture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
@@ -54,6 +57,7 @@ bool Emulator::loadRom() {
 
 void Emulator::render() {
     SDL_SetRenderTarget(renderer, screenTexture);
+    //PROBLEM HERE
     SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
     SDL_RenderClear(renderer);
     GPU& gpu = cpu->getGpu();
@@ -71,7 +75,7 @@ void Emulator::render() {
 
 void Emulator::swap() {
     SDL_SetRenderTarget(renderer, nullptr);
-    SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);
     
     SDL_RenderCopy(renderer, screenTexture, nullptr, nullptr);
@@ -105,11 +109,15 @@ void Emulator::run() {
                 running = false;
                 break;
             }
-            
             if (ev.window.windowID == windowID && ev.type == SDL_WINDOWEVENT)
                 handleWindowEvent(ev);
             else if (hasDebugger && ev.window.windowID == debugger->getWindowID() && ev.type == SDL_WINDOWEVENT)
                 debugger->handleWindowEvent(ev);
+            
+            if (ev.type == SDL_KEYUP && ev.key.keysym.scancode == SDL_SCANCODE_F1) {
+                if(loadRom())
+                    now = SDL_GetTicks(); //reset ticks to prevent ops overhead
+            }
             
             if (hasFocus()) {
                 handleKeyEvent(ev);
@@ -136,6 +144,8 @@ void Emulator::run() {
         cpu->getTimersManager().update();
         
         render();
+        
+        if (hasDebugger) debugger->render();
         
         frames++;
         
@@ -169,14 +179,17 @@ void Emulator::handleKeyEvent(SDL_Event& ev) {
         cpu->getKeyboard().keyDown(key);
     } else if (ev.type == SDL_KEYUP) {
         SDL_Scancode key = ev.key.keysym.scancode;
-        if (key == SDL_SCANCODE_F1) {
-            loadRom();
-        } else if (key == SDL_SCANCODE_G) {
-            if (debugger == nullptr) debugger = new Debugger();
+        if (key == SDL_SCANCODE_G) {
+            if (debugger == nullptr) debugger = new Debugger(*this);
+            debugger->show();
             hasDebugger = true;
         }
         cpu->getKeyboard().keyUp(key);
     }
+}
+
+void Emulator::disableDebugger() {
+    hasDebugger = false;
 }
 
 void Emulator::initWindow() {

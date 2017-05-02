@@ -11,6 +11,7 @@
 class Debugger;
 
 class Emulator {
+    friend class Debugger;
 public:
     Emulator();
     ~Emulator();
@@ -19,6 +20,7 @@ public:
     void swap();
     bool loadRom();
     bool hasFocus() { return windowFocused; };
+    void disableDebugger();
 private:
     void initWindow();
     void initEmulator();
