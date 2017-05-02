@@ -44,7 +44,7 @@ FX15	LD DT, VX	DT = VX
 FX18	LD ST, VX	ST = VX
 FX1E	ADD I, VX	I = I + VX; VF = 1 if I > 0xFFF else 0
 FX29	LD F, VX	I = address of 4x5 font character in VX (0..F) (* see note)
-FX33	BCD VX	Store BCD representation of VX at I (100), I+1 (10), and I+2 (1); I remains unchanged
+FX33	LD B, VX	Store BCD representation of VX at I (100), I+1 (10), and I+2 (1); I remains unchanged
 FX55	LD [I], VX	Store V0..VX (inclusive) to memory starting at I; I remains unchanged
 FX65	LD VX, [I]	Load V0..VX (inclusive) from memory starting at I; I remains unchanged
 FX30	LD HF, VX	I = address of 8x10 font character in VX (0..F) (* see note)

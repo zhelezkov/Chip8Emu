@@ -444,13 +444,13 @@ void fn_0x9xy0(std::ofstream& out, int strNum) {
 /// 0xAnnn - set I = Addr
 void fn_0xAnnn(std::ofstream& out, int strNum) {
 	ushort addr;
-	if (TOKEN(strNum, CMD_IND(strNum).first + 1).type == NAME)	// label
+	if (TOKEN(strNum, CMD_IND(strNum).first + 2).type == NAME)	// label
 	{
-		addr = file[labels[CMD_STR(strNum, CMD_IND(strNum).first + 1)]].first;
+		addr = file[labels[CMD_STR(strNum, CMD_IND(strNum).first + 2)]].first;
 	}
 	else
 	{
-		addr = strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 1));	// number
+		addr = strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 2));	// number
 	}
 	OpcodeData data(addr);
 	out << (byte)(HEX_BYTE(0xA, data.n2)) << (byte)(HEX_BYTE(data.n3, data.n4));
@@ -458,13 +458,13 @@ void fn_0xAnnn(std::ofstream& out, int strNum) {
 /// 0xBnnn - jump to Addr + V0
 void fn_0xBnnn(std::ofstream& out, int strNum) {
 	ushort addr;
-	if (TOKEN(strNum, CMD_IND(strNum).first + 1).type == NAME)	// label
+	if (TOKEN(strNum, CMD_IND(strNum).first + 2).type == NAME)	// label
 	{
-		addr = file[labels[CMD_STR(strNum, CMD_IND(strNum).first + 1)]].first;
+		addr = file[labels[CMD_STR(strNum, CMD_IND(strNum).first + 2)]].first;
 	}
 	else
 	{
-		addr = strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 1));	// number
+		addr = strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 2));	// number
 	}
 	OpcodeData data(addr);
 	out << (byte)(HEX_BYTE(0xB, data.n2)) << (byte)(HEX_BYTE(data.n3, data.n4));
@@ -597,13 +597,13 @@ void fn_0xFx0A(std::ofstream& out, int strNum) {
 /// 0xFx15 - set delayTimer = Vx
 void fn_0xFx15(std::ofstream& out, int strNum) {
 	byte regInd;
-	if (TOKEN(strNum, CMD_IND(strNum).first + 1).type == NAME)	// var
+	if (TOKEN(strNum, CMD_IND(strNum).first + 2).type == NAME)	// var
 	{
-		regInd = var[CMD_STR(strNum, CMD_IND(strNum).first + 1)];
+		regInd = var[CMD_STR(strNum, CMD_IND(strNum).first + 2)];
 	}
 	else
 	{
-		regInd = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 1)); // number
+		regInd = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 2)); // number
 	}
 
 	out << (byte)(0xF0 + regInd) << (byte)0x15;
@@ -612,13 +612,13 @@ void fn_0xFx15(std::ofstream& out, int strNum) {
 /// 0xFx18 - set soundTimer = Vx
 void fn_0xFx18(std::ofstream& out, int strNum) {
 	byte regInd;
-	if (TOKEN(strNum, CMD_IND(strNum).first + 1).type == NAME)	// var
+	if (TOKEN(strNum, CMD_IND(strNum).first + 2).type == NAME)	// var
 	{
-		regInd = var[CMD_STR(strNum, CMD_IND(strNum).first + 1)];
+		regInd = var[CMD_STR(strNum, CMD_IND(strNum).first + 2)];
 	}
 	else
 	{
-		regInd = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 1)); // number
+		regInd = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 2)); // number
 	}
 
 	out << (byte)(0xF0 + regInd) << (byte)0x18;
@@ -627,13 +627,13 @@ void fn_0xFx18(std::ofstream& out, int strNum) {
 /// 0xFx1E - I = I + VX; VF = 1 if I > 0xFFF else 0
 void fn_0xFx1E(std::ofstream& out, int strNum) {
 	byte regInd;
-	if (TOKEN(strNum, CMD_IND(strNum).first + 1).type == NAME)	// var
+	if (TOKEN(strNum, CMD_IND(strNum).first + 2).type == NAME)	// var
 	{
-		regInd = var[CMD_STR(strNum, CMD_IND(strNum).first + 1)];
+		regInd = var[CMD_STR(strNum, CMD_IND(strNum).first + 2)];
 	}
 	else
 	{
-		regInd = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 1)); // number
+		regInd = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 2)); // number
 	}
 
 	out << (byte)(0xF0 + regInd) << (byte)0x1E;
@@ -642,13 +642,13 @@ void fn_0xFx1E(std::ofstream& out, int strNum) {
 /// 0xFx29 - point I to 5 byte numeric sprite for value in VX
 void fn_0xFx29(std::ofstream& out, int strNum) {
 	byte regInd;
-	if (TOKEN(strNum, CMD_IND(strNum).first + 1).type == NAME)	// var
+	if (TOKEN(strNum, CMD_IND(strNum).first + 2).type == NAME)	// var
 	{
-		regInd = var[CMD_STR(strNum, CMD_IND(strNum).first + 1)];
+		regInd = var[CMD_STR(strNum, CMD_IND(strNum).first + 2)];
 	}
 	else
 	{
-		regInd = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 1)); // number
+		regInd = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 2)); // number
 	}
 
 	out << (byte)(0xF0 + regInd) << (byte)0x29;
@@ -657,13 +657,13 @@ void fn_0xFx29(std::ofstream& out, int strNum) {
 /// 0xFx33 - store BCD of VX in [I], [I+1], [I+2]
 void fn_0xFx33(std::ofstream& out, int strNum) {
 	byte regInd;
-	if (TOKEN(strNum, CMD_IND(strNum).first + 1).type == NAME)	// var
+	if (TOKEN(strNum, CMD_IND(strNum).first + 2).type == NAME)	// var
 	{
-		regInd = var[CMD_STR(strNum, CMD_IND(strNum).first + 1)];
+		regInd = var[CMD_STR(strNum, CMD_IND(strNum).first + 2)];
 	}
 	else
 	{
-		regInd = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 1)); // number
+		regInd = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 2)); // number
 	}
 
 	out << (byte)(0xF0 + regInd) << (byte)0x33;
@@ -672,13 +672,13 @@ void fn_0xFx33(std::ofstream& out, int strNum) {
 /// 0xFx55 - store V0 .. VX (inclusive) in [I] .. [I + X]
 void fn_0xFx55(std::ofstream& out, int strNum) {
 	byte regInd;
-	if (TOKEN(strNum, CMD_IND(strNum).first + 1).type == NAME)	// var
+	if (TOKEN(strNum, CMD_IND(strNum).first + 2).type == NAME)	// var
 	{
-		regInd = var[CMD_STR(strNum, CMD_IND(strNum).first + 1)];
+		regInd = var[CMD_STR(strNum, CMD_IND(strNum).first + 2)];
 	}
 	else
 	{
-		regInd = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 1)); // number
+		regInd = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 2)); // number
 	}
 
 	out << (byte)(0xF0 + regInd) << (byte)0x55;
@@ -759,13 +759,13 @@ void fn_0x00FF(std::ofstream& out, int strNum) {
 /// 0xFx30 - point I to 10 byte numeric sprite for value in VX
 void fn_0xFx30(std::ofstream& out, int strNum) {
 	byte regInd;
-	if (TOKEN(strNum, CMD_IND(strNum).first + 1).type == NAME)	// var
+	if (TOKEN(strNum, CMD_IND(strNum).first + 2).type == NAME)	// var
 	{
-		regInd = var[CMD_STR(strNum, CMD_IND(strNum).first + 1)];
+		regInd = var[CMD_STR(strNum, CMD_IND(strNum).first + 2)];
 	}
 	else
 	{
-		regInd = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 1)); // number
+		regInd = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 2)); // number
 	}
 
 	out << (byte)(0xF0 + regInd) << (byte)0x30;
@@ -774,13 +774,13 @@ void fn_0xFx30(std::ofstream& out, int strNum) {
 /// 0xFx75 - save V0...VX (X<8) in the RPL flags
 void fn_0xFx75(std::ofstream& out, int strNum) {
 	byte regInd;
-	if (TOKEN(strNum, CMD_IND(strNum).first + 1).type == NAME)	// var
+	if (TOKEN(strNum, CMD_IND(strNum).first + 2).type == NAME)	// var
 	{
-		regInd = var[CMD_STR(strNum, CMD_IND(strNum).first + 1)];
+		regInd = var[CMD_STR(strNum, CMD_IND(strNum).first + 2)];
 	}
 	else
 	{
-		regInd = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 1)); // number
+		regInd = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 2)); // number
 	}
 
 	out << (byte)(0xF0 + regInd) << (byte)0x75;
