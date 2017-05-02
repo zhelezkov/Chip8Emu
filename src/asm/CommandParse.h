@@ -194,7 +194,7 @@ bool CheckCommand(int strNum, int& curMem)
 		TOKEN(strNum, CMD_IND(strNum).first).type = CMD;
 		arguments = { number };
 		file[strNum].first = curMem;
-		curMem += 2;
+		curMem += 1;
 
 		if (Check(strNum, arguments, true))
 		{

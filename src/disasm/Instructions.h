@@ -169,7 +169,7 @@ void fn_0xFx29(std::ofstream& out, const OpcodeData data) {
 
 /// 0xFx33 - store BCD of VX in [I], [I+1], [I+2]
 void fn_0xFx33(std::ofstream& out, const OpcodeData data) {
-    out << "BCD V" << data.n2 << std::endl;
+    out << "LD B, V" << data.n2 << std::endl;
 }
 
 /// 0xFx55 - store V0 .. VX (inclusive) in [I] .. [I + X]

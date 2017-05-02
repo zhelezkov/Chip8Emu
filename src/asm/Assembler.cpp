@@ -289,7 +289,6 @@ bool Assembler::Assemble()
 				{
 					file[strNum].first = curMem;
 					file[strNum].second = false;
-					curMem += 2;
 					continue;
 				}
 
