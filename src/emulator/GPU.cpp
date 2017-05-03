@@ -16,11 +16,12 @@ void GPU::clearScreen() {
     }
 }
 
+//TODO if we change resolution mode, we should also change size of screenTexture in Emulator
 void GPU::setResolutionMode(const ResolutionMode mode) {
     //if (resMode == mode) return;
     resMode = mode;
-    width = WIDTH * resMode;
-    height = HEIGHT * resMode;
+    width = GPU_DEFAULT_WIDTH * resMode;
+    height = GPU_DEFAULT_HEIGHT * resMode;
     if (videoMem)
         delete[] videoMem;
     videoMem = new byte[width * height];

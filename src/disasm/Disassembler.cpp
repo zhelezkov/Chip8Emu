@@ -58,9 +58,11 @@ bool Disassembler::disassemble()
     return true;
 }
 
+//#ifdef DISASM_STANDALONE
 int main()
 {
     Disassembler disAsm("UFO", "in.c8");
     disAsm.disassemble();
     return 0;
 }
+//#endif

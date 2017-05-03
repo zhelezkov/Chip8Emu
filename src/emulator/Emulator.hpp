@@ -8,6 +8,10 @@
 
 #include "CHIP.h"
 
+static const uint EMULATOR_WINDOW_WIDTH = 320;
+static const uint EMULATOR_WINDOW_HEIGHT = 240;
+static const uint EMULATOR_WINDOW_SCALE = 2;
+
 class Debugger;
 
 class Emulator {

@@ -9,14 +9,11 @@
 #include "Emulator.hpp"
 #include "CPU.hpp"
 
-#define FONT_WIDTH 5
-#define FONT_HEIGHT 7
-
 Debugger::Debugger(Emulator& emulator) : emulator(emulator) {
     LOG_F(INFO, "Initializing debugger");
     int x, y;
     SDL_GetWindowPosition(emulator.window, &x, &y);
-    window = SDL_CreateWindow("Debugger", x + 320 * 2, y, 64 * 2, 200 * 2, SDL_WINDOW_OPENGL);
+    window = SDL_CreateWindow("Debugger", x + EMULATOR_WINDOW_WIDTH * EMULATOR_WINDOW_SCALE, y, DEBUGGER_WINDOW_WIDTH * DEBUGGER_WINDOW_SCALE, DEBUGGER_WINDOW_HEIGHT * DEBUGGER_WINDOW_SCALE, SDL_WINDOW_OPENGL);
     CHECK_F(window != nullptr, "Error during creating window: %s", SDL_GetError());
     
     windowID = SDL_GetWindowID(window);
@@ -24,7 +21,7 @@ Debugger::Debugger(Emulator& emulator) : emulator(emulator) {
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
     CHECK_F(renderer != nullptr, "Error during creating renderer: %s", SDL_GetError());
     
-    renderTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 64, 200);
+    renderTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, DEBUGGER_WINDOW_WIDTH, DEBUGGER_WINDOW_HEIGHT);
     CHECK_F(renderTexture != nullptr, "Error during creating texture: %s", SDL_GetError());
 
     
@@ -84,17 +81,31 @@ void Debugger::drawText(std::string& str, int x, int y) {
     }
 }
 
-void Debugger::render() {
+void Debugger::renderRegisters() {
     SDL_SetRenderTarget(renderer, renderTexture);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
+    
     for (int i = 0; i < V_REGISTERS_COUNT; i++) {
         char cStr[20];
         sprintf(cStr, "V%x=%x", i, emulator.cpu->getRegisterV(i));
         std::string str = cStr;
         drawText(str, 0, i * (FONT_HEIGHT + 2));
     }
+}
 
+void Debugger::renderMemoryView() {
+    SDL_SetRenderTarget(renderer, renderTexture);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    
+    
+}
+
+void Debugger::render() {
+    renderRegisters();
+    renderMemoryView();
+    
     SDL_SetRenderTarget(renderer, nullptr);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);

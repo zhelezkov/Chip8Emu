@@ -6,8 +6,16 @@
 #ifndef Debugger_hpp
 #define Debugger_hpp
 
-#include "CHIP.h"
 #include <string>
+#include "CHIP.h"
+
+//64px for V registers, then 128px for memory
+static const uint DEBUGGER_WINDOW_WIDTH = 192;
+static const uint DEBUGGER_WINDOW_HEIGHT = 256;
+static const uint DEBUGGER_WINDOW_SCALE = 2;
+
+static const uint FONT_WIDTH = 5;
+static const uint FONT_HEIGHT = 7;
 
 class Emulator;
 
@@ -25,6 +33,9 @@ public:
     void drawText(std::string& str, int x, int y);
 private:
     void loadFont();
+    void renderRegisters();
+    void renderMemoryView();
+    
     SDL_Window* window = nullptr;
     int windowID;
     SDL_Renderer* renderer = nullptr;

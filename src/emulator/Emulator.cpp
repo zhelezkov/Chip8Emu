@@ -198,7 +198,7 @@ void Emulator::disableDebugger() {
 void Emulator::initWindow() {
     CHECK_F(SDL_Init(SDL_INIT_EVERYTHING) == 0, "Error during SDL initialization: %s", SDL_GetError());
     
-    window = SDL_CreateWindow("CHIP-8 Emulator", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 320 * 2, 240 * 2, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("CHIP-8 Emulator", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, EMULATOR_WINDOW_WIDTH * EMULATOR_WINDOW_SCALE, EMULATOR_WINDOW_HEIGHT * EMULATOR_WINDOW_SCALE, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
     CHECK_F(window != nullptr, "Error during creating window: %s", SDL_GetError());
     
     windowID = SDL_GetWindowID(window);
@@ -206,7 +206,7 @@ void Emulator::initWindow() {
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
     CHECK_F(renderer != nullptr, "Error during creating renderer: %s", SDL_GetError());
     
-    screenTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 64, 32);
+    screenTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, GPU_DEFAULT_WIDTH, GPU_DEFAULT_HEIGHT);
     CHECK_F(screenTexture != nullptr, "Error during creating texture: %s", SDL_GetError());
 
 	LOG_F(INFO, "Window successfully created");

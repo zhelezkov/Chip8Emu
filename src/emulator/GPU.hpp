@@ -8,8 +8,8 @@
 
 #include "CHIP.h"
 
-#define WIDTH 64
-#define HEIGHT 32
+static const uint GPU_DEFAULT_WIDTH = 64;
+static const uint GPU_DEFAULT_HEIGHT = 32;
 
 enum ResolutionMode {
     LOW = 1,
