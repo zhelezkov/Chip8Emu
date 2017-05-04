@@ -82,9 +82,8 @@ void Debugger::drawText(std::string& str, int x, int y) {
 }
 
 void Debugger::renderRegisters() {
-    SDL_SetRenderTarget(renderer, renderTexture);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
+    SDL_Rect drawRect = {0, 0, DEBUGGER_REGISTERS_VIEW_WIDTH, DEBUGGER_WINDOW_HEIGHT};
+    SDL_RenderSetViewport(renderer, &drawRect);
     
     for (int i = 0; i < V_REGISTERS_COUNT; i++) {
         char cStr[20];
@@ -95,14 +94,16 @@ void Debugger::renderRegisters() {
 }
 
 void Debugger::renderMemoryView() {
-    SDL_SetRenderTarget(renderer, renderTexture);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-    
+    SDL_Rect drawRect = {DEBUGGER_REGISTERS_VIEW_WIDTH, 0, DEBUGGER_REGISTERS_VIEW_WIDTH + DEBUGGER_MEMORY_VIEW_WIDTH, DEBUGGER_WINDOW_HEIGHT};
+    SDL_RenderSetViewport(renderer, &drawRect);
     
 }
 
 void Debugger::render() {
+    SDL_SetRenderTarget(renderer, renderTexture);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    
     renderRegisters();
     renderMemoryView();
     

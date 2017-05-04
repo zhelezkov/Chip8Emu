@@ -18,5 +18,6 @@ class CPU;
 class Memory;
 class TimersManager;
 class Keyboard;
+class APU;
 
 #endif /* CHIP_h */

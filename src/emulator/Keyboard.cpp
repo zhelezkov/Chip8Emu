@@ -37,11 +37,16 @@ bool Keyboard::isPressed(byte index) {
 }
 
 void Keyboard::keyDown(ushort index) {
-    key[sdlKeys[(SDL_Scancode) index]] = true;
+    if (CPU::getInstance()->waitingForKey) {
+        CPU* cpu = CPU::getInstance();
+        cpu->setRegisterV(cpu->registerWaitingKey, sdlKeyToChipKey(index));
+        cpu->waitingForKey = false;
+    }
+    key[sdlKeyToChipKey(index)] = true;
 }
 
 void Keyboard::keyUp(ushort index) {
-    key[sdlKeys[(SDL_Scancode) index]] = false;
+    key[sdlKeyToChipKey(index)] = false;
 }
 
 byte sdlKeyToChipKey(ushort index) {

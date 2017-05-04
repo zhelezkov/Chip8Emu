@@ -12,13 +12,13 @@
 byte sdlKeyToChipKey(ushort index);
 
 class Keyboard {
-private:
-	bool key[16];
 public:
 	void reset();
 	bool isPressed(byte index);
     void keyDown(ushort index);
     void keyUp(ushort index);
+private:
+    bool key[16];
 };
 
 #endif /* Keyboard_hpp */

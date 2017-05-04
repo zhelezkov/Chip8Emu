@@ -111,7 +111,7 @@ void Emulator::run() {
             }
             if (ev.window.windowID == windowID && ev.type == SDL_WINDOWEVENT)
                 handleWindowEvent(ev);
-            else if (hasDebugger && ev.window.windowID == debugger->getWindowID() && ev.type == SDL_WINDOWEVENT)
+            else if (debuggerConnected && ev.window.windowID == debugger->getWindowID() && ev.type == SDL_WINDOWEVENT)
                 debugger->handleWindowEvent(ev);
             
             if (ev.type == SDL_KEYUP && ev.key.keysym.scancode == SDL_SCANCODE_F1) {
@@ -121,12 +121,12 @@ void Emulator::run() {
             
             if (hasFocus()) {
                 handleKeyEvent(ev);
-            } else if (hasDebugger && debugger->hasFocus()) {
+            } else if (debuggerConnected && debugger->hasFocus()) {
                 debugger->handleKeyEvent(ev);
             }
         }
         
-        hasAppFocus = hasFocus() || (hasDebugger && debugger->hasFocus());
+        hasAppFocus = hasFocus() || (debuggerConnected && debugger->hasFocus());
         
         if (!hasAppFocus) {
             //when window is not focused, vsync doesn't work, so don't waste cpu time
@@ -145,7 +145,7 @@ void Emulator::run() {
         
         render();
         
-        if (hasDebugger) debugger->render();
+        if (debuggerConnected) debugger->render();
         
         frames++;
         
@@ -177,22 +177,19 @@ void Emulator::handleKeyEvent(SDL_Event& ev) {
     if (ev.type == SDL_KEYDOWN) {
         SDL_Scancode key = ev.key.keysym.scancode;
         cpu->getKeyboard().keyDown(key);
-        if (cpu->waitingForKey()) {
-            cpu->keyPress(key);
-        }
     } else if (ev.type == SDL_KEYUP) {
         SDL_Scancode key = ev.key.keysym.scancode;
         if (key == SDL_SCANCODE_G) {
             if (debugger == nullptr) debugger = new Debugger(*this);
             debugger->show();
-            hasDebugger = true;
+            debuggerConnected = true;
         }
         cpu->getKeyboard().keyUp(key);
     }
 }
 
 void Emulator::disableDebugger() {
-    hasDebugger = false;
+    debuggerConnected = false;
 }
 
 void Emulator::initWindow() {

@@ -10,7 +10,10 @@
 #include "CHIP.h"
 
 //64px for V registers, then 128px for memory
-static const uint DEBUGGER_WINDOW_WIDTH = 192;
+static const uint DEBUGGER_REGISTERS_VIEW_WIDTH = 64;
+static const uint DEBUGGER_MEMORY_VIEW_WIDTH = 128;
+
+static const uint DEBUGGER_WINDOW_WIDTH = DEBUGGER_REGISTERS_VIEW_WIDTH + DEBUGGER_MEMORY_VIEW_WIDTH;
 static const uint DEBUGGER_WINDOW_HEIGHT = 256;
 static const uint DEBUGGER_WINDOW_SCALE = 2;
 

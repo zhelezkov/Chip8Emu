@@ -5,6 +5,9 @@
 
 #include "TimersManager.hpp"
 
+#include "CPU.hpp"
+#include "APU.hpp"
+
 TimersManager::TimersManager() {
 }
 
@@ -19,7 +22,7 @@ void TimersManager::update() {
 
 	if (soundTimer > 0) {
         if (soundTimer == 1) {
-            //PLAY BEEP SOUND   
+            CPU::getInstance()->getApu().playSound();
         }
 		soundTimer--;
 	}

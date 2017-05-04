@@ -8,10 +8,7 @@
 
 #include "CHIP.h"
 
-class TimersManager
-{
-	byte delayTimer;
-	byte soundTimer;
+class TimersManager {
 public:
     TimersManager();
     void reset();
@@ -23,6 +20,9 @@ public:
 
 	byte getDelayTimer();
 	void setDelayTimer(byte v);
+private:
+    byte delayTimer;
+    byte soundTimer;
 };
 
 #endif /* TimersManager_hpp */

@@ -40,7 +40,7 @@ private:
     Debugger* debugger = nullptr;
     
     bool windowFocused = false;
-    bool hasDebugger = false;
+    bool debuggerConnected = false;
 };
 
 #endif /* Emulator_hpp */

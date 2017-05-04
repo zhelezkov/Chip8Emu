@@ -3,18 +3,23 @@
 //  Chip8Emulator
 //
 
+#include "CPU.hpp"
+
 #include "Memory.hpp"
 #include "GPU.hpp"
 #include "TimersManager.hpp"
 #include "Keyboard.hpp"
+#include "APU.hpp"
 #include "Opcodes.h"
 
-#include "CPU.hpp"
+CPU* CPU::instance = NULL;
 
-CPU::CPU(Memory* mem, GPU* gpu, TimersManager* timers, Keyboard* keyboard) :memory(mem), gpu(gpu), timersManager(timers), keyboard(keyboard) {
+CPU::CPU(Memory* mem, GPU* gpu, TimersManager* timers, Keyboard* keyboard, APU* apu) : memory(mem), gpu(gpu), timersManager(timers), keyboard(keyboard), apu(apu) {
+    instance = this;
 }
 
-CPU::CPU() : memory(new Memory()), gpu(new GPU()), timersManager(new TimersManager()), keyboard(new Keyboard()) {
+CPU::CPU() : CPU(new Memory(), new GPU(), new TimersManager(), new Keyboard(), new APU()) {
+    
 }
 
 CPU::~CPU() {
@@ -22,6 +27,10 @@ CPU::~CPU() {
     delete gpu;
     delete timersManager;
     delete keyboard;
+}
+
+CPU* CPU::getInstance() {
+    return instance;
 }
 
 void CPU::reset() {
@@ -46,9 +55,10 @@ void CPU::reset() {
 }
 
 void CPU::tick() {
-    if (waitingForKey()) {
+    if (waitingForKey) {
         return;
     }
+    
     const ushort rawCode = getMemory()[PC] << 8 | getMemory()[PC + 1];
 	PC += 2;
 
@@ -70,6 +80,10 @@ TimersManager& CPU::getTimersManager() const {
 
 Keyboard& CPU::getKeyboard() const {
 	return *keyboard;
+}
+
+APU& CPU::getApu() const {
+    return *apu;
 }
 
 byte CPU::getRegisterV(byte index) const {
@@ -132,12 +146,6 @@ void CPU::setRegisterR(byte index, byte val) {
 }
 
 void CPU::waitForKey(byte index) {
+    waitingForKey = true;
     registerWaitingKey = index;
-}
-
-void CPU::keyPress(ushort key) {
-    CHECK_F(waitingForKey(), "Key press can be used only for waiting key");
-    
-    V[registerWaitingKey] = sdlKeyToChipKey(key);
-    registerWaitingKey = -1;
 }
