@@ -511,6 +511,19 @@ void fn_0xFx85(CPU* const cpu, const OpcodeData data) {
 }
 
 /************ Extended CHIP-8 functions ************/
-//TODO
+//// Skip next instruction if VX > VY
+void fn_0x5xy1(CPU* const cpu, const OpcodeData data) {
+    byte Vx = cpu->getRegisterV(data.n2);
+    byte Vy = cpu->getRegisterV(data.n3);
 
+    if (Vx > Vy) cpu->setPC(cpu->getPC() + 2);
+}
+
+//// Skip next instruction if VX < VY
+void fn_0x5xy2(CPU* const cpu, const OpcodeData data) {
+    byte Vx = cpu->getRegisterV(data.n2);
+    byte Vy = cpu->getRegisterV(data.n3);
+
+    if (Vx < Vy) cpu->setPC(cpu->getPC() + 2);
+}
 #endif /* Instructions_h */

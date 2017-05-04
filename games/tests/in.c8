@@ -1,0 +1,139 @@
+ init:
+            ; update const - 1 FPS
+            equ         delay, 60
+
+            ; step of animation
+            equ         step, 1
+
+            ; start position
+            var         Sx, v6
+            var         Sy, v7
+            ld          Sx, 0
+            ld          Sy, 0
+
+            ; const of width and height
+            equ         height, 7
+            equ         width, 7
+
+            ; height and width of symbol
+            var         H, v2
+            var         W, v3
+            ld          H, height
+            ld          W, width
+
+            ; Vx == v0 and Vy == v1
+            var         Vx, v0
+            var         Vy, v1
+
+            LOW
+draw:
+            CLS
+
+            ; where to draw the logo
+            ld          Vx, Sx
+            ld          Vy, Sy
+
+            ; first symbol
+            ld          i, logo
+
+            ; C
+            drw         Vx, Vy, height
+            add         Vx, W
+            add         i, W
+            
+            ; H
+            drw         Vx, Vy, height
+            add         Vx, W
+            add         i, W
+
+            ; I
+            drw         Vx, Vy, height
+            add         Vx, width
+            add         i, W
+
+            ; P
+            drw         Vx, Vy, height
+            add         Vx, W
+            add         i, W
+
+            ; -
+            drw         Vx, Vy, height
+            add         Vx, W
+            add         i, W
+
+            ; 8
+            drw         Vx, Vy, height
+            add         i, W
+
+loop:   
+            ld          v4, delay
+            ld          dt, v4
+cycle:
+            ; if dt != 0 - continue
+            ld          v4, dt
+            se          v4, 0
+            jp          cycle
+            ; else
+            ld          vD, 9   ; 31 - 22
+            RND         v9, #1F ; [0..31]
+            ld          vB, 22  ; 64 - 42(6 * width)
+            SLT         v9, vB  ; if v9 >= 22 then v9 -= 9
+            sub         v9, vD
+            ld          Sx, v9  ; new X
+
+            ld          vD, 6   ; 31 - 25
+            RND         v9, #1F ; [0..31]
+            ld          vB, 25  ; 32 - 7(height)
+            SLT         v9, vB  ; if v9 >= 25 then v9 -= 6
+            sub         v9, vD
+            ld          Sy, v9  ; new Y
+
+            jp          draw
+
+logo:       byte        %01111000
+            byte        %11001100
+            byte        %11000000
+            byte        %11000000
+            byte        %11000000
+            byte        %11001100
+            byte        %01111000
+
+            byte        %11001100
+            byte        %11001100
+            byte        %11001100
+            byte        %11111100
+            byte        %11001100
+            byte        %11001100
+            byte        %11001100
+
+            byte        %11111100
+            byte        %00110000
+            byte        %00110000
+            byte        %00110000
+            byte        %00110000
+            byte        %00110000
+            byte        %11111100
+
+            byte        %11111000
+            byte        %11001100
+            byte        %11001100
+            byte        %11111000
+            byte        %11000000
+            byte        %11000000
+            byte        %11000000
+
+            byte        %00000000
+            byte        %00000000
+            byte        %00000000
+            byte        %11110000
+            byte        %00000000
+            byte        %00000000
+            byte        %00000000
+
+            byte        %01111000
+            byte        %11001100
+            byte        %11001100
+            byte        %01111000
+            byte        %11001100
+            byte        %11001100
+            byte        %01111000

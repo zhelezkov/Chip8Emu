@@ -41,7 +41,9 @@ const Opcode& getOpcode(const OpcodeData opcode) {
         case 0x2:
         case 0x3:
         case 0x4:
+            return ops[op(opcode.n1, 0, 0, 0)];
         case 0x5:
+            return ops[op(opcode.n1, 0, 0, opcode.n4)];
         case 0x6:
         case 0x7:
             return ops[op(opcode.n1, 0, 0, 0)];

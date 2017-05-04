@@ -802,6 +802,53 @@ void fn_0xFx85(std::ofstream& out, int strNum) {
 }
 
 /************ Extended CHIP-8 functions ************/
-//TODO
+void fn_0x5xy1(std::ofstream& out, int strNum) {
+    byte regX;
+    byte regY;
+    if (TOKEN(strNum, CMD_IND(strNum).first + 1).type == NAME)	// var
+    {
+        regX = var[CMD_STR(strNum, CMD_IND(strNum).first + 1)];
+    }
+    else
+    {
+        regX = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 1)); // number
+    }
+
+    if (TOKEN(strNum, CMD_IND(strNum).first + 2).type == NAME)	// var
+    {
+        regY = var[CMD_STR(strNum, CMD_IND(strNum).first + 2)];
+    }
+    else
+    {
+        regY = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 2)); // number
+    }
+
+    out << (byte)HEX_BYTE(5, regX) << (byte)HEX_BYTE(regY, 1);
+}
+
+//// Skip next instruction if VX < VY
+void fn_0x5xy2(std::ofstream& out, int strNum) {
+    byte regX;
+    byte regY;
+    if (TOKEN(strNum, CMD_IND(strNum).first + 1).type == NAME)	// var
+    {
+        regX = var[CMD_STR(strNum, CMD_IND(strNum).first + 1)];
+    }
+    else
+    {
+        regX = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 1)); // number
+    }
+
+    if (TOKEN(strNum, CMD_IND(strNum).first + 2).type == NAME)	// var
+    {
+        regY = var[CMD_STR(strNum, CMD_IND(strNum).first + 2)];
+    }
+    else
+    {
+        regY = (byte)strToNumber(CMD_STR(strNum, CMD_IND(strNum).first + 2)); // number
+    }
+
+    out << (byte)HEX_BYTE(5, regX) << (byte)HEX_BYTE(regY, 2);
+}
 
 #endif /* InstructionsAsm_h */

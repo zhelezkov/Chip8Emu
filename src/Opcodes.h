@@ -75,8 +75,10 @@ BEGIN_OPS \
     OP(op(0,0,F,F), "HIGH", args(), "Enter high res screen mode", fn(0x00FF)), \
     OP(op(F,x,3,0), "LD", args(hf, reg), "Point I to 10 byte numeric sprite for value in VX.", fn(0xFx30)), \
     OP(op(F,x,7,5), "LD", args(r, reg), "Save V0...VX (X<8) in the RPL flags.", fn(0xFx75)), \
-    OP(op(F,x,8,5), "LD", args(reg, r), "Load V0...VX (X<8) from the RPL flags.", fn(0xFx85)) \
+    OP(op(F,x,8,5), "LD", args(reg, r), "Load V0...VX (X<8) from the RPL flags.", fn(0xFx85)),\
 	/************ Extended CHIP-8 functions ************/ \
+    OP(op(5,x,y,1), "SGT", args(reg, reg), "Skip next instruction if VX > VY", fn(0x5xy1)), \
+    OP(op(5,x,y,2), "SLT", args(reg, reg), "Skip next instruction if VX < VY", fn(0x5xy2)) \
 END_OPS
 
 extern const Opcode& getOpcode(const OpcodeData opcode);

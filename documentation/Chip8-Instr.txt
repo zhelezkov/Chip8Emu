@@ -14,6 +14,8 @@
 3XNN	SE VX, NN	Skip next instruction if VX == NN
 4XNN	SNE VX, NN	Skip next instruction if VX != NN
 5XY0	SE VX, VY	Skip next instruction if VX == VY
+5XY1	SGT VX, VY	Skip next instruction if VX > VY
+5XY2	SLT VX, VY	Skip next instruction if VX < VY
 6XNN	LD VX, NN	VX = NN
 7XNN	ADD VX, NN	VX = VX + NN
 

@@ -256,6 +256,14 @@ void fn_0xFx85(std::ofstream& out, const OpcodeData data) {
 }
 
 /************ Extended CHIP-8 functions ************/
-//TODO
+//// Skip next instruction if VX > VY
+void fn_0x5xy1(std::ofstream& out, const OpcodeData data) {
+    out << "SGT V" << data.n2 << ", V" << data.n3 << std::endl;
+}
+
+//// Skip next instruction if VX < VY
+void fn_0x5xy2(std::ofstream& out, const OpcodeData data) {
+    out << "SLT V" << data.n2 << ", V" << data.n3 << std::endl;
+}
 
 #endif /* Instructions_h */
