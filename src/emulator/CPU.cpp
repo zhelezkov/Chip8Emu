@@ -49,6 +49,7 @@ void CPU::reset() {
     memory->reset();
     timersManager->reset();
     keyboard->reset();
+	waitingForKey = false;
     registerWaitingKey = -1;
     
     LOG_F(INFO, "CPU reseted");
