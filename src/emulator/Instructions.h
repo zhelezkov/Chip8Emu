@@ -363,7 +363,10 @@ void fn_0x00Bn(CPU* const cpu, const OpcodeData data) {
     int height = gpu.getHeight();
     int width = gpu.getWidth();
     
-    N /= gpu.getResolutionMode();
+    if (gpu.getResolutionMode() == 1) {
+        N /= 2;
+    }
+    
     for (int y = 0; y < height - N; y++) {
         for (int x = 0; x < width; x++) {
             byte pix = gpu.getPixel(x, y + N);
@@ -383,11 +386,13 @@ void fn_0x00Cn(CPU* const cpu, const OpcodeData data) {
     // CHECK IT!
     byte N = data.n4;
     GPU& gpu = cpu->getGpu();
-    int height = gpu.getHeight();
     int width = gpu.getWidth();
+    int height = gpu.getHeight();
     
-    N /= gpu.getResolutionMode();
-    for (int y = height - 1; y >= N; y--) {
+    if (gpu.getResolutionMode() == 1) {
+        N /= 2;
+    }
+    for (int y = height - 1; y > 0; y--) {
         for (int x = 0; x < width; x++) {
             byte pix = gpu.getPixel(x, y - N);
             gpu.setPixel(pix, x, y);
@@ -424,12 +429,12 @@ void fn_0x00FB(CPU* const cpu, const OpcodeData data) {
 void fn_0x00FC(CPU* const cpu, const OpcodeData data) {
     // CHECK IT!
     GPU& gpu = cpu->getGpu();
-    int height = gpu.getHeight();
     int width = gpu.getWidth();
+    int height = gpu.getHeight();
     byte N = 4 / gpu.getResolutionMode();
     
     for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width - N; x--) {
+        for (int x = 0; x < width - N; x++) {
             byte pix = gpu.getPixel(x + N, y);
             gpu.setPixel(pix, x, y);
         }
