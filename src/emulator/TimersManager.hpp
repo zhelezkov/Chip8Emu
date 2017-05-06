@@ -23,6 +23,7 @@ public:
 private:
     byte delayTimer;
     byte soundTimer;
+    byte sounding;
 };
 
 #endif /* TimersManager_hpp */
