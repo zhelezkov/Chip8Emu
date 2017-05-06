@@ -38,6 +38,7 @@ add_executable(chip8emu ${chip8} ${chip8emu})
 target_include_directories(chip8emu PRIVATE ${SDL2_INCLUDE_DIR})
 target_link_libraries(chip8emu ${SDL2_LIBRARY} ${OPENGL_gl_LIBRARY} utils chip8disasmLib)
 target_compile_definitions(chip8emu PRIVATE CHIP_EMU)
+set_target_properties(chip8emu PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
 add_custom_command(TARGET chip8emu PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/font.bmp ${CMAKE_BINARY_DIR})
 if(WIN32)

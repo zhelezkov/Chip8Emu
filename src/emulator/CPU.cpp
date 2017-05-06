@@ -33,7 +33,7 @@ CPU* CPU::getInstance() {
     return instance;
 }
 
-void CPU::reset() {
+void CPU::reset(bool resetMemory) {
     exit = false;
     PC = MEM_START;
     I = 0;
@@ -46,7 +46,8 @@ void CPU::reset() {
         R[i] = 0;
     
     gpu->reset();
-    memory->reset();
+	if (resetMemory)
+		memory->reset();
     timersManager->reset();
     keyboard->reset();
 	waitingForKey = false;

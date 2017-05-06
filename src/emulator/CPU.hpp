@@ -24,7 +24,7 @@ public:
     
     static CPU* getInstance();
     
-    void reset();
+    void reset(bool resetMemory = false);
     
     void tick();
     

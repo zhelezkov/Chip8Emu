@@ -48,7 +48,7 @@ bool Emulator::loadRom() {
     fread(buffer, sizeof(byte), MEM_SIZE, inFile);
     fclose(inFile);
     
-    cpu->reset();
+    cpu->reset(true);
     
     cpu->getMemory().fillMemory(buffer);
     
@@ -186,15 +186,24 @@ void Emulator::handleKeyEvent(SDL_Event& ev) {
     if (ev.type == SDL_KEYDOWN) {
         SDL_Scancode key = ev.key.keysym.scancode;
         cpu->getKeyboard().keyDown(key);
-    } else if (ev.type == SDL_KEYUP) {
-        SDL_Scancode key = ev.key.keysym.scancode;
-        if (key == SDL_SCANCODE_G) {
-            if (debugger == nullptr) debugger = new Debugger(*this);
-            debugger->show();
-            debuggerConnected = true;
-        }
+	}
+	else if (ev.type == SDL_KEYUP) {
+		SDL_Scancode key = ev.key.keysym.scancode;
+		if (key == SDL_SCANCODE_G) {
+			if (debugger == nullptr) debugger = new Debugger(*this);
+			debugger->show();
+			debuggerConnected = true;
+		}
+		if (key == SDL_SCANCODE_R && (ev.key.keysym.mod & KMOD_CTRL)) {
+			reloadCurrentROM();
+		}
+
         cpu->getKeyboard().keyUp(key);
     }
+}
+
+void Emulator::reloadCurrentROM() {
+	cpu->reset(false);
 }
 
 void Emulator::disableDebugger() {

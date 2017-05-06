@@ -24,7 +24,6 @@ Debugger::Debugger(Emulator& emulator) : emulator(emulator), startAddress(0x200)
     
     renderTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, DEBUGGER_WINDOW_WIDTH, DEBUGGER_WINDOW_HEIGHT);
     CHECK_F(renderTexture != nullptr, "Error during creating texture: %s", SDL_GetError());
-
     
     LOG_F(INFO, "Debugger window successfully created");
     
@@ -57,6 +56,8 @@ void Debugger::handleKeyEvent(SDL_Event& ev) {
         SDL_Scancode key = ev.key.keysym.scancode;
         if (key == SDL_SCANCODE_SPACE) {
             pause = !pause;
+			if (pause) SDL_SetWindowTitle(window, "Debugger -STEP MODE-");
+			else SDL_SetWindowTitle(window, "Debugger");
         }
         if (key == SDL_SCANCODE_N && pause) {
             emulator.cpu->tick();
@@ -140,7 +141,8 @@ void Debugger::renderMemoryView() {
     int curY = 0;
     char str[32];
     for (int i = startAddress; i < endAddress; i += 2) {
-        const char* disStr = Disassembler::disasmBytecode(mem[i] << 8 | mem[i + 1]).c_str();
+		std::string dis = Disassembler::disasmBytecode(mem[i] << 8 | mem[i + 1]);
+        const char* disStr = dis.c_str();
         sprintf(str, "#%x - %s", i, disStr);
         if (curAddress == i) {
             SDL_Rect curAddressRect = {0, curY, DEBUGGER_MEMORY_VIEW_WIDTH, 9};

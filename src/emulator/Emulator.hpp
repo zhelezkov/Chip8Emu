@@ -30,6 +30,7 @@ private:
     void initEmulator();
     void handleWindowEvent(SDL_Event& ev);
     void handleKeyEvent(SDL_Event& ev);
+	void reloadCurrentROM();
 
     SDL_Window* window = nullptr;
     int windowID;
