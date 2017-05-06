@@ -31,10 +31,14 @@ include_directories(src src/utils)
 
 add_library(utils ${utilsPath})
 
+add_library(chip8disasmLib SHARED ${chip8} ${chip8disasm})
+target_compile_definitions(chip8disasmLib PRIVATE CHIP_DISASM)
+
 add_executable(chip8emu ${chip8} ${chip8emu})
 target_include_directories(chip8emu PRIVATE ${SDL2_INCLUDE_DIR})
-target_link_libraries(chip8emu ${SDL2_LIBRARY} ${OPENGL_gl_LIBRARY} utils)
+target_link_libraries(chip8emu ${SDL2_LIBRARY} ${OPENGL_gl_LIBRARY} utils chip8disasmLib)
 target_compile_definitions(chip8emu PRIVATE CHIP_EMU)
+
 add_custom_command(TARGET chip8emu PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/font.bmp ${CMAKE_BINARY_DIR})
 if(WIN32)
 add_custom_command(TARGET chip8emu PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/libs/pcre/bin/ ${CMAKE_BINARY_DIR})
@@ -47,4 +51,6 @@ target_link_libraries(chip8asm ${PCRE_LIBRARY})
 target_compile_definitions(chip8asm PRIVATE CHIP_ASM)
 
 add_executable(chip8disasm ${chip8} ${chip8disasm})
-target_compile_definitions(chip8disasm PRIVATE CHIP_DISASM)
+target_compile_definitions(chip8disasm PRIVATE CHIP_DISASM CHIP_DISASM_STANDALONE)
+
+

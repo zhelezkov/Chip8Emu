@@ -36,6 +36,7 @@ private:
     SDL_Renderer* renderer = nullptr;
     SDL_Texture* screenTexture = nullptr;
     CPU* cpu = nullptr;
+    int resMode;
     
     Debugger* debugger = nullptr;
     

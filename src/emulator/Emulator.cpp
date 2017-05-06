@@ -35,6 +35,7 @@ Emulator::~Emulator() {
 void Emulator::initEmulator() {
     LOG_F(INFO, "Initializing CPU");
     cpu = new CPU();
+    resMode = cpu->getGpu().getResolutionMode();
 }
 
 bool Emulator::loadRom() {
@@ -56,11 +57,17 @@ bool Emulator::loadRom() {
 }
 
 void Emulator::render() {
+    GPU& gpu = cpu->getGpu();
+    
+    if (resMode != gpu.getResolutionMode()) {
+        SDL_DestroyTexture(screenTexture);
+        screenTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, GPU_DEFAULT_WIDTH * gpu.getResolutionMode(), GPU_DEFAULT_HEIGHT * gpu.getResolutionMode());
+        CHECK_F(screenTexture != nullptr, "Error during creating texture: %s", SDL_GetError());
+    }
+    
     SDL_SetRenderTarget(renderer, screenTexture);
-    //PROBLEM HERE
     SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
     SDL_RenderClear(renderer);
-    GPU& gpu = cpu->getGpu();
     for (Uint32 x = 0; x < gpu.getWidth(); x++) {
         for (Uint32 y = 0; y < gpu.getHeight(); y++) {
             byte pix = gpu.getPixel(x, y);
@@ -136,7 +143,9 @@ void Emulator::run() {
         
         unprocessedTime += elapsedTime;
         while (unprocessedTime > 1) {
-            cpu->tick();
+            if (!(debuggerConnected && debugger->paused())) {
+                cpu->tick();
+            }
             ops++;
             unprocessedTime--;
         }
@@ -150,7 +159,7 @@ void Emulator::run() {
         frames++;
         
         if (SDL_GetTicks() > timer + 1000) {
-            printf("fps: %d, ops/sec: %d\n", frames, ops);
+            LOG_F(INFO, "fps: %d, ops/sec: %d\n", frames, ops);
             timer += 1000;
             frames = 0;
             ticks = 0;

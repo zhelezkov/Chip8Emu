@@ -9,16 +9,13 @@
 #include "Opcodes.h"
 #include "CHIP.h"
 #include <fstream>
+#include <string>
+#include <sstream>
 
-class Disassembler
-{
-    const char* in;
-    const char* out;
-    const char* log = "Disassembler.log";
-
+class Disassembler {
 public:
-    Disassembler(const char *in, const char* out);
-    bool disassemble();
+    static void disassembleFile(const char* in, const char* out);
+    static std::string disasmBytecode(ushort bytecode);
 };
 
 #endif /* Disassembler_hpp */

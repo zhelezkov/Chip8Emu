@@ -204,29 +204,7 @@ void fn_0xCxkk(CPU* const cpu, const OpcodeData data) {
 }
 
 /// 0xDxyn - Draw 8xN sprite at I to VX, VY; VF = 1 if collision else 0
-//TODO: CHECK THIS FCKING FUNCTION VERY CAREFULLY
 void fn_0xDxyn(CPU* const cpu, const OpcodeData data) {
-//	ushort x = V[(opcode & 0x0F00) >> 8];
-//	ushort y = V[(opcode & 0x00F0) >> 4];
-//	ushort height = opcode & 0x000F;
-//	ushort pixel;
-//
-//	V[0xF] = 0;
-//	for (int yline = 0; yline < height; yline++)
-//	{
-//		pixel = memory[I + yline];
-//		for (int xline = 0; xline < 8; xline++)
-//		{
-//			if ((pixel & (0x80 >> xline)) != 0)
-//			{
-//				if (gfx[(x + xline) % 64 + (((y + yline) % 128) * 128)] == 1)
-//					V[0xF] = 1;
-//
-//				gfx[(x + xline) % 64 + (((y + yline) % 128) * 128)] ^= 1;
-//			}
-//		}
-//	}
-
 	ushort x = cpu->getRegisterV(data.n2);
 	ushort y = cpu->getRegisterV(data.n3);
 	ushort n = data.n4;
@@ -237,52 +215,43 @@ void fn_0xDxyn(CPU* const cpu, const OpcodeData data) {
 	Memory& memory = cpu->getMemory();
 
 	cpu->setRegisterV(0xF, 0);
-	/*if (n == 0) // 0xDXY0 - Draw a 16x16 sprite at I to VX, VY (8x16 in low res mode) *SUPER CHIP*
-	{
-		for (byte yline = 0; yline < 16; yline++)
-		{
-			pixel = memory[I + 2 * yline];
-			for (byte xline = 0; xline < 8; xline++)
-			{
-				if ((pixel & (0x80 >> xline)) != 0)
-				{
-					if (gpu.getPixel((x + xline) % gpu.getWidth(), (y + yline) % gpu.getHeight()) == 1)
+    // 0xDXY0 - Draw a 16x16 sprite at I to VX, VY (8x16 in low res mode) *SUPER CHIP*
+	if (n == 0) {
+		for (byte yLine = 0; yLine < 16; yLine++) {
+			pixel = memory[I + 2 * yLine];
+			for (byte xLine = 0; xLine < 8; xLine++) {
+				if ((pixel & (0x80 >> xLine)) != 0) {
+					if (gpu.getPixel((x + xLine) % gpu.getWidth(), (y + yLine) % gpu.getHeight()) == 1)
 						cpu->setRegisterV(0xF, 1);
 
-					//gpu.xorPixel((x + xline) % gpu.getWidth(), (y + yline) % gpu.getHeight());
+					gpu.xorPixel((x + xLine) % gpu.getWidth(), (y + yLine) % gpu.getHeight());
 				}
 			}
 
-			pixel = memory[I + 1 + 2 * yline];
-			for (byte xline = 0; xline < 8; xline++)
-			{
-				if ((pixel & (0x80 >> xline)) != 0)
-				{
-					if (gpu.getPixel((x + xline + 8) % gpu.getWidth(), (y + yline) % gpu.getHeight()) == 1)
+			pixel = memory[I + 1 + 2 * yLine];
+			for (byte xLine = 0; xLine < 8; xLine++) {
+				if ((pixel & (0x80 >> xLine)) != 0) {
+					if (gpu.getPixel((x + xLine + 8) % gpu.getWidth(), (y + yLine) % gpu.getHeight()) == 1)
 						cpu->setRegisterV(0xF, 1);
-                    else
-                        cpu->setRegisterV(0xF, 0);
-					//gpu.xorPixel((x + xline + 8) % gpu.getWidth(), (y + yline) % gpu.getHeight()) ^= 1;
+                    
+					gpu.xorPixel((x + xLine + 8) % gpu.getWidth(), (y + yLine) % gpu.getHeight());
 				}
 			}
 		}
 	}
-	else {*/
+	else {
 		for(byte yLine = 0; yLine < n; yLine++) {
 			pixel = memory[I + yLine];
 			for (byte xLine = 0; xLine < 8; xLine++) {
 				if ((pixel & (0x80 >> xLine)) != 0) {
                     if(gpu.getPixel((x + xLine) % (gpu.getWidth()), (y + yLine) % (gpu.getHeight())) == 1)
                         cpu->setRegisterV(0xF, 1);
-                    //else
-                    //    cpu->setRegisterV(0xF, 0);
                     
-                    //printf("XORING: %d %d", (x + xLine) % gpu.getWidth(), (y + yLine) % gpu.getHeight());
-					gpu.xorPixel((x + xLine) % (gpu.getWidth()), (y + yLine) % (gpu.getHeight()));
+					gpu.xorPixel((x + xLine) % gpu.getWidth(), (y + yLine) % gpu.getHeight());
 				}
 			}
 		}
-	//}
+	}
 }
 
 /// 0xEx9E - skip next instruction if key Vx down

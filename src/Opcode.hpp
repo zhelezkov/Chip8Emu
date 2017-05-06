@@ -71,7 +71,7 @@ struct OpcodeData {
 #define EXEC_DESCR std::ofstream&, int
 #elif CHIP_DISASM
 //#include "disasm/Instructions.h"
-#define EXEC_DESCR std::ofstream&, const OpcodeData
+#define EXEC_DESCR std::ostream&, const OpcodeData
 #endif
 
 class CPU;

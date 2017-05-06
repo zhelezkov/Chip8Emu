@@ -3,6 +3,7 @@
 //  Chip8Asm
 //
 
+#define LOGURU_IMPLEMENTATION 1
 #include "Assembler.hpp"
 #include "HelpFunctions.h"
 #include "StringToken.hpp"
@@ -223,7 +224,7 @@ bool Assembler::Assemble()
 	if (ERROR) goto END;
 
 	/*********************************** command and memory parse *************************/
-
+    {
     int curMem = 0x200;
 	const std::pair<int, int> NILtoken = { -1, -1 };
 	// string == label + cmd + comments
@@ -309,6 +310,7 @@ bool Assembler::Assemble()
 	{
 		if(CMD_IND(strNum) != NILtoken) ParseCommand(outFile, strNum);
 	}
+    }
 
 	END:
 	// print parsed file
@@ -357,9 +359,16 @@ bool Assembler::Assemble()
     return true;
 }
 
-int main() 
-{
-    Assembler Asm("in.c8", "out.txt");
+int main(int argc, char* argv[]) {
+    CHECK_F(argc >= 2, "Not enough arguments.");
+    int inLen = strlen(argv[1]);
+    char* outFile = (char*) malloc((inLen + 4) * sizeof(char));
+    strcpy(outFile, argv[1]);
+    strcat(outFile, ".bin");
+    
+    Assembler Asm(argv[1], outFile);
     Asm.Assemble();
+    
+    free(outFile);
     return 0;
 }
