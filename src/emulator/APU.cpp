@@ -6,18 +6,23 @@
 #include "APU.hpp"
 #include <SDL.h>
 
+float tonePose = 0;
+
 void audioCallback(void* userdata, Uint8* stream, int streamLength) {
-    for (int i = 0; i < streamLength; i += 4) {
-        stream[i] = 1;
+    for (int i = 0; i < streamLength; i++) {
+        stream[i] = sinf(tonePose) + 127;
+        tonePose += 3.14159 * 1000 / 44100;
     }
 }
 
 APU::APU() {
     SDL_AudioSpec audioSpec;
-    audioSpec.freq = 3000;
-    audioSpec.format = AUDIO_S8;
+    SDL_zero(audioSpec);
+    
+    audioSpec.freq = 44100;
+    audioSpec.format = AUDIO_U8;
     audioSpec.channels = 1;
-    audioSpec.samples = 32;
+    audioSpec.samples = 4096;
     audioSpec.callback = audioCallback;
 
     int err = SDL_OpenAudio(&audioSpec, NULL);
@@ -35,7 +40,6 @@ void APU::reset() {
 
 void APU::playSound() {
     SDL_PauseAudio(false);
-    LOG_F(INFO, "BEEP");
 }
 
 void APU::pauseSound() {

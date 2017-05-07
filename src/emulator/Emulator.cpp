@@ -136,8 +136,6 @@ void Emulator::run() {
         hasAppFocus = hasFocus() || (debuggerConnected && debugger->hasFocus());
         
         if (!hasAppFocus) {
-            //when window is not focused, vsync doesn't work, so don't waste cpu time
-            SDL_Delay(100);
             continue;
         }
         
@@ -225,6 +223,8 @@ void Emulator::initWindow() {
     CHECK_F(screenTexture != nullptr, "Error during creating texture: %s", SDL_GetError());
 
 	LOG_F(INFO, "Window successfully created");
+    
+    SDL_RaiseWindow(window);
 }
 
 int main(int argc, char* argv[]) {
