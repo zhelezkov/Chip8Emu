@@ -7,17 +7,14 @@
 #define APU_hpp
 
 #include "CHIP.h"
-#include "SDL.h"
 
 class APU {
 public:
     APU();
     ~APU();
     void reset();
-    
     void playSound();
-private:
-    SDL_AudioSpec wavSpec;
+    void pauseSound();
 };
 
 #endif /* APU_hpp */

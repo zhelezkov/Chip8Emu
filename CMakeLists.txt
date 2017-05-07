@@ -3,7 +3,6 @@ project(Chip8Dev CXX)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 find_package(SDL2 REQUIRED)
-find_package(OpenGL REQUIRED)
 find_package(PCRE REQUIRED)
 
 set (CMAKE_CXX_STANDARD 11)
