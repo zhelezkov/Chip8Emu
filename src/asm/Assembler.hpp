@@ -6,8 +6,6 @@
 #ifndef Assembler_hpp
 #define Assembler_hpp
 
-#include "Opcodes.h"
-#include "Defines.h"
 #include <fstream>
 
 class Assembler

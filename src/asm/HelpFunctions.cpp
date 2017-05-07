@@ -24,50 +24,50 @@ bool checkForValidStr(const std::string s, int start, int end)
 	return true;
 }
 
-bool checkStrForHexNumber(const std::string& s, int start, int end)
-{
+bool checkStrForHexNumber(const std::string& s, int start, int end) {
 	if (start == -1) start = 0;
 	if (end == -1) end = s.length();
 
-	if (s[start] == '-')
+    if (s[start] == '-') {
 		if (s.length() != 1) start++;
 		else return false;
+    }
+    
+    for (int i = start; i < end; i++)
+        if (!((s[i] >= '0' && s[i] <= '9') || (s[i] >= 'A' && s[i] <= 'F') || (s[i] >= 'a' && s[i] <= 'f')))
+            return false;
 
-		for (int i = start; i < end; i++)
-			if (!(s[i] >= '0' && s[i] <= '9' || s[i] >= 'A' && s[i] <= 'F' || s[i] >= 'a' && s[i] <= 'f'))
-				return false;
-
-		return true;
+    return true;
 }
 
-bool checkStrForDecNumber(const std::string& s, int start, int end)
-{
+bool checkStrForDecNumber(const std::string& s, int start, int end) {
 	if (start == -1) start = 0;
 	if (end == -1) end = s.length();
 
-	if (s[start] == '-')
+    if (s[start] == '-') {
 		if (s.length() != 1) start++;
 		else return false;
+    }
 
-		for (int i = start; i < end; i++)
-			if (s[i] < '0' || s[i] > '9')
-				return false;
+    for (int i = start; i < end; i++)
+        if (s[i] < '0' || s[i] > '9')
+            return false;
 
-		return true;
+    return true;
 }
 
-bool checkStrForBinNumber(const std::string& s, int start, int end)
-{
+bool checkStrForBinNumber(const std::string& s, int start, int end) {
 	if (start == -1) start = 0;
 	if (end == -1) end = s.length();
 
-	if (s[start] == '-')
+    if (s[start] == '-') {
 		if (s.length() != 1) start++;
 		else return false;
+    }
 
-		for (int i = start; i < end; i++)
-			if (!(s[i] == '0' || s[i] == '1'))
-				return false;
+    for (int i = start; i < end; i++)
+        if (!(s[i] == '0' || s[i] == '1'))
+            return false;
 
 		return true;
 }
@@ -76,7 +76,7 @@ bool checkStrForRegister(const std::string& s)
 {
 	if (s.length() != 2) return false;
 
-	if ((s[0] == 'v' || s[0] == 'V') && (s[1] >= '0' && s[1] <= '9' || s[1] >= 'A' && s[1] <= 'F' || s[1] >= 'a' && s[1] <= 'f'))
+	if ((s[0] == 'v' || s[0] == 'V') && ((s[1] >= '0' && s[1] <= '9') || (s[1] >= 'A' && s[1] <= 'F') || (s[1] >= 'a' && s[1] <= 'f')))
 		return true;
 	else return false;
 }
@@ -113,7 +113,7 @@ bool checkStrForHF(std::string s)
 	else return false;
 }
 
-bool checkTypeForArg(typeToken type)
+bool checkTypeForArg(TypeToken type)
 {
 	return type != LABEL && type != COMMENT && type != NIL;
 }

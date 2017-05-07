@@ -13,7 +13,7 @@
 #include <vector>
 #include <tuple>
 
-enum typeArg {
+enum TypeArg {
 	name,
 	number,
 	reg,
@@ -29,7 +29,7 @@ enum typeArg {
 	r
 };
 
-static const std::string typeArgStr[]{
+static const std::string TypeArgStr[]{
 	"string-name",
 	"number",
 	"register",
@@ -62,15 +62,10 @@ struct OpcodeData {
 };
 
 #ifdef CHIP_EMU
-//#include "emulator/Instructions.h"
 #define EXEC_DESCR CPU* const, const OpcodeData
 #elif CHIP_ASM
-//#include "asm/Instructions.h"
-#include "asm/StringToken.hpp"
-#include "asm/Defines.h"
 #define EXEC_DESCR std::ofstream&, int
 #elif CHIP_DISASM
-//#include "disasm/Instructions.h"
 #define EXEC_DESCR std::ostream&, const OpcodeData
 #endif
 
@@ -83,13 +78,13 @@ public:
         
     }
     
-    Opcode(const char* name, const std::vector<typeArg> arguments, const char* description, void (*exec)(EXEC_DESCR) = fn_nop);
+    Opcode(const char* name, const std::vector<TypeArg> arguments, const char* description, void (*exec)(EXEC_DESCR) = fn_nop);
     
     const char* getName() const { return name; };
-	const std::vector<typeArg> getArgs() const { return arguments; }
+	const std::vector<TypeArg> getArgs() const { return arguments; }
 private:
     const char* name;
-	const std::vector<typeArg> arguments;
+	const std::vector<TypeArg> arguments;
     const char* description;
 public:
     void (*exec)(EXEC_DESCR);

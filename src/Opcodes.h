@@ -17,14 +17,6 @@
 
 #define fn(name) fn_##name
 
-/*#ifdef CHIP_EMU
-
-#elif CHIP_DISASM
-
-#elif CHIP_ASM
-
-#endif*/
-
 #define args(...) {__VA_ARGS__}
 
 #define INIT_OPS \

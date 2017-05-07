@@ -11,6 +11,7 @@
 #include "CHIP.h"
 #include "StringToken.hpp"
 #include "HelpFunctions.h"
+#include "Defines.h"
 #include <vector>
 #include <string>
 #include <algorithm>
@@ -23,9 +24,9 @@ extern std::map<std::string, byte> equ;				  // in Assembler.cpp
 extern bool ERROR;									  // in Assembler.cpp
 extern std::vector<VECTOR_TYPE> ovector; // in Assembler.cpp
 
-bool CheckArg(StringToken str, typeArg _correctType)
+bool CheckArg(StringToken str, TypeArg _correctType)
 {
-	typeToken type = str.type;
+	TypeToken type = str.type;
 	if (_correctType == name)
 	{
 		if (type == NAME) return true;
@@ -115,7 +116,7 @@ bool CheckArg(StringToken str, typeArg _correctType)
 	return false;
 }
 
-bool Check(int strNum, const std::vector<typeArg>& arguments, bool debug)
+bool Check(int strNum, const std::vector<TypeArg>& arguments, bool debug)
 {
 	std::string cmd = CMD_STR(strNum, CMD_IND(strNum).first);
 	std::transform(cmd.begin(), cmd.end(), cmd.begin(), toupper);
@@ -140,7 +141,7 @@ bool Check(int strNum, const std::vector<typeArg>& arguments, bool debug)
 	for(int i = 0; i < arguments.size(); i++)
 		if (!CheckArg(TOKEN(strNum, CMD_IND(strNum).first + 1 + i), arguments[i]))
 		{
-			if (debug) errors.push_back(StringNumber(strNum) + ' ' + std::to_string(i + 1) + "th argument should be the " + typeArgStr[arguments[i]] + ": " + CMD_STR(strNum, CMD_IND(strNum).first + 1 + i));
+			if (debug) errors.push_back(StringNumber(strNum) + ' ' + std::to_string(i + 1) + "th argument should be the " + TypeArgStr[arguments[i]] + ": " + CMD_STR(strNum, CMD_IND(strNum).first + 1 + i));
 			return false;
 		}
 
@@ -151,7 +152,7 @@ bool CheckCommand(int strNum, int& curMem)
 {
 	std::string cmd = CMD_STR(strNum, CMD_IND(strNum).first);
 	std::transform(cmd.begin(), cmd.end(), cmd.begin(), toupper);
-	std::vector<typeArg> arguments;
+	std::vector<TypeArg> arguments;
 	
 	if (cmd == "EQU")
 	{

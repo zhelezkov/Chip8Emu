@@ -1,7 +1,8 @@
 #pragma once
 #include <tuple>
 #include <vector>
-#include "asm/StringToken.hpp"
+
+struct StringToken;
 
 struct TokenIndexes {
 	std::pair<int, int> LabelToken;
@@ -9,8 +10,8 @@ struct TokenIndexes {
 	std::pair<int, int> CommentToken;
 };
 
-#define VECTOR_TYPE std::tuple<std::vector<StringToken>, std::vector<typeArg>, TokenIndexes>
-#define NEWSTR std::make_tuple(std::vector<StringToken>(), std::vector<typeArg>(), TokenIndexes())
+#define VECTOR_TYPE std::tuple<std::vector<StringToken>, std::vector<TypeArg>, TokenIndexes>
+#define NEWSTR std::make_tuple(std::vector<StringToken>(), std::vector<TypeArg>(), TokenIndexes())
 
 #define STRING(i) std::get<0>(ovector[i])
 #define TOKEN(i, j) std::get<0>(ovector[i])[j]

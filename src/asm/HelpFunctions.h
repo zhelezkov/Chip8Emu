@@ -12,7 +12,7 @@
 #include <string>
 #include <algorithm>
 #include "CHIP.h"
-#include "typeToken.h"
+#include "TypeToken.h"
 
 extern std::map<std::string, int> labels;	 // in Assembler.cpp
 extern std::map<std::string, byte> var;		 // in Assembler.cpp	
@@ -39,7 +39,7 @@ bool checkStrForST(std::string s);
 
 bool checkStrForHF(std::string s);
 
-bool checkTypeForArg(typeToken type);
+bool checkTypeForArg(TypeToken type);
 
 ushort strToNumber(std::string str);
 

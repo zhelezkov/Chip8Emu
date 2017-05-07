@@ -6,8 +6,6 @@
 #ifndef Instructions_h
 #define Instructions_h
 
-//TODO make instructions.cpp and keep it as header only
-
 #include <cstdlib>
 #include "CPU.hpp"
 #include "GPU.hpp"
@@ -383,7 +381,6 @@ void fn_0x00Bn(CPU* const cpu, const OpcodeData data) {
 
 /// 0x00Cn - scroll display N lines down (N/2 in low res mode)
 void fn_0x00Cn(CPU* const cpu, const OpcodeData data) {
-    // CHECK IT!
     byte N = data.n4;
     GPU& gpu = cpu->getGpu();
     int width = gpu.getWidth();
@@ -407,7 +404,6 @@ void fn_0x00Cn(CPU* const cpu, const OpcodeData data) {
 
 /// 0x00FB - scroll right 4 pixels (2 pixels in low res mode)
 void fn_0x00FB(CPU* const cpu, const OpcodeData data) {
-    // CHECK IT!
     GPU& gpu = cpu->getGpu();
     int height = gpu.getHeight();
     int width = gpu.getWidth();
@@ -427,7 +423,6 @@ void fn_0x00FB(CPU* const cpu, const OpcodeData data) {
 
 /// 0x00FC - scroll left 4 pixels (2 pixels in low res mode)
 void fn_0x00FC(CPU* const cpu, const OpcodeData data) {
-    // CHECK IT!
     GPU& gpu = cpu->getGpu();
     int width = gpu.getWidth();
     int height = gpu.getHeight();
@@ -465,13 +460,14 @@ void fn_0xFx30(CPU* const cpu, const OpcodeData data) {
     byte indexX = data.n2;
     byte Vx = cpu->getRegisterV(indexX);
     
-    cpu->setAddrRegister(Vx * 10 + 80); //TODO CHECK
+    cpu->setAddrRegister(Vx * 10 + 80);
 }
 
 /// 0xFx75 - save V0...VX (X<8) in the RPL flags
 void fn_0xFx75(CPU* const cpu, const OpcodeData data) {
     byte indexX = data.n2;
-    //TODO assert x < 8
+    CHECK_F(indexX < 8);
+    
     for (byte i = 0; i <= indexX; i++)
         cpu->setRegisterR(i, cpu->getRegisterV(i));
 }
@@ -479,6 +475,7 @@ void fn_0xFx75(CPU* const cpu, const OpcodeData data) {
 /// FX85 - load V0...VX (X<8) from the RPL flags
 void fn_0xFx85(CPU* const cpu, const OpcodeData data) {
     byte indexX = data.n2;
+    CHECK_F(indexX < 8);
     
     for (byte i = 0; i <= indexX; i++)
         cpu->setRegisterV(i, cpu->getRegisterR(i));

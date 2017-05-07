@@ -13,7 +13,7 @@
 #include "asm/Instructions.h"
 #endif
 
-Opcode::Opcode(const char* name, const std::vector<typeArg> arguments, const char* description, void (*exec)(EXEC_DESCR)) : name(name), arguments(arguments), description(description), exec(exec) {
+Opcode::Opcode(const char* name, const std::vector<TypeArg> arguments, const char* description, void (*exec)(EXEC_DESCR)) : name(name), arguments(arguments), description(description), exec(exec) {
 }
 
 #define k 0

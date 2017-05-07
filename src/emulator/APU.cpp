@@ -11,7 +11,7 @@ float tonePose = 0;
 void audioCallback(void* userdata, Uint8* stream, int streamLength) {
     for (int i = 0; i < streamLength; i++) {
         stream[i] = sinf(tonePose) + 127;
-        tonePose += 3.14159 * 1000 / 44100;
+        tonePose += M_PI * 1000 / 44100;
     }
 }
 
@@ -27,6 +27,8 @@ APU::APU() {
 
     int err = SDL_OpenAudio(&audioSpec, NULL);
     CHECK_F(err != -1, "Error initing audio");
+    
+    SDL_PauseAudio(true);
 }
 
 APU::~APU() {

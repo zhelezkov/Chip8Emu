@@ -8,6 +8,8 @@
 #include "HelpFunctions.h"
 #include "StringToken.hpp"
 #include "CommandParse.h"
+#include "Opcodes.h"
+#include "Defines.h"
 
 //#include <regex>
 #include <ctime>
@@ -34,53 +36,29 @@ bool Assembler::Assemble()
 {
     std::ifstream inFile(in, std::ios::in);
     std::ofstream outFile(out, std::ios::binary | std::ios::out);
-    std::ofstream logFile(this->log, std::ios::out);
 
 	std::ofstream temp("Assemble.txt", std::ios::out);
 
     /************************************ check file for opened ***************************/
-    if (!inFile.is_open())
-    {
-        logFile << "Error: unable to open file '" << in << "'\n";
-        return false;
-    }
-    logFile << "OK: file is opened.\n\n";
+    CHECK_F(inFile.is_open(), "Error: unable to open file '%s'", in);
+    
+    LOG_F(INFO, "OK: file is opened.");;
 	clock_t start = clock();
 
-	/*************** It's too long time ***************/
-    /*std::string s;
-    std::cmatch result;
-    std::regex regular("[\\s|,]*(;+.*)?[\\s|,]*([\\w-\\[\\]:#%\\.]+)?[\\s|,]*([^\\w-\\[\\]:#%\\. ,\\s;]+)?");
-    while (getline(inFile, s))
-    {
-        while (std::regex_search(s.c_str(), result, regular) && s != "")
-        {
-            for (int i = 1; i < result.size(); i++)
-                if (result[i] != "") outFile << result[i] << ' ';
-
-            s = result.suffix().str();
-        }
-
-        outFile << "\n";
-    }*/
-
 	const char *error;
-	int   erroffset;
+	int   errorffset;
 	pcre *re;
 
-	char *regex = "(;+.*)?[\\s|,]*([\\w-\\[\\]:#%\\.]+)?[\\s|,]*([^\\w-\\[\\]:#%\\. ,\\s;]+)?";
+	const char* regex = "(;+.*)?[\\s|,]*([\\w-\\[\\]:#%\\.]+)?[\\s|,]*([^\\w-\\[\\]:#%\\. ,\\s;]+)?";
 
 	re = pcre_compile(regex,          /* the pattern */
 		PCRE_MULTILINE,				  /* options */
 		&error,						  /* for error message */
-		&erroffset,				      /* for error offset */
+		&errorffset,				      /* for error offset */
 		NULL);                        /* use default character tables */
 
-	if (!re)
-	{
-		logFile << "pcre_compile failed (offset: " << erroffset << "), " << error << "\n";
-		return -1;
-	}
+    
+    CHECK_NOTNULL_F(re, "pcre_compile failed (offset: %d), %s", errorffset, error);
 
 	std::string s;
 	while (getline(inFile, s))
@@ -325,37 +303,29 @@ bool Assembler::Assemble()
 		
 		for (int TokenNum = 0; TokenNum < STRING(strNum).size(); TokenNum++)
 		{
-			temp << TOKEN(strNum, TokenNum).parsedStr + "(" + typeTokenStr[TOKEN(strNum, TokenNum).type] + ") ";
+			temp << TOKEN(strNum, TokenNum).parsedStr + "(" + TypeTokenStr[TOKEN(strNum, TokenNum).type] + ") ";
 		}
 		temp << "\n";
 	}
 
 	// print our log
-	logFile << "Errors: " << errors.size() << "\n";
-	for (int i = 0; i < errors.size(); i++)
-		logFile << errors[i] << "\n";
-	logFile << "\n";
+    LOG_F(INFO, "Errors: %lu", errors.size());
+    for (int i = 0; i < errors.size(); i++)
+        LOG_F(INFO, "%s", errors[i].c_str());
 
-	logFile << "Labels: \n";
+    LOG_F(INFO, "Labels:");
 	for (auto i = labels.begin(); i != labels.end(); i++)
-		logFile << (*i).first << " " << std::hex << "[0x" <<file[(*i).second].first << "]\n";
-	logFile << "\n";
+        LOG_F(INFO, "%s [0x%x]", (*i).first.c_str(), file[(*i).second].first);
 
-	logFile << "Var: \n";
+    LOG_F(INFO, "Var: ");
 	for (auto i = var.begin(); i != var.end(); i++)
-	{
-		logFile << (*i).first << " = v" << std::hex << (int)(*i).second << "\n";
-	}
-	logFile << "\n";
-
-	logFile << "Const: \n";
+        LOG_F(INFO, "%s = v%x", (*i).first.c_str(), (*i).second);
+	
+    LOG_F(INFO, "Conts: ");
 	for (auto i = equ.begin(); i != equ.end(); i++)
-	{
-		logFile << (*i).first << " = " << std::dec << (int)(*i).second << "\n";
-	}
-	logFile << "\n";
-
-    logFile << "Time: " << std::dec << clock() - start;
+        LOG_F(INFO, "%s = %d", (*i).first.c_str(), (*i).second);
+    
+    LOG_F(INFO, "Time: %lu", clock() - start);
     return true;
 }
 

@@ -8,7 +8,7 @@
 
 #include <string>
 #include <tuple>
-#include "typeToken.h"
+#include "TypeToken.h"
 #include "HelpFunctions.h"
 
 const int lengthToken = 15;
@@ -17,7 +17,7 @@ struct StringToken
 {
 	int arr[lengthToken];
 	std::string parsedStr;	// comments + cmd + error
-	typeToken type = NIL;
+	TypeToken type = NIL;
 	bool error = false;
 
 	std::pair<int, int> allInd;
@@ -70,7 +70,7 @@ struct StringToken
 			{
 				if (commandStr.front() == '#') type = HEX;
 				if (commandStr.front() == '%') type = BIN;
-				if (commandStr.front() >= '0' && commandStr.front() <= '9' || commandStr.front() == '-') type = DEC;
+				if ((commandStr.front() >= '0' && commandStr.front() <= '9') || commandStr.front() == '-') type = DEC;
 				if (commandStr.back() == ':') type = LABEL;
 				if (commandStr.front() == '[') type = ADDR;
 				if (checkStrForRegister(commandStr)) type = REG;

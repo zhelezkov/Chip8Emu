@@ -8,7 +8,7 @@
 
 #include <string>
 
-enum typeToken {
+enum TypeToken {
 	NAME,
 	DT,
 	ST,
@@ -29,7 +29,7 @@ enum typeToken {
 	NIL
 };
 
-static const std::string typeTokenStr[] = {
+static const std::string TypeTokenStr[] = {
 	"NAME",
 	"DT",
 	"ST",
