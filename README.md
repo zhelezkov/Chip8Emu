@@ -1,3 +1,5 @@
+[![alt text](car.gif)](https://rsredsq.github.io/Chip8Emu/)
+
 # Chip8Emu
 CHIP-8 is an assembler, disassembler, debugger, and emulator for the [COSMAC ELF](https://en.wikipedia.org/wiki/RCA_1802) [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) interpreter. 
 
