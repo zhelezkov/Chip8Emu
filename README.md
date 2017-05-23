@@ -1,7 +1,11 @@
+[![alt text](car.gif)](https://rsredsq.github.io/Chip8Emu/)
+
 # Chip8Emu
 CHIP-8 is an assembler, disassembler, debugger, and emulator for the [COSMAC ELF](https://en.wikipedia.org/wiki/RCA_1802) [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) interpreter. 
 
-Chip-8Emu is written in C++ and uses [SDL](https://www.libsdl.org/) for its rendering, input handling, and audio. It should easily run on Windows and OSX
+Chip-8Emu is written in C++, uses [SDL](https://www.libsdl.org/) for its rendering, input handling, and audio and uses [pcre](http://www.pcre.org/) for parsing assembly. It should easily run on Windows and OSX.
+
+Athors: [rsredsq](https://github.com/rsredsq) and [scrat98](https://github.com/scrat98)
 
 ## Building
 **You must have the latest version [cmake](https://cmake.org/) and have [GCC](https://gcc.gnu.org/) compile for the OSX or have [Visual Studio 2017](https://www.visualstudio.com/ru/downloads/) for the Windows**
@@ -86,3 +90,56 @@ Chip-8 provides 2 timers, a delay timer and a sound timer.
 The delay timer is active whenever the delay timer register (DT) is non-zero. This timer does nothing more than subtract 1 from the value of DT at a rate of 60Hz. When DT reaches 0, it deactivates.
 
 The sound timer is active whenever the sound timer register (ST) is non-zero. This timer also decrements at a rate of 60Hz, however, as long as ST's value is greater than zero, the Chip-8 buzzer will sound. When ST reaches zero, the sound timer deactivates.
+
+# Instructions
+| Opcode | Mnemonic      | Description
+|:-------|:--------------|:---------------------------------------------------------------
+| 00E0	  | CLS	          | Clear video memory
+| 00EE	  | RET	          | Return from subroutine
+| 0NNN	  | SYS           | NNN	Call CDP1802 subroutine at NNN |DELETED|
+| 00BN	  | SCU           | N	Scroll up N pixels (N/2 pixels in low res mode)
+| 00CN	  | SCD           | N	Scroll down N pixels (N/2 pixels in low res mode)
+| 00FB	  | SCR	          | Scroll right 4 pixels (2 pixels in low res mode)
+| 00FC	  | SCL	          | Scroll left 4 pixels (2 pixels in low res mode)
+| 00FD	  | EXIT	         | Exit the interpreter; this causes the VM to infinite loop
+| 00FE	  | LOW	          | Enter low resolution (64x32) mode; this is the default mode
+| 00FF	  | HIGH	         | Enter high resolution (128x64) mode
+| 1NNN	  | JP            | NNN	Jump to address NNN
+| 2NNN	  | CALL          | NNN	Call CHIP-8 subroutine at NNN
+| 3XNN	  | SE            | VX, NN	Skip next instruction if VX == NN
+| 4XNN	  | SNE           | VX, NN	Skip next instruction if VX != NN
+| 5XY0	  | SE            | VX, VY	Skip next instruction if VX == VY
+| 5XY1	  | SGT           | VX, VY	Skip next instruction if VX > VY
+| 5XY2	  | SLT           | VX, VY	Skip next instruction if VX < VY
+| 6XNN	  | LD VX, NN	    | VX = NN
+| 7XNN	  | ADD VX, NN	   | VX = VX + NN
+| 8XY0	  | LD VX, VY	    | VX = VY
+| 8XY1	  | OR VX, VY	    | VX = VX OR VY
+| 8XY2	  | AND VX, VY	   | VX = VX AND VY
+| 8XY3	  | XOR VX, VY	   | VX = VX XOR VY
+| 8XY4	  | ADD VX, VY	   | VX = VX + VY; VF = 1 if overflow else 0
+| 8XY5	  | SUB VX, VY	   | VX = VX - VY; VF = 1 if not borrow else 0
+| 8XY6	  | SHR VX	       | VF = LSB(VX); VX = VX » 1
+| 8XY7	  | SUBN VX, VY	  | VX = VY - VX; VF = 1 if not borrow else 0
+| 8XYE	  | SHL VX	       | VF = MSB(VX); VX = VX « 1
+| 9XY0	  | SNE VX, VY 	  | Skip next instruction if VX != VY
+| ANNN	  | LD I, NNN	    | I = NNN
+| BNNN	  | JP V0, NNN	   | Jump to address NNN + V0
+| CXNN	  | RND VX, NN	   | VX = RND() AND NN
+| DXYN	  | DRW VX, VY, N	| Draw 8xN sprite at I to VX, VY; VF = 1 if collision else 0
+| DXY0	  | DRW VX, VY, 0	| Draw a 16x16 sprite at I to VX, VY (8x16 in low res mode)
+| EX9E	  | SKP VX	       | Skip next instruction if key(VX) is pressed
+| EXA1	  | SKNP VX	      | Skip next instruction if key(VX) is not pressed
+| FX07	  | LD VX, DT	    | VX = DT
+| FX0A	  | LD VX, K	     | Wait for key press, store key pressed in VX
+| FX15	  | LD DT, VX	    | DT = VX
+| FX18	  | LD ST, VX	    | ST = VX
+| FX1E	  | ADD I, VX	    | I = I + VX; VF = 1 if I > 0xFFF else 0
+| FX29	  | LD F, VX	     | I = address of 4x5 font character in VX (0..F)
+| FX33	  | LD B, VX	     | Store BCD representation of VX at I (100), I+1 (10), and I+2 (1); I remains unchanged
+| FX55	  | LD [I], VX	   | Store V0..VX (inclusive) to memory starting at I; I remains unchanged
+| FX65	  | LD VX, [I]	   | Load V0..VX (inclusive) from memory starting at I; I remains unchanged
+| FX30	  | LD HF, VX	    | I = address of 8x10 font character in VX (0..F)
+| FX75	  | LD R, VX	     | Store V0..VX (inclusive) into HP-RPL user flags R0..RX (X < 8)
+| FX85	  | LD VX, R	     | Load V0..VX (inclusive) from HP-RPL user flags R0..RX (X < 8)
+
