@@ -22,7 +22,7 @@ In 1991 Erik Bryntse added to the language several innovations that have resulte
 
 Currently, there are more and MegaChip developed by Revival Studios. In this version added color graphics and sound.
 
-# Memory
+## Memory
 CHIP-8 has 4 KB of memory (addresses 0x000h-0xFFFh). The first 512 bytes (addresses 0x000h-0x200h) are reserved for the interpreter, so the game is available only 3,584 bytes. Accordingly, the game is in memory starting at address 0x200h.
 
 ```
@@ -50,12 +50,12 @@ CHIP-8 has 4 KB of memory (addresses 0x000h-0xFFFh). The first 512 bytes (addres
 +---------------+= 0x000 (0) Start of Chip-8 RAM
 ```
 
-# Screen
+## Screen
 The original implementation of the CHIP-8 has a monochrome(black and white) screen size 64х32 pixel. Super Chip in addition to the main advanced mode is 128x64. 
 
 Chip-8 draws graphics on screen through the use of sprites. A sprite is a group of bytes which are a binary representation of the desired picture. Chip-8 sprites may be up to 15 bytes, for a possible sprite size of 8x15. The interpreter provides 16 predefined sprites with a size of 4x5 pixels(8x10 for the Super Chip). It is a hexadecimal number from 0 to F.
 
-# Keyboard
+## Keyboard
 Computers which used the original CHIP-8 had 16-key keyboard. for convenience, all the keys were located to the left
 
 ```
@@ -70,7 +70,7 @@ Original              In the Emulator
 |A|0|B|F|                |Z|X|C|V|
 +-+-+-+-+                +-+-+-+-+
 ```
-# Registers
+## Registers
 The CHIP-8 has 16, 8-bit virtual registers: `V0`, `V1`, `V2`, `V3`, `V4`, `V5`, `V6`, `V7`, `V8`, `V9`, `VA`, `VB`, `VC`, `VD`, `VE`, and `VF`. All of these are considered general purpose registers except for `VF` which is used for carry, borrow, shift, overflow, and collision detection.
  
 There is a single, 16-bit address register: `I`, which is used for reading from - and writing to - memory.
@@ -79,19 +79,19 @@ Last, there are two, 8-bit, timer registers (`DT` for delays and `ST` for sounds
 
 Finally, the Super CHIP-8, which was used on the HP-48 calculators, contained 8, 8-bit, user-flag registers: `R0`-`R7`. These cannot be directly used, but registers `V0`-`V7` can be saved to - and loaded from - them. This can be quite handy at times. See the `LD R, VX` and `LD VX, R` instructions below.
 
-# Stack & CPU
+## Stack & CPU
 In the stack are saved the return address in function calls. The original interpreter had 12 levels of nesting stack. Now we are decided to do 16. Each value in the stack has a size of 2 bytes.
 
 The processor executes 1000 opcodes per second
 
-# Timers & Sound
+## Timers & Sound
 Chip-8 provides 2 timers, a delay timer and a sound timer.
 
 The delay timer is active whenever the delay timer register (DT) is non-zero. This timer does nothing more than subtract 1 from the value of DT at a rate of 60Hz. When DT reaches 0, it deactivates.
 
 The sound timer is active whenever the sound timer register (ST) is non-zero. This timer also decrements at a rate of 60Hz, however, as long as ST's value is greater than zero, the Chip-8 buzzer will sound. When ST reaches zero, the sound timer deactivates.
 
-# Instructions
+## Instructions
 | Opcode | Mnemonic      | Description
 |:-------|:--------------|:---------------------------------------------------------------
 | 00E0	  | CLS	          | Clear video memory
@@ -143,3 +143,41 @@ The sound timer is active whenever the sound timer register (ST) is non-zero. Th
 | FX75	  | LD R, VX	     | Store V0..VX (inclusive) into HP-RPL user flags R0..RX (X < 8)
 | FX85	  | LD VX, R	     | Load V0..VX (inclusive) from HP-RPL user flags R0..RX (X < 8)
 
+# Emulator
+| Comamnd  |	Description
+|:---------|:--------------
+|`F1`      | Load ROM
+|`Ctr + R` | Restart ROM  
+|`Ctr + G` | Open debug window
+
+# Debugger
+| Comamnd |	Description
+|:--------|:--------------
+|`Space`  | Pause
+|`N`      | Next instruction 
+
+# Assembler
+If you want to try creating your own game, then this is what you need. The sample programs can be viewed [here](https://github.com/rsredsq/Chip8Emu/tree/master/games/tests). This is a wonderful interpreter, who will point out your mistakes, making it easier to create games
+
+## Syntax
+| Command                |	Syntax                | Example
+|:-----------------------|:----------------------|:----------
+| `Labels`               | label:                | start:
+| <`Bytes`     | byte                  | `hex` byte #A3 
+                                                   `bin` byte %10010011
+                                                   `dec` byte 125
+| `Define`     | equ [name] [value]    | equ up 5
+| `Variable`   | var [name] [register] | var speed v3
+| `Comments`   | ;                     | ; this is comment
+
+## Code generate
+Using the command line, run chip8asm.exe by the assembler file name as a parameter. As a result, you will get a bin file, and two log file.
+
+`Assembler.txt` - it's a parsed file for greater clarity (was done for a static code analyzer, but it was not completed yet)
+`Assembler.log` - it's a log with all errors, variables, labels, and other information
+
+# DisAssembler
+
+
+# Thanks for watching
+If you have any questions or find a bug, please contact us: [rsredsq](https://github.com/rsredsq) or [scrat98](https://github.com/scrat98). 
