@@ -92,7 +92,7 @@ The delay timer is active whenever the delay timer register (DT) is non-zero. Th
 The sound timer is active whenever the sound timer register (ST) is non-zero. This timer also decrements at a rate of 60Hz, however, as long as ST's value is greater than zero, the Chip-8 buzzer will sound. When ST reaches zero, the sound timer deactivates.
 
 ## Instructions
-<table>
+<table border=1 frame=void rules=all>
 <thead>
 <tr>
 <th align="left">Opcode</th>
@@ -345,7 +345,7 @@ The sound timer is active whenever the sound timer register (ST) is non-zero. Th
 </table>
 
 # Emulator
-<table>
+<table border=1 frame=void rules=all>
 <thead>
 <tr>
 <th align="left">Comamnd</th>
@@ -369,7 +369,7 @@ The sound timer is active whenever the sound timer register (ST) is non-zero. Th
 </table>
 
 # Debugger
-<table>
+<table border=1 frame=void rules=all>
 <thead>
 <tr>
   <th align="left">Comamnd</th>
@@ -392,7 +392,7 @@ The sound timer is active whenever the sound timer register (ST) is non-zero. Th
 If you want to try creating your own game, then this is what you need. The sample programs can be viewed [here](https://github.com/rsredsq/Chip8Emu/tree/master/games/tests). This is a wonderful interpreter, who will point out your mistakes, making it easier to create games
 
 ## Syntax
-<table>
+<table border=1 frame=void rules=all>
   <tbody>
   <tr>
     <th align="left">Command</th>
