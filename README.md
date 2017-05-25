@@ -211,7 +211,7 @@ Using the command line, run chip8asm.exe by the assembler file name as a paramet
 `Assembler.log` - it's a log with all errors, variables, labels, and other information
 
 # DisAssembler
-
+Using the command line, run chip8disasm.exe by the bin file name as a parameter. As a result, you will get a assembler file.
 
 # Thanks for watching
 If you have any questions or find a bug, please contact us: [rsredsq](https://github.com/rsredsq) or [scrat98](https://github.com/scrat98). 
