@@ -9,7 +9,7 @@ Authors: [rsredsq](https://github.com/rsredsq) and [scrat98](https://github.com/
 
 ## Building
 **You should have the latest version [cmake](https://cmake.org/) and [GCC](https://gcc.gnu.org/) or [Visual Studio 2017](https://www.visualstudio.com/ru/downloads/)**
-* Clone or [download](https://github.com/rsredsq/Chip8Emu/archive/master.zip) source code
+* Clone or [download](https://github.com/rsredsq/Chip8Emu/releases) source code
 * Run buildWIN.bat or buildOSX.sh, depends on your OS
 * Have fun!
 
