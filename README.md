@@ -92,116 +92,345 @@ The delay timer is active whenever the delay timer register (DT) is non-zero. Th
 The sound timer is active whenever the sound timer register (ST) is non-zero. This timer also decrements at a rate of 60Hz, however, as long as ST's value is greater than zero, the Chip-8 buzzer will sound. When ST reaches zero, the sound timer deactivates.
 
 ## Instructions
-| Opcode | Mnemonic      | Description
-|:-------|:--------------|:---------------------------------------------------------------
-| 00E0	  | CLS	          | Clear video memory
-| 00EE	  | RET	          | Return from subroutine
-| 0NNN	  | SYS           | NNN	Call CDP1802 subroutine at NNN |DELETED|
-| 00BN	  | SCU           | N	Scroll up N pixels (N/2 pixels in low res mode)
-| 00CN	  | SCD           | N	Scroll down N pixels (N/2 pixels in low res mode)
-| 00FB	  | SCR	          | Scroll right 4 pixels (2 pixels in low res mode)
-| 00FC	  | SCL	          | Scroll left 4 pixels (2 pixels in low res mode)
-| 00FD	  | EXIT	         | Exit the interpreter; this causes the VM to infinite loop
-| 00FE	  | LOW	          | Enter low resolution (64x32) mode; this is the default mode
-| 00FF	  | HIGH	         | Enter high resolution (128x64) mode
-| 1NNN	  | JP            | NNN	Jump to address NNN
-| 2NNN	  | CALL          | NNN	Call CHIP-8 subroutine at NNN
-| 3XNN	  | SE            | VX, NN	Skip next instruction if VX == NN
-| 4XNN	  | SNE           | VX, NN	Skip next instruction if VX != NN
-| 5XY0	  | SE            | VX, VY	Skip next instruction if VX == VY
-| 5XY1	  | SGT           | VX, VY	Skip next instruction if VX > VY
-| 5XY2	  | SLT           | VX, VY	Skip next instruction if VX < VY
-| 6XNN	  | LD VX, NN	    | VX = NN
-| 7XNN	  | ADD VX, NN	   | VX = VX + NN
-| 8XY0	  | LD VX, VY	    | VX = VY
-| 8XY1	  | OR VX, VY	    | VX = VX OR VY
-| 8XY2	  | AND VX, VY	   | VX = VX AND VY
-| 8XY3	  | XOR VX, VY	   | VX = VX XOR VY
-| 8XY4	  | ADD VX, VY	   | VX = VX + VY; VF = 1 if overflow else 0
-| 8XY5	  | SUB VX, VY	   | VX = VX - VY; VF = 1 if not borrow else 0
-| 8XY6	  | SHR VX	       | VF = LSB(VX); VX = VX » 1
-| 8XY7	  | SUBN VX, VY	  | VX = VY - VX; VF = 1 if not borrow else 0
-| 8XYE	  | SHL VX	       | VF = MSB(VX); VX = VX « 1
-| 9XY0	  | SNE VX, VY 	  | Skip next instruction if VX != VY
-| ANNN	  | LD I, NNN	    | I = NNN
-| BNNN	  | JP V0, NNN	   | Jump to address NNN + V0
-| CXNN	  | RND VX, NN	   | VX = RND() AND NN
-| DXYN	  | DRW VX, VY, N	| Draw 8xN sprite at I to VX, VY; VF = 1 if collision else 0
-| DXY0	  | DRW VX, VY, 0	| Draw a 16x16 sprite at I to VX, VY (8x16 in low res mode)
-| EX9E	  | SKP VX	       | Skip next instruction if key(VX) is pressed
-| EXA1	  | SKNP VX	      | Skip next instruction if key(VX) is not pressed
-| FX07	  | LD VX, DT	    | VX = DT
-| FX0A	  | LD VX, K	     | Wait for key press, store key pressed in VX
-| FX15	  | LD DT, VX	    | DT = VX
-| FX18	  | LD ST, VX	    | ST = VX
-| FX1E	  | ADD I, VX	    | I = I + VX; VF = 1 if I > 0xFFF else 0
-| FX29	  | LD F, VX	     | I = address of 4x5 font character in VX (0..F)
-| FX33	  | LD B, VX	     | Store BCD representation of VX at I (100), I+1 (10), and I+2 (1); I remains unchanged
-| FX55	  | LD [I], VX	   | Store V0..VX (inclusive) to memory starting at I; I remains unchanged
-| FX65	  | LD VX, [I]	   | Load V0..VX (inclusive) from memory starting at I; I remains unchanged
-| FX30	  | LD HF, VX	    | I = address of 8x10 font character in VX (0..F)
-| FX75	  | LD R, VX	     | Store V0..VX (inclusive) into HP-RPL user flags R0..RX (X < 8)
-| FX85	  | LD VX, R	     | Load V0..VX (inclusive) from HP-RPL user flags R0..RX (X < 8)
+<table>
+<thead>
+<tr>
+<th align="left">Opcode</th>
+<th align="left">Mnemonic</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">00E0</td>
+<td align="left">CLS</td>
+<td align="left">Clear video memory</td>
+</tr>
+<tr>
+<td align="left">00EE</td>
+<td align="left">RET</td>
+<td align="left">Return from subroutine</td>
+</tr>
+<tr>
+<td align="left">0NNN</td>
+<td align="left">SYS</td>
+<td align="left">NNN	Call CDP1802 subroutine at NNN</td>
+</tr>
+<tr>
+<td align="left">00BN</td>
+<td align="left">SCU</td>
+<td align="left">N	Scroll up N pixels (N/2 pixels in low res mode)</td>
+</tr>
+<tr>
+<td align="left">00CN</td>
+<td align="left">SCD</td>
+<td align="left">N	Scroll down N pixels (N/2 pixels in low res mode)</td>
+</tr>
+<tr>
+<td align="left">00FB</td>
+<td align="left">SCR</td>
+<td align="left">Scroll right 4 pixels (2 pixels in low res mode)</td>
+</tr>
+<tr>
+<td align="left">00FC</td>
+<td align="left">SCL</td>
+<td align="left">Scroll left 4 pixels (2 pixels in low res mode)</td>
+</tr>
+<tr>
+<td align="left">00FD</td>
+<td align="left">EXIT</td>
+<td align="left">Exit the interpreter; this causes the VM to infinite loop</td>
+</tr>
+<tr>
+<td align="left">00FE</td>
+<td align="left">LOW</td>
+<td align="left">Enter low resolution (64x32) mode; this is the default mode</td>
+</tr>
+<tr>
+<td align="left">00FF</td>
+<td align="left">HIGH</td>
+<td align="left">Enter high resolution (128x64) mode</td>
+</tr>
+<tr>
+<td align="left">1NNN</td>
+<td align="left">JP</td>
+<td align="left">NNN	Jump to address NNN</td>
+</tr>
+<tr>
+<td align="left">2NNN</td>
+<td align="left">CALL</td>
+<td align="left">NNN	Call CHIP-8 subroutine at NNN</td>
+</tr>
+<tr>
+<td align="left">3XNN</td>
+<td align="left">SE</td>
+<td align="left">VX, NN	Skip next instruction if VX == NN</td>
+</tr>
+<tr>
+<td align="left">4XNN</td>
+<td align="left">SNE</td>
+<td align="left">VX, NN	Skip next instruction if VX != NN</td>
+</tr>
+<tr>
+<td align="left">5XY0</td>
+<td align="left">SE</td>
+<td align="left">VX, VY	Skip next instruction if VX == VY</td>
+</tr>
+<tr>
+<td align="left">5XY1</td>
+<td align="left">SGT</td>
+<td align="left">VX, VY	Skip next instruction if VX &gt; VY</td>
+</tr>
+<tr>
+<td align="left">5XY2</td>
+<td align="left">SLT</td>
+<td align="left">VX, VY	Skip next instruction if VX &lt; VY</td>
+</tr>
+<tr>
+<td align="left">6XNN</td>
+<td align="left">LD VX, NN</td>
+<td align="left">VX = NN</td>
+</tr>
+<tr>
+<td align="left">7XNN</td>
+<td align="left">ADD VX, NN</td>
+<td align="left">VX = VX + NN</td>
+</tr>
+<tr>
+<td align="left">8XY0</td>
+<td align="left">LD VX, VY</td>
+<td align="left">VX = VY</td>
+</tr>
+<tr>
+<td align="left">8XY1</td>
+<td align="left">OR VX, VY</td>
+<td align="left">VX = VX OR VY</td>
+</tr>
+<tr>
+<td align="left">8XY2</td>
+<td align="left">AND VX, VY</td>
+<td align="left">VX = VX AND VY</td>
+</tr>
+<tr>
+<td align="left">8XY3</td>
+<td align="left">XOR VX, VY</td>
+<td align="left">VX = VX XOR VY</td>
+</tr>
+<tr>
+<td align="left">8XY4</td>
+<td align="left">ADD VX, VY</td>
+<td align="left">VX = VX + VY; VF = 1 if overflow else 0</td>
+</tr>
+<tr>
+<td align="left">8XY5</td>
+<td align="left">SUB VX, VY</td>
+<td align="left">VX = VX - VY; VF = 1 if not borrow else 0</td>
+</tr>
+<tr>
+<td align="left">8XY6</td>
+<td align="left">SHR VX</td>
+<td align="left">VF = LSB(VX); VX = VX » 1</td>
+</tr>
+<tr>
+<td align="left">8XY7</td>
+<td align="left">SUBN VX, VY</td>
+<td align="left">VX = VY - VX; VF = 1 if not borrow else 0</td>
+</tr>
+<tr>
+<td align="left">8XYE</td>
+<td align="left">SHL VX</td>
+<td align="left">VF = MSB(VX); VX = VX « 1</td>
+</tr>
+<tr>
+<td align="left">9XY0</td>
+<td align="left">SNE VX, VY</td>
+<td align="left">Skip next instruction if VX != VY</td>
+</tr>
+<tr>
+<td align="left">ANNN</td>
+<td align="left">LD I, NNN</td>
+<td align="left">I = NNN</td>
+</tr>
+<tr>
+<td align="left">BNNN</td>
+<td align="left">JP V0, NNN</td>
+<td align="left">Jump to address NNN + V0</td>
+</tr>
+<tr>
+<td align="left">CXNN</td>
+<td align="left">RND VX, NN</td>
+<td align="left">VX = RND() AND NN</td>
+</tr>
+<tr>
+<td align="left">DXYN</td>
+<td align="left">DRW VX, VY, N</td>
+<td align="left">Draw 8xN sprite at I to VX, VY; VF = 1 if collision else 0</td>
+</tr>
+<tr>
+<td align="left">DXY0</td>
+<td align="left">DRW VX, VY, 0</td>
+<td align="left">Draw a 16x16 sprite at I to VX, VY (8x16 in low res mode)</td>
+</tr>
+<tr>
+<td align="left">EX9E</td>
+<td align="left">SKP VX</td>
+<td align="left">Skip next instruction if key(VX) is pressed</td>
+</tr>
+<tr>
+<td align="left">EXA1</td>
+<td align="left">SKNP VX</td>
+<td align="left">Skip next instruction if key(VX) is not pressed</td>
+</tr>
+<tr>
+<td align="left">FX07</td>
+<td align="left">LD VX, DT</td>
+<td align="left">VX = DT</td>
+</tr>
+<tr>
+<td align="left">FX0A</td>
+<td align="left">LD VX, K</td>
+<td align="left">Wait for key press, store key pressed in VX</td>
+</tr>
+<tr>
+<td align="left">FX15</td>
+<td align="left">LD DT, VX</td>
+<td align="left">DT = VX</td>
+</tr>
+<tr>
+<td align="left">FX18</td>
+<td align="left">LD ST, VX</td>
+<td align="left">ST = VX</td>
+</tr>
+<tr>
+<td align="left">FX1E</td>
+<td align="left">ADD I, VX</td>
+<td align="left">I = I + VX; VF = 1 if I &gt; 0xFFF else 0</td>
+</tr>
+<tr>
+<td align="left">FX29</td>
+<td align="left">LD F, VX</td>
+<td align="left">I = address of 4x5 font character in VX (0..F)</td>
+</tr>
+<tr>
+<td align="left">FX33</td>
+<td align="left">LD B, VX</td>
+<td align="left">Store BCD representation of VX at I (100), I+1 (10), and I+2 (1); I remains unchanged</td>
+</tr>
+<tr>
+<td align="left">FX55</td>
+<td align="left">LD [I], VX</td>
+<td align="left">Store V0..VX (inclusive) to memory starting at I; I remains unchanged</td>
+</tr>
+<tr>
+<td align="left">FX65</td>
+<td align="left">LD VX, [I]</td>
+<td align="left">Load V0..VX (inclusive) from memory starting at I; I remains unchanged</td>
+</tr>
+<tr>
+<td align="left">FX30</td>
+<td align="left">LD HF, VX</td>
+<td align="left">I = address of 8x10 font character in VX (0..F)</td>
+</tr>
+<tr>
+<td align="left">FX75</td>
+<td align="left">LD R, VX</td>
+<td align="left">Store V0..VX (inclusive) into HP-RPL user flags R0..RX (X &lt; 8)</td>
+</tr>
+<tr>
+<td align="left">FX85</td>
+<td align="left">LD VX, R</td>
+<td align="left">Load V0..VX (inclusive) from HP-RPL user flags R0..RX (X &lt; 8)</td>
+</tr>
+</tbody>
+</table>
 
 # Emulator
-| Comamnd  |	Description
-|:---------|:--------------
-|`F1`      | Load ROM
-|`Ctr + R` | Restart ROM  
-|`Ctr + G` | Open debug window
+<table>
+<thead>
+<tr>
+<th align="left">Comamnd</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>F1</code></td>
+<td align="left">Load ROM</td>
+</tr>
+<tr>
+<td align="left"><code>Ctr + R</code></td>
+<td align="left">Restart ROM</td>
+</tr>
+<tr>
+<td align="left"><code>Ctr + G</code></td>
+<td align="left">Open debug window</td>
+</tr>
+</tbody>
+</table>
 
 # Debugger
-| Comamnd |	Description
-|:--------|:--------------
-|`Space`  | Pause
-|`N`      | Next instruction 
+<table>
+<thead>
+<tr>
+  <th align="left">Comamnd</th>
+  <th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td align="left"><code>Space</code></td>
+  <td align="left">Pause</td>
+</tr>
+<tr>
+  <td align="left"><code>N</code></td>
+  <td align="left">Next instruction</td>
+</tr>
+</tbody>
+</table>
 
 # Assembler
 If you want to try creating your own game, then this is what you need. The sample programs can be viewed [here](https://github.com/rsredsq/Chip8Emu/tree/master/games/tests). This is a wonderful interpreter, who will point out your mistakes, making it easier to create games
 
 ## Syntax
 <table>
+  <tbody>
   <tr>
-    <th>Command</th>
-    <th>Syntax</th>
-    <th>Example</th>
-  </tr>
-  
-  <tr>
-    <td><code>Labels</code></td>
-    <td>label:</td>
-    <td>start:</td>
-  </tr>
-  
-  <tr>
-    <td rowspan="3"><code>Bytes</code></td>
-    <td rowspan="3">byte</td>
-    <td><code>hex</code> byte #A3</td>
+    <th align="left">Command</th>
+    <th align="left">Syntax</th>
+    <th align="left">Example</th>
   </tr>
   <tr>
-    <td><code>bin</code> byte %10010011</td>
+    <td align="left"><code>Labels</code></td>
+    <td align="left">label:</td>
+    <td align="left">start:</td>
   </tr>
   <tr>
-    <td><code>dec</code> byte 125</td>
+    <td rowspan="3" align="left"><code>Bytes</code></td>
+    <td rowspan="3" align="left">byte</td>
+    <td align="left"><code>hex</code> byte #A3</td>
   </tr>
-  
   <tr>
-    <td><code>Define</code></td>
-    <td>equ [name] [value]</td>
-    <td>equ up 5</td>
+    <td align="left"><code>bin</code> byte %10010011</td>
   </tr>
-  
   <tr>
-    <td><code>Variable</code></td>
-    <td>var [name] [register]</td>
-    <td>var speed v3</td>
+    <td align="left"><code>dec</code> byte 125</td>
   </tr>
-  
   <tr>
-    <td><code>Comments</code></td>
-    <td>;</td>
-    <td>; this is comment</td>
+    <td align="left"><code>Define</code></td>
+    <td align="left">equ [name] [value]</td>
+    <td align="left">equ up 5</td>
+  </tr>
+  <tr>
+    <td align="left"><code>Variable</code></td>
+    <td align="left">var [name] [register]</td>
+    <td align="left">var speed v3</td>
+  </tr>
+  <tr>
+    <td align="left"><code>Comments</code></td>
+    <td align="left">;</td>
+    <td align="left">; this is comment</td>
   </tr>  
+</tbody>
 </table>
 
 ## Code generate
