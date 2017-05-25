@@ -3,7 +3,7 @@
 # Chip8Emu
 Chip8Emu is an assembler, disassembler, debugger, and emulator for the [COSMAC ELF](https://en.wikipedia.org/wiki/RCA_1802) [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) interpreter. 
 
-Chip-8Emu is written in C++.
+Chip-8Emu is written in C++, uses [SDL2](https://www.libsdl.org), [pcre](http://pcre.org), [loguru](https://github.com/emilk/loguru), [tinyfiledialogs](https://sourceforge.net/projects/tinyfiledialogs/)
 
 Authors: [rsredsq](https://github.com/rsredsq) and [scrat98](https://github.com/scrat98)
 
