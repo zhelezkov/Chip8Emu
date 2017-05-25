@@ -160,15 +160,49 @@ The sound timer is active whenever the sound timer register (ST) is non-zero. Th
 If you want to try creating your own game, then this is what you need. The sample programs can be viewed [here](https://github.com/rsredsq/Chip8Emu/tree/master/games/tests). This is a wonderful interpreter, who will point out your mistakes, making it easier to create games
 
 ## Syntax
-| Command                |	Syntax                | Example
-|:-----------------------|:----------------------|:----------
-| `Labels`               | label:                | start:
-| <`Bytes`     | byte                  | `hex` byte #A3 
-                                                   `bin` byte %10010011
-                                                   `dec` byte 125
-| `Define`     | equ [name] [value]    | equ up 5
-| `Variable`   | var [name] [register] | var speed v3
-| `Comments`   | ;                     | ; this is comment
+<table>
+  <tr>
+    <th>Command</th>
+    <th>Syntax</th>
+    <th>Example</th>
+  </tr>
+  
+  <tr>
+    <td><code>Labels</code></td>
+    <td>label:</td>
+    <td>start:</td>
+  </tr>
+  
+  <tr>
+    <td rowspan="3"><code>Bytes</code></td>
+    <td rowspan="3">byte</td>
+    <td><code>hex</code> byte #A3</td>
+  </tr>
+  <tr>
+    <td><code>bin</code> byte %10010011</td>
+  </tr>
+  <tr>
+    <td><code>dec</code> byte 125</td>
+  </tr>
+  
+  <tr>
+    <td><code>Define</code></td>
+    <td>equ [name] [value]</td>
+    <td>equ up 5</td>
+  </tr>
+  
+  <tr>
+    <td><code>Variable</code></td>
+    <td>var [name] [register]</td>
+    <td>var speed v3</td>
+  </tr>
+  
+  <tr>
+    <td><code>Comments</code></td>
+    <td>;</td>
+    <td>; this is comment</td>
+  </tr>  
+</table>
 
 ## Code generate
 Using the command line, run chip8asm.exe by the assembler file name as a parameter. As a result, you will get a bin file, and two log file.
