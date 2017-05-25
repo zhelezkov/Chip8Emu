@@ -34,6 +34,7 @@ Assembler::Assembler(const char * in, const char * out) : in(in), out(out)
 
 bool Assembler::Assemble()
 {
+    loguru::add_file(log, loguru::FileMode::Truncate, loguru::Verbosity_MAX);
     std::ifstream inFile(in, std::ios::in);
     std::ofstream outFile(out, std::ios::binary | std::ios::out);
 
@@ -42,7 +43,7 @@ bool Assembler::Assemble()
     /************************************ check file for opened ***************************/
     CHECK_F(inFile.is_open(), "Error: unable to open file '%s'", in);
     
-    LOG_F(INFO, "OK: file is opened.");;
+    LOG_F(INFO, "OK: file is opened.");
 	clock_t start = clock();
 
 	const char *error;
@@ -332,7 +333,7 @@ bool Assembler::Assemble()
 int main(int argc, char* argv[]) {
     CHECK_F(argc >= 2, "Not enough arguments.");
     int inLen = strlen(argv[1]);
-    char* outFile = (char*) malloc((inLen + 4) * sizeof(char));
+    char* outFile = (char*) malloc((inLen + 5) * sizeof(char));
     strcpy(outFile, argv[1]);
     strcat(outFile, ".bin");
     

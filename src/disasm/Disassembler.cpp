@@ -56,7 +56,7 @@ std::string Disassembler::disasmBytecode(ushort bytecode) {
 int main(int argc, char* argv[]) {
     CHECK_F(argc >= 2, "Not enough arguments.");
     int inLen = strlen(argv[1]);
-    char* outFile = (char*) malloc((inLen + 4) * sizeof(char));
+    char* outFile = (char*) malloc((inLen + 5) * sizeof(char));
     strcpy(outFile, argv[1]);
     strcat(outFile, ".out");
     Disassembler::disassembleFile(argv[1], outFile);

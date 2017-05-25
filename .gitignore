@@ -3,6 +3,7 @@ chip8disasm.dir
 chip8asm.dir
 chip8emu.dir
 utils.dir
+chip8disasmLib.dir
 Win32
 Win64
 .DS_Store
