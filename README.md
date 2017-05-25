@@ -1,16 +1,16 @@
 [![alt text](car.gif)](https://rsredsq.github.io/Chip8Emu/)
 
 # Chip8Emu
-CHIP-8 is an assembler, disassembler, debugger, and emulator for the [COSMAC ELF](https://en.wikipedia.org/wiki/RCA_1802) [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) interpreter. 
+Chip8Emu is an assembler, disassembler, debugger, and emulator for the [COSMAC ELF](https://en.wikipedia.org/wiki/RCA_1802) [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) interpreter. 
 
-Chip-8Emu is written in C++, uses [SDL](https://www.libsdl.org/) for its rendering, input handling, and audio and uses [pcre](http://www.pcre.org/) for parsing assembly. It should easily run on Windows and OSX.
+Chip-8Emu is written in C++.
 
-Athors: [rsredsq](https://github.com/rsredsq) and [scrat98](https://github.com/scrat98)
+Authors: [rsredsq](https://github.com/rsredsq) and [scrat98](https://github.com/scrat98)
 
 ## Building
-**You must have the latest version [cmake](https://cmake.org/) and have [GCC](https://gcc.gnu.org/) compile for the OSX or have [Visual Studio 2017](https://www.visualstudio.com/ru/downloads/) for the Windows**
+**You should have the latest version [cmake](https://cmake.org/) and [GCC](https://gcc.gnu.org/) or [Visual Studio 2017](https://www.visualstudio.com/ru/downloads/)**
 * Clone or [download](https://github.com/rsredsq/Chip8Emu/archive/master.zip) source code
-* Run the script file depending on your operating system. buildWIN.bat for Windows and buildOSX.sh for OSX
+* Run buildWIN.bat or buildOSX.sh, depends on your OS
 * Have fun!
 
 # What's a Chip-8?
@@ -19,8 +19,6 @@ Chip-8 is a simple, interpreted, programming language which was first used on so
 In 1990 Andreas Gustafsson wrote interpreter CHIP-8 for the graphing calculator HP-48. This version was called CHIP-48.
 
 In 1991 Erik Bryntse added to the language several innovations that have resulted in a 2-fold increase in screen resolution in the games and use scrolling. This version was called Super Chip-8.
-
-Currently, there are more and MegaChip developed by Revival Studios. In this version added color graphics and sound.
 
 ## Memory
 CHIP-8 has 4 KB of memory (addresses 0x000h-0xFFFh). The first 512 bytes (addresses 0x000h-0x200h) are reserved for the interpreter, so the game is available only 3,584 bytes. Accordingly, the game is in memory starting at address 0x200h.
@@ -160,7 +158,7 @@ The sound timer is active whenever the sound timer register (ST) is non-zero. Th
 |`N`      | Next instruction 
 
 # Assembler
-If you want to try creating your own game, then this is what you need. The sample programs can be viewed [here](https://github.com/rsredsq/Chip8Emu/tree/master/games/tests). This is a wonderful interpreter, who will point out your mistakes, making it easier to create games
+If you want to create your own game for CHIP-8, then you could use chip8asm. The sample programs can be viewed [here](https://github.com/rsredsq/Chip8Emu/tree/master/games/tests). 
 
 ## Syntax
 <table>
@@ -208,13 +206,10 @@ If you want to try creating your own game, then this is what you need. The sampl
 </table>
 
 ## Code generate
-Using the command line, run chip8asm.exe by the assembler file name as a parameter. As a result, you will get a bin file, and two log file.
+Using the command line, run `chip8asm <fileIn>`. As a result, you will get a bin file, and two log files.
 
 `Assembler.txt` - it's a parsed file for greater clarity (was done for a static code analyzer, but it was not completed yet) <br>
 `Assembler.log` - it's a log with all errors, variables, labels, and other information
 
-# DisAssembler
-Using the command line, run chip8disasm.exe by the bin file name as a parameter. As a result, you will get a assembler file.
-
-# Thanks for watching
-If you have any questions or find a bug, please contact us: [rsredsq](https://github.com/rsredsq) or [scrat98](https://github.com/scrat98). 
+# Disassembler
+Using the command line, run `chip8disasm <fileIn>`. As a result, you will get an assembler file.
