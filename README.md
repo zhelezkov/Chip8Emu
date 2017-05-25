@@ -210,7 +210,7 @@ If you want to try creating your own game, then this is what you need. The sampl
 ## Code generate
 Using the command line, run chip8asm.exe by the assembler file name as a parameter. As a result, you will get a bin file, and two log file.
 
-`Assembler.txt` - it's a parsed file for greater clarity (was done for a static code analyzer, but it was not completed yet)
+`Assembler.txt` - it's a parsed file for greater clarity (was done for a static code analyzer, but it was not completed yet) <br>
 `Assembler.log` - it's a log with all errors, variables, labels, and other information
 
 # DisAssembler
